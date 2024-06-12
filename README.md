@@ -1,168 +1,46 @@
-# Taskflower
+# Getting Started with Create React App
 
-## 🌟 About the project
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-### 📷 Screenshots
+## Available Scripts
 
-### 🛠️ Tech Stack
+In the project directory, you can run:
 
-Client
+### `npm start`
 
-<p>
-<img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" />
-<img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" />
-<img src="https://img.shields.io/badge/ts--node-3178C6?style=for-the-badge&logo=ts-node&logoColor=white" />
-<img src="https://img.shields.io/badge/Node%20js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" />
-<img src="https://img.shields.io/badge/Yarn-2C8EBB?style=for-the-badge&logo=yarn&logoColor=white" />
-<img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" />
-<img src="https://img.shields.io/badge/daisyUI-1ad1a5?style=for-the-badge&logo=daisyui&logoColor=white" />
-<img src="https://img.shields.io/badge/json-5E5C5C?style=for-the-badge&logo=json&logoColor=white" />
-<img src="https://img.shields.io/badge/eslint-3A33D1?style=for-the-badge&logo=eslint&logoColor=white" />
-</p>
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-Server
+The page will reload if you make edits.\
+You will also see any lint errors in the console.
 
-<p>
-<img src="https://img.shields.io/badge/Spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white" />
-<img src="https://img.shields.io/badge/Spring_Boot-F2F4F9?style=for-the-badge&logo=spring-boot" />
-<img src="https://img.shields.io/badge/Spring_Security-6DB33F?style=for-the-badge&logo=Spring-Security&logoColor=white" />
-<img src="https://img.shields.io/badge/Google_Cloud-4285F4?style=for-the-badge&logo=google-cloud&logoColor=white" />
-<img src="https://img.shields.io/badge/gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white" />
-<img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=white" />
-<img src="https://img.shields.io/badge/json-5E5C5C?style=for-the-badge&logo=json&logoColor=white" />
-<img src="https://img.shields.io/badge/OpenJDK-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" />
-<img src="https://img.shields.io/badge/SonarLint-CB2029?style=for-the-badge&logo=sonarlint&logoColor=white" />
-<img src="https://img.shields.io/badge/Hibernate-59666C?style=for-the-badge&logo=Hibernate&logoColor=white" />
-<img src="https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white" />
-</p>
+### `npm test`
 
-UI/UX Design
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-<p>
-    <img src="https://img.shields.io/badge/figma-%23F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white" />
-</p>
+### `npm run build`
 
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-Tool
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-<p>
-<img src="https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=Postman&logoColor=white" />
-<img src="https://img.shields.io/badge/NeoVim-%2357A143.svg?&style=for-the-badge&logo=neovim&logoColor=white" />
-<img src="https://img.shields.io/badge/WebStorm-000000?style=for-the-badge&logo=WebStorm&logoColor=white" />
-</p>
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
+### `npm run eject`
 
-### 🎯 Features
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-[Project Feature Design](./document/Project_Feature_Design.md)
+If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-### 🔑 Environment Variables
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-To run this project, you will need to add the following environment variables to your "application-secrets.yml" file.
+You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-```
-spring:
-  datasource:
-    url: jdbc:mariadb://localhost:3306/taskflower?useSSL=false%serverTimeZone=UTC&useLegacyDatetimeCode=false
-    username: [db-username]
-    password: [db-passowrd]
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: "[client id]"
-            client-secret: "[client secret]"
-            redirect-uri: "{baseUrl}/oauth2/code/{registrationId}"
-            scope: email, profile, https://www.googleapis.com/auth/calendar
+## Learn More
 
-app:
-  token:
-    expire-ms: 86400000
-    secret-key: [token secret key]
-  cors:
-    allowed-origins:
-      http://localhost:3000,
-      http://localhost:8080
-  oauth2:
-    jwt-set-uri: https://www.googleapis.com/oauth2/v3/certs
-    userinfo-uri: https://www.googleapis.com/oauth2/v3/userinfo
-    token-uri: https://www.googleapis.com/oauth2/v4/token
-    authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
-    authorized-redirect-uris: http://localhost:3000/oauth2/redirect
-```
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-
-
-## 🧰  Getting started
-
-### ‼️ Prerequisites
-
-This client project uses Yarn as package manager
-
-```
-npm install --global yarn
-```
-
-### ⚙️ Installation & Running
-
-Clone the project
-
-```
-git clone https://github.com/codeartitect/taskflower.git
-```
-
-Go to the project directory
-
-```
-cd taskflower
-```
-
-1. client
-
-   Go to the client project directory
-
-   ```
-   cd client
-   ```
-
-   Install dependency
-
-   ```
-   yarn install
-   ```
-
-   Start the server
-
-   ```
-   yarn start
-   ```
-
-2. server
-
-   Start the server
-
-   ```
-   ./gradlew bootRun
-   ```
-
-
-## 👋 Contributing
-
-Seongwon Yang
-
-- https://github.com/codeartitect
-- https://codeartitect.github.io/resume
-- ysw991106@gmail.com
-
-## ⚠️ License
-
-[Apache-2.0 license](./LICENSE)
-
-## 🤝 Contact
-
-Seongwon Yang
-
-- https://github.com/codeartitect
-- https://codeartitect.github.io/resume
-- ysw991106@gmail.com
+To learn React, check out the [React documentation](https://reactjs.org/).
