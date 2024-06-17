@@ -1,11 +1,28 @@
 import React from 'react';
-import './App.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import {Home} from "./page/home/Home";
+import {Login} from "./page/auth/Login";
+import {Signup} from "./page/auth/Signup";
+import {Dashboard} from "./page/dashboard/Dashboard";
+import {Calendar} from "./page/calendar/Calendar";
+import {Routine} from "./page/routine/Routine";
+import {Task} from "./page/task/Task";
 
-function App() {
-  return (
-    <div className="App">
-    </div>
-  );
+
+const App = () => {
+    return (
+        <Router>
+            <Routes>
+                <Route path="/" element={<Home/>}/>
+                <Route path="/login" element={<Login/>}/>
+                <Route path="/signup" element={<Signup/>}/>
+                <Route path="/dashboard" element={<Dashboard/>}/>
+                <Route path="/calendar" element={<Calendar/>}/>
+                <Route path="/routine" element={<Routine/>}/>
+                <Route path="/task" element={<Task/>}/>
+            </Routes>
+        </Router>
+    );
 }
 
 export default App;
