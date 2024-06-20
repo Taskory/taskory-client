@@ -7,12 +7,11 @@ import {Calendar} from "./page/calendar/Calendar";
 import {Routine} from "./page/routine/Routine";
 import {Task} from "./page/task/Task";
 import React from "react";
-import {AuthRedirectHandler} from "./handler/AuthRedirectHandler";
+import {Report} from "./page/report/Report";
 
 export const AppRouter = (): React.JSX.Element => {
     return (
         <Router>
-            <AuthRedirectHandler />
             <Routes>
                 <Route path="/" element={<Home/>}/>
                 <Route path="/login" element={<Login/>}/>
@@ -21,6 +20,7 @@ export const AppRouter = (): React.JSX.Element => {
                 <Route path="/calendar" element={<Calendar/>}/>
                 <Route path="/routine" element={<Routine/>}/>
                 <Route path="/task" element={<Task/>}/>
+                <Route path="/report" element={<Report/>}/>
             </Routes>
         </Router>
     );

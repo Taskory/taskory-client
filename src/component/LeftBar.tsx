@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import {Link} from "react-router-dom";
 
 interface LeftBarLinkProps {
     opened: boolean,
@@ -7,14 +8,16 @@ interface LeftBarLinkProps {
 
 const LeftBarLink:React.FC<LeftBarLinkProps> = (props: LeftBarLinkProps) => {
     return (
-        <a href="#" className="flex items-center py-2 text-gray-700 hover:bg-gray-100 rounded">
-            <img
-                src={"/asset/left-bar/"+props.name + ".png"}
-                alt={props.name}
-                className={`h-8 w-8 mr-2`}
-            />
-            {!props.opened && props.name}
-        </a>
+        <Link to={"/" + props.name}>
+            <a href="#" className="flex items-center py-2 text-gray-700 hover:bg-gray-100 rounded">
+                <img
+                    src={"/asset/left-bar/" + props.name + ".png"}
+                    alt={props.name}
+                    className={`h-8 w-8 mr-2`}
+                />
+                {!props.opened && props.name}
+            </a>
+        </Link>
     );
 }
 
