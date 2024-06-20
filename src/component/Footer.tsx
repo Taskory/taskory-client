@@ -1,4 +1,3 @@
-import { FaFacebook, FaTwitter, FaLinkedin, FaInstagram } from 'react-icons/fa';
 
 export const Footer = () => {
     return (
@@ -13,16 +12,32 @@ export const Footer = () => {
                 </div>
                 <div className="flex space-x-4">
                     <a href="#" className="text-gray-600 hover:text-gray-900">
-                        <FaFacebook size={20}/>
+                        <img
+                            src="/asset/logo.png"
+                            alt="Logo"
+                            className={`h-8 w-8 mr-2`}
+                        />
                     </a>
                     <a href="#" className="text-gray-600 hover:text-gray-900">
-                        <FaTwitter size={20}/>
+                        <img
+                            src="/asset/logo.png"
+                            alt="Logo"
+                            className={`h-8 w-8 mr-2`}
+                        />
                     </a>
                     <a href="#" className="text-gray-600 hover:text-gray-900">
-                        <FaLinkedin size={20}/>
+                        <img
+                            src="/asset/logo.png"
+                            alt="Logo"
+                            className={`h-8 w-8 mr-2`}
+                        />
                     </a>
                     <a href="#" className="text-gray-600 hover:text-gray-900">
-                        <FaInstagram size={20}/>
+                        <img
+                            src="/asset/logo.png"
+                            alt="Logo"
+                            className={`h-8 w-8 mr-2`}
+                        />
                     </a>
                 </div>
             </div>

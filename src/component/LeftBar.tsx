@@ -1,37 +1,62 @@
-import {FaCog, FaQuestionCircle, FaRegCalendarAlt, FaTachometerAlt, FaTasks} from "react-icons/fa";
+import React, {useState} from "react";
+
+interface LeftBarLinkProps {
+    opened: boolean,
+    name: string
+}
+
+const LeftBarLink:React.FC<LeftBarLinkProps> = (props: LeftBarLinkProps) => {
+    return (
+        <a href="#" className="flex items-center py-2 text-gray-700 hover:bg-gray-100 rounded">
+            <img
+                src={"/asset/left-bar/"+props.name + ".png"}
+                alt={props.name}
+                className={`h-8 w-8 mr-2`}
+            />
+            {!props.opened && props.name}
+        </a>
+    );
+}
 
 export const LeftBar = () => {
+    const [isOpened, setOpened] = useState(false);
+
+    const toggleSidebar = () => {
+        setOpened(!isOpened);
+    };
     return (
-        <aside className="bg-white border-r border-gray-200 w-64 flex flex-col justify-between">
+        <aside
+            className={`transition-width duration-300 ease-in-out bg-white border-r border-gray-200 flex flex-col justify-between ${
+                isOpened ? "w-20" : "w-72"
+            }`}
+        >
             <div>
-                <div className="px-4 py-4 flex">
-                    <img
-                        src="/asset/logo.png"
-                        alt="Logo"
-                        className="h-8 w-8 mr-2"
-                    />
-                    <h1 className="text-xl font-bold">TASKFLOWER</h1>
+                <div className="px-4 py-4 flex items-center justify-between">
+                    <div className="flex items-center">
+                        <img
+                            src="/asset/logo.png"
+                            alt="Logo"
+                            className={`h-8 w-8 mr-2`}
+                        />
+                        {!isOpened && (
+                            <h1 className="text-xl font-bold">TASKFLOWER</h1>
+                        )}
+                    </div>
+                    <button className="btn btn-primary" onClick={toggleSidebar}>
+                        {isOpened ? ">" : "<"}
+                    </button>
                 </div>
                 <nav className="flex flex-col px-4">
-                    <a href="#" className="flex items-center py-2 text-gray-700 hover:bg-gray-100 rounded">
-                        <FaTachometerAlt className="mr-3"/> Dashboard
-                    </a>
-                    <a href="#" className="flex items-center py-2 text-gray-700 hover:bg-gray-100 rounded">
-                        <FaRegCalendarAlt className="mr-3"/> Calendar
-                    </a>
-                    <a href="#" className="flex items-center py-2 text-gray-700 hover:bg-gray-100 rounded">
-                        <FaTasks className="mr-3"/> Tasks
-                    </a>
-
+                    <LeftBarLink opened={isOpened} name={"Dashboard"} />
+                    <LeftBarLink opened={isOpened} name={"Report"} />
+                    <LeftBarLink opened={isOpened} name={"Calendar"} />
+                    <LeftBarLink opened={isOpened} name={"Task"} />
+                    <LeftBarLink opened={isOpened} name={"Routine"} />
                 </nav>
             </div>
             <div className="px-4 py-4">
-                <a href="#" className="flex items-center py-2 text-gray-700 hover:bg-gray-100 rounded">
-                    <FaCog className="mr-3"/> Settings
-                </a>
-                <a href="#" className="flex items-center py-2 text-gray-700 hover:bg-gray-100 rounded">
-                    <FaQuestionCircle className="mr-3"/> Help & Support
-                </a>
+                <LeftBarLink opened={isOpened} name={"Setting"} />
+                <LeftBarLink opened={isOpened} name={"Help & Support"} />
             </div>
         </aside>
     );

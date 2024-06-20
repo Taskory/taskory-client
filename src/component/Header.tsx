@@ -1,4 +1,3 @@
-import {FaBell, FaUserCircle} from "react-icons/fa";
 
 export const Header = () => {
     return (
@@ -11,8 +10,16 @@ export const Header = () => {
                 />
             </div>
             <div className="flex items-center">
-                <FaBell className="text-gray-600 mr-4"/>
-                <FaUserCircle className="text-gray-600"/>
+                <img
+                    src="/asset/logo.png"
+                    alt="Logo"
+                    className={`h-8 w-8 mr-2`}
+                />
+                <img
+                    src="/asset/logo.png"
+                    alt="Logo"
+                    className={`h-8 w-8 mr-2`}
+                />
             </div>
         </header>
     );
