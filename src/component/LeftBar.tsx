@@ -9,14 +9,14 @@ interface LeftBarLinkProps {
 const LeftBarLink:React.FC<LeftBarLinkProps> = (props: LeftBarLinkProps) => {
     return (
         <Link to={"/" + props.name}>
-            <a href="#" className="flex items-center py-2 text-gray-700 hover:bg-gray-100 rounded">
+            <div className="flex items-center py-2 text-gray-700 hover:bg-gray-100 rounded">
                 <img
                     src={"/asset/left-bar/" + props.name + ".png"}
                     alt={props.name}
                     className={`h-8 w-8 mr-2`}
                 />
                 {!props.opened && props.name}
-            </a>
+            </div>
         </Link>
     );
 }
@@ -35,31 +35,34 @@ export const LeftBar = () => {
         >
             <div>
                 <div className="px-4 py-4 flex items-center justify-between">
-                    <div className="flex items-center">
-                        <img
-                            src="/asset/logo.png"
-                            alt="Logo"
-                            className={`h-8 w-8 mr-2`}
-                        />
-                        {!isOpened && (
-                            <h1 className="text-xl font-bold">TASKFLOWER</h1>
-                        )}
-                    </div>
+                    <Link to={"/"}>
+                        <div className="flex items-center">
+                            <img
+                                src="/asset/logo.png"
+                                alt="Logo"
+                                className={`h-8 w-8 mr-2`}
+                            />
+                            {!isOpened && (
+
+                                <h1 className="text-xl font-bold">TASKFLOWER</h1>
+                            )}
+                        </div>
+                    </Link>
                     <button className="btn btn-primary" onClick={toggleSidebar}>
                         {isOpened ? ">" : "<"}
                     </button>
                 </div>
                 <nav className="flex flex-col px-4">
-                    <LeftBarLink opened={isOpened} name={"Dashboard"} />
-                    <LeftBarLink opened={isOpened} name={"Report"} />
-                    <LeftBarLink opened={isOpened} name={"Calendar"} />
-                    <LeftBarLink opened={isOpened} name={"Task"} />
-                    <LeftBarLink opened={isOpened} name={"Routine"} />
+                    <LeftBarLink opened={isOpened} name={"Dashboard"}/>
+                    <LeftBarLink opened={isOpened} name={"Report"}/>
+                    <LeftBarLink opened={isOpened} name={"Calendar"}/>
+                    <LeftBarLink opened={isOpened} name={"Task"}/>
+                    <LeftBarLink opened={isOpened} name={"Routine"}/>
                 </nav>
             </div>
             <div className="px-4 py-4">
-                <LeftBarLink opened={isOpened} name={"Setting"} />
-                <LeftBarLink opened={isOpened} name={"Help & Support"} />
+                <LeftBarLink opened={isOpened} name={"Setting"}/>
+                <LeftBarLink opened={isOpened} name={"Help & Support"}/>
             </div>
         </aside>
     );
