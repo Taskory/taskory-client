@@ -13,28 +13,28 @@ export const Footer = () => {
                 <div className="flex space-x-4">
                     <a href="#" className="text-gray-600 hover:text-gray-900">
                         <img
-                            src="/asset/logo.png"
+                            src="/asset/img/Logo.png"
                             alt="Logo"
                             className={`h-8 w-8 mr-2`}
                         />
                     </a>
                     <a href="#" className="text-gray-600 hover:text-gray-900">
                         <img
-                            src="/asset/logo.png"
+                            src="/asset/img/Logo.png"
                             alt="Logo"
                             className={`h-8 w-8 mr-2`}
                         />
                     </a>
                     <a href="#" className="text-gray-600 hover:text-gray-900">
                         <img
-                            src="/asset/logo.png"
+                            src="/asset/img/Logo.png"
                             alt="Logo"
                             className={`h-8 w-8 mr-2`}
                         />
                     </a>
                     <a href="#" className="text-gray-600 hover:text-gray-900">
                         <img
-                            src="/asset/logo.png"
+                            src="/asset/img/Logo.png"
                             alt="Logo"
                             className={`h-8 w-8 mr-2`}
                         />

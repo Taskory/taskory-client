@@ -9,8 +9,10 @@ export const RightBar: React.FC<RightBarProps> = ({ isOpened, toggle }) => {
     return (
         <>
             <aside className="bg-gray-100">
-                <div className="btn btn-sm" onClick={toggle}>
-                    temp
+                <div className="btn btn-sm mt-10" onClick={toggle}>
+                    {/*<img src="/asset/RightBarBtn.svg" alt="RightBarBtn" className="h-8 w-8" />*/}
+                    {isOpened ? (<p>Close {">"} </p>): (<p>Open {"<"}</p>)}
+
                 </div>
             </aside>
             <aside className={`bg-white border-l border-gray-200 w-64 p-4 ${isOpened ? '' : 'hidden'}`}>

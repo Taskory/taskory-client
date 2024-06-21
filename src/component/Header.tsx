@@ -8,7 +8,7 @@ export const Header: React.FC<HeaderProps> = ({ isOpened }) => {
     return (
         <header
             className={`bg-white border-b border-gray-200 px-4 py-2 flex justify-between items-center fixed top-0 ${
-                isOpened ? 'left-20' : 'left-72'
+                isOpened ? 'left-24' : 'left-72'
             } right-0 h-16 transition-all duration-300`}
         >
             <div className="flex items-center">
@@ -19,8 +19,8 @@ export const Header: React.FC<HeaderProps> = ({ isOpened }) => {
                 />
             </div>
             <div className="flex items-center">
-                <img src="/asset/logo.png" alt="Logo" className="h-8 w-8 mr-2" />
-                <img src="/asset/logo.png" alt="Logo" className="h-8 w-8 mr-2" />
+                <img src="/asset/img/Logo.png" alt="Logo" className="h-8 w-8 mr-2" />
+                <img src="/asset/img/Logo.png" alt="Logo" className="h-8 w-8 mr-2" />
             </div>
         </header>
     );
