@@ -8,6 +8,7 @@ import {Routine} from "./page/routine/Routine";
 import {Task} from "./page/task/Task";
 import React from "react";
 import {Report} from "./page/report/Report";
+import {Setting} from "./page/setting/Setting";
 
 export const AppRouter = (): React.JSX.Element => {
     return (
@@ -21,6 +22,7 @@ export const AppRouter = (): React.JSX.Element => {
                 <Route path="/routine" element={<Routine/>}/>
                 <Route path="/task" element={<Task/>}/>
                 <Route path="/report" element={<Report/>}/>
+                <Route path="/setting" element={<Setting/>}/>
             </Routes>
         </Router>
     );

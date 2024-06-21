@@ -55,7 +55,6 @@ export const LeftBar: React.FC<LeftBarProps> = ({ isOpened, toggle }) => {
             </div>
             <div className="px-4 py-4">
                 <LeftBarLink opened={isOpened} name={'Setting'} />
-                <LeftBarLink opened={isOpened} name={'Help & Support'} />
             </div>
         </aside>
     );
