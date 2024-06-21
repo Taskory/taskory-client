@@ -8,16 +8,18 @@ interface HomeLayoutProps {
 
 export const HomeLayout: React.FC<HomeLayoutProps> = ({ children }) => {
     return (
-        <div className="flex flex-col min-h-screen">
-            <header>
-                <HomeHeader/>
-            </header>
-            <main className="flex-grow">
-                {children}
-            </main>
+        <>
+            <div className="flex flex-col min-h-screen">
+                <header>
+                    <HomeHeader/>
+                </header>
+                <main className="flex-grow">
+                    {children}
+                </main>
+            </div>
             <footer>
                 <Footer/>
             </footer>
-        </div>
+        </>
     );
 };
