@@ -11,7 +11,7 @@ const LeftBarLink: React.FC<LeftBarLinkProps> = ({ opened, name }) => {
         <Link to={'/' + name}>
             <div className="flex items-center py-2 text-gray-700 hover:bg-gray-100 rounded">
                 <img
-                    src={'/asset/leftbar/' + name + '.svg'}
+                    src={'/asset/img/leftbar/' + name + '.svg'}
                     alt={name}
                     className="h-8 w-8 mr-2"
                 />
