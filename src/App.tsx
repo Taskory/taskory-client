@@ -1,5 +1,5 @@
 import React from 'react';
-import {AppRouter} from "./AppRouter";
+import {AppRouter} from "./router/AppRouter";
 import {SidebarStateProvider} from "./context/SidebarStateContext";
 
 const App = () => {
