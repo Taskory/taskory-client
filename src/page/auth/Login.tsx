@@ -1,4 +1,7 @@
 import React from 'react';
+import {API_URL, GOOGLE_AUTH_URL} from "../../constants";
+import googleLogo from "../../asset/img/social/google-logo.png";
+
 
 export const Login = () => {
     return (
@@ -11,14 +14,13 @@ export const Login = () => {
                 <form>
                     <div className="mb-4">
                         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-                            Email
+                            Username
                         </label>
                         <input
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                            id="email"
-                            type="email"
-                            placeholder="Email"
-                            defaultValue="temp@gmail.com"
+                            id="username"
+                            type="text"
+                            placeholder="Username"
                         />
                     </div>
                     <div className="mb-6">
@@ -31,7 +33,6 @@ export const Login = () => {
                                 id="password"
                                 type="password"
                                 placeholder="Password"
-                                defaultValue="password"
                             />
                             <span className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5">
                 <svg className="h-5 text-gray-500" fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
@@ -56,11 +57,10 @@ export const Login = () => {
                             Forgot your password?
                         </a>
                     </div>
-                    <div className="text-center mt-4">
-                        <span className="text-gray-600">Need help? </span>
-                        <a href="#"
-                           className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
-                            Contact Support
+                    <div className="h-auto space-y-2 my-4">
+                        <a className="flex justify-start btn w-full h-min" href={GOOGLE_AUTH_URL}>
+                            <img className={"size-1/12"} src={googleLogo} alt="Google"/>
+                            <p className={"ml-4"}>Log in with Google</p>
                         </a>
                     </div>
                 </form>

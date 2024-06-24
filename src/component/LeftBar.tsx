@@ -37,12 +37,12 @@ export const LeftBar: React.FC<LeftBarProps> = ({ isOpened, toggle }) => {
                 <div className="px-4 py-4 flex items-center justify-between">
                     <Link to={'/'}>
                         <div className="flex items-center">
-                            <img src="/asset/img/Logo.png" alt="Logo" className="h-8 w-8 mr-2 fixed" />
+                            <img src="/src/asset/img/Logo.png" alt="Logo" className="h-8 w-8 mr-2 fixed" />
                             {!isOpened && <h1 className="text-xl font-bold ml-10">TASKFLOWER</h1>}
                         </div>
                     </Link>
                     <button onClick={toggle}>
-                        <img src="/asset/img/leftbar/Menu.svg" alt="Menu" className="h-6 w-6 ml-2"/>
+                        <img src="/src/asset/img/leftbar/Menu.svg" alt="Menu" className="h-6 w-6 ml-2"/>
                     </button>
                 </div>
                 <nav className="flex flex-col px-4">
