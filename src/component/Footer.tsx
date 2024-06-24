@@ -4,7 +4,7 @@ export const Footer = () => {
         <footer className="footer p-10 bg-base-300">
             <aside>
                 <img
-                    src="/src/asset/img/Logo.png"
+                    src="/asset/img/Logo.png"
                     alt="logo"
                     className={`h-24 w-24`}
                 />
@@ -15,7 +15,7 @@ export const Footer = () => {
                 <div className="grid grid-flow-col gap-4">
                     <a href="https://github.com/codeartist99" className="text-gray-600 hover:text-gray-900">
                         <img
-                            src="/src/asset/img/social/github.svg"
+                            src="/asset/img/social/github.svg"
                             alt="github"
                             className={`h-6 w-6`}
                         />
@@ -23,7 +23,7 @@ export const Footer = () => {
                     <a href="https://www.linkedin.com/in/seongwon-yang-01928a228/"
                        className="text-gray-600 hover:text-gray-900">
                         <img
-                            src="/src/asset/img/social/linkedin.svg"
+                            src="/asset/img/social/linkedin.svg"
                             alt="linkedin"
                             className={`h-6 w-6`}
                         />
@@ -31,7 +31,7 @@ export const Footer = () => {
                     <a href="https://www.instagram.com/99_seongwon"
                        className="text-gray-600 hover:text-gray-900">
                         <img
-                            src="/src/asset/img/social/instagram.svg"
+                            src="/asset/img/social/instagram.svg"
                             alt="instagram"
                             className={`h-6 w-6`}
                         />

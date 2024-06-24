@@ -1,9 +1,50 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {API_URL, GOOGLE_AUTH_URL} from "../../constants";
-import googleLogo from "../../asset/img/social/google-logo.png";
+import {useNavigate} from "react-router-dom";
+import {existAuthCookie, removeAuthCookie, setAuthCookie} from "../../util/CookieUtil";
 
 
 export const Login = () => {
+    const navigate = useNavigate();
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+
+    useEffect(() => {
+        if (existAuthCookie()) removeAuthCookie()
+    }, []);
+
+    const fetchLogin = async () => {
+        const requestOptions = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email: username,
+                password: password
+            }),
+        }
+        try {
+            await fetch(API_URL + "/auth/login", requestOptions).then(res => {
+                if (res.ok) {
+                    res.json().then(result => {
+                        setAuthCookie(result.token);
+                        navigate("/");
+                    });
+                } else {
+                    alert("이메일 및 비밀번호가 잘못되었습니다.")
+                }
+            })
+        } catch (e) {
+            alert("로그인 오류");
+        }
+
+    }
+
+    const handleLogin = async (event: React.FormEvent) => {
+        event.preventDefault(); // 폼 제출 이벤트의 기본 동작 중지
+        await fetchLogin();
+    };
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
             <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
@@ -11,16 +52,19 @@ export const Login = () => {
                 <p className="text-gray-600 mb-6 text-center">
                     Log in to continue manage your tasks.
                 </p>
-                <form>
+                <form onSubmit={handleLogin}>
                     <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
                             Username
                         </label>
                         <input
                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             id="username"
                             type="text"
+                            value={username}
                             placeholder="Username"
+                            autoComplete="username"
+                            onChange={e => setUsername(e.target.value)}
                         />
                     </div>
                     <div className="mb-6">
@@ -32,15 +76,12 @@ export const Login = () => {
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 id="password"
                                 type="password"
+                                value={password}
                                 placeholder="Password"
+                                autoComplete="current-password"
+                                onChange={e => setPassword(e.target.value)}
                             />
-                            <span className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5">
-                <svg className="h-5 text-gray-500" fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                     stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                        d="M15 12h2l4-4m0 0l-4-4m4 4H3m6 4h3"/>
-                </svg>
-              </span>
+                            <span className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5" />
                         </div>
                     </div>
                     <div className="flex items-center justify-between mb-4">
@@ -52,14 +93,14 @@ export const Login = () => {
                         </button>
                     </div>
                     <div className="text-center">
-                        <a href="#"
-                           className="inline-block align-baseline font-bold text-sm text-gray-500 hover:text-gray-800">
-                            Forgot your password?
-                        </a>
+                        {/*<a href=""*/}
+                        {/*   className="inline-block align-baseline font-bold text-sm text-gray-500 hover:text-gray-800">*/}
+                        {/*    Forgot your password?*/}
+                        {/*</a>*/}
                     </div>
                     <div className="h-auto space-y-2 my-4">
                         <a className="flex justify-start btn w-full h-min" href={GOOGLE_AUTH_URL}>
-                            <img className={"size-1/12"} src={googleLogo} alt="Google"/>
+                            <img className={"size-1/12"} src="/asset/img/social/google-logo.png" alt="Google"/>
                             <p className={"ml-4"}>Log in with Google</p>
                         </a>
                     </div>
@@ -67,5 +108,6 @@ export const Login = () => {
             </div>
         </div>
     );
+
 
 }

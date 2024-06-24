@@ -9,6 +9,7 @@ import {Task} from "./page/task/Task";
 import React from "react";
 import {Report} from "./page/report/Report";
 import {Setting} from "./page/setting/Setting";
+import {OAuth2RedirectHandler} from "./handler/OAuth2RedirectHandler";
 
 export const AppRouter = (): React.JSX.Element => {
     return (
@@ -23,6 +24,7 @@ export const AppRouter = (): React.JSX.Element => {
                 <Route path="/task" element={<Task/>}/>
                 <Route path="/report" element={<Report/>}/>
                 <Route path="/setting" element={<Setting/>}/>
+                <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler/>}/>
             </Routes>
         </Router>
     );

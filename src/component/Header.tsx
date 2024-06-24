@@ -19,13 +19,13 @@ export const Header: React.FC<HeaderProps> = ({ isOpened }) => {
                         className="px-2 py-1 border-none outline-none flex-grow"
                     />
                     <button className="btn btn-circle btn-sm border-none bg-base-100 h-10 w-10 flex items-center justify-center">
-                        <img src="/src/asset/img/header/search.svg" alt="search" className="h-6 w-6"/>
+                        <img src="/asset/img/header/search.svg" alt="search" className="h-6 w-6"/>
                     </button>
                 </div>
             </div>
             <div className="flex items-center">
-                <img src="/src/asset/img/header/notification.svg" alt="notification" className="h-8 w-8 mr-2"/>
-                <img src="/src/asset/img/Logo.png" alt="Logo" className="h-8 w-8 mr-2"/>
+                <img src="/asset/img/header/notification.svg" alt="notification" className="h-8 w-8 mr-2"/>
+                <img src="/asset/img/Logo.png" alt="Logo" className="h-8 w-8 mr-2"/>
             </div>
         </header>
     );
