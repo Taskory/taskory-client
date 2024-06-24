@@ -1,10 +1,51 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {CommonLayout} from "../../layout/CommonLayout";
-import {getAuthCookie} from "../../util/CookieUtil";
+import {existAuthCookie, getAuthCookie} from "../../util/CookieUtil";
+import {useNavigate} from "react-router-dom";
+import {API_URL} from "../../constants";
+
+interface UserInfoInterface {
+    id: number | null;
+    username: string | null;
+    zoneId: string | null;
+}
+
 
 export const Profile: React.FC = () => {
-    console.log(getAuthCookie());
-    
+    const [userInfo, setUserInfo] = useState<UserInfoInterface>({id: null, username: null, zoneId: null});
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!existAuthCookie()) {
+            navigate("/");
+        }
+
+        const requestOptions = {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + getAuthCookie(),
+            },
+        }
+
+        const requestProfile = () => {
+            try {
+                fetch(API_URL + "/user/profile", requestOptions)
+                    .then(res => {
+                        if (res.ok) {
+                            res.json()
+                                .then(result => {
+                                    console.log(result);
+                                    setUserInfo({id: result.id, username: result.username, zoneId: result.zoneId});
+                                });
+                        }
+                    });
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        requestProfile();
+    }, [navigate]);
     return (
         <CommonLayout>
             <div className="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8 bg-white shadow-md rounded-lg">
