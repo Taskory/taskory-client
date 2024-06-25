@@ -7,7 +7,7 @@ import {existAuthCookie} from "../../util/CookieUtil";
 import {UserInfoInterface} from "../../api/interface/UserInfoInterface";
 import {ProfileUpdateRequestInterface} from "../../api/interface/ProfileUpdateRequestInterface";
 
-export const ProfileUpdate: React.FC = () => {
+export const Register: React.FC = () => {
     const [userInfo, setUserInfo] = useState<UserInfoInterface>({
         id: null,
         username: null,
@@ -68,7 +68,8 @@ export const ProfileUpdate: React.FC = () => {
                     id: result.id,
                     username: getEmailLocalPart(result.username),
                     zoneId: result.zoneId
-                })
+                });
+                navigate("/dashboard");
             });
         } else {
             alert("Please check username.");
@@ -89,32 +90,34 @@ export const ProfileUpdate: React.FC = () => {
             <div className="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8 bg-white shadow-md rounded-lg">
                 <h2 className="text-2xl font-bold mb-6">Update Profile</h2>
                 <form onSubmit={handleSubmit}>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="grid gap-4">
                         <div>
                             <label className="block text-sm font-medium text-gray-700">Username</label>
-                            <div className="flex">
-                                <input
-                                    type="text"
-                                    name="username"
-                                    className="mt-1 p-2 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                    value={userInfo.username || ""}
-                                    onChange={handleInputChange}
-                                />
-                                <button
-                                    type="button"
-                                    onClick={handleUsernameCheck}
-                                    className="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                                >
-                                    Check
-                                </button>
+                            <div>
+                                <div className="flex">
+                                    <input
+                                        type="text"
+                                        name="username"
+                                        className="mt-1 p-2 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                        value={userInfo.username || ""}
+                                        onChange={handleInputChange}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={handleUsernameCheck}
+                                        className="ml-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                    >
+                                        Check
+                                    </button>
+                                </div>
+                                {isUsernameAvailable === null ? null
+                                    :
+                                    isUsernameAvailable ? (
+                                        <p className="text-green-500">Username is available!</p>
+                                    ) : (
+                                        <p className="text-red-500">Username is already taken.</p>
+                                    )}
                             </div>
-                            {isUsernameAvailable === null ? null
-                                :
-                                isUsernameAvailable ? (
-                                    <p className="text-green-500">Username is available!</p>
-                                ) : (
-                                    <p className="text-red-500">Username is already taken.</p>
-                                )}
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700">Email</label>

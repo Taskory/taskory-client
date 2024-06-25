@@ -20,7 +20,7 @@ export const OAuth2RedirectHandler: React.FC = () => {
     if (token) {
       setAuthCookie(token);
       if (forbidden) {
-        navigate("/profile/update", {state: {data: forbidden}});
+        navigate("/register", {state: {data: forbidden}});
       } else {
         navigate("/");
       }

@@ -1,6 +1,6 @@
-import {getAuthCookie} from "../../../util/CookieUtil";
-import {API_URL} from "../../../constants";
-import {ProfileUpdateRequestInterface} from "./interface/ProfileUpdateRequestInterface";
+import {getAuthCookie} from "../../util/CookieUtil";
+import {API_URL} from "../../constants";
+import {ProfileUpdateRequestInterface} from "../interface/ProfileUpdateRequestInterface";
 
 export async function requestUsernameCheck(username: string) {
     if (!username) {
