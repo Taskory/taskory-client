@@ -11,6 +11,7 @@ import {Report} from "../page/report/Report";
 import {Setting} from "../page/setting/Setting";
 import {OAuth2RedirectHandler} from "../handler/OAuth2RedirectHandler";
 import {Profile} from "../page/profile/Profile";
+import {ProfileUpdate} from "../page/profile/ProfileUpdate";
 
 export const AppRouter = (): React.JSX.Element => {
     return (
@@ -26,6 +27,7 @@ export const AppRouter = (): React.JSX.Element => {
                 <Route path="/report" element={<Report/>}/>
                 <Route path="/setting" element={<Setting/>}/>
                 <Route path="/profile" element={<Profile/>}/>
+                <Route path="/profile/update" element={<ProfileUpdate/>}/>
                 <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler/>}/>
             </Routes>
         </Router>

@@ -1,0 +1,14 @@
+{
+  "timezone": {
+    "London": "Europe/London",
+    "Berlin": "Europe/Berlin",
+    "Helsinki": "Europe/Helsinki",
+    "New York": "America/New_York",
+    "Chicago": "America/Chicago",
+    "Denver": "America/Denver",
+    "Los Angeles": "America/Los_Angeles",
+    "Seoul": "Asia/Seoul",
+    "Tokyo": "Asia/Tokyo",
+    "Sydney": "Australia/Sydney"
+  }
+}
