@@ -1,12 +1,9 @@
-import React, {useEffect, useState} from 'react';
-import {API_URL, GOOGLE_AUTH_URL} from "../../constants";
-import {useNavigate} from "react-router-dom";
-import {existAuthCookie, removeAuthCookie, setAuthCookie} from "../../util/CookieUtil";
+import React, {useEffect} from 'react';
+import {GOOGLE_AUTH_URL} from "../../constants";
+import {existAuthCookie, removeAuthCookie} from "../../util/CookieUtil";
 
 
 export const Login = () => {
-    const navigate = useNavigate();
-
     useEffect(() => {
         if (existAuthCookie()) removeAuthCookie()
     }, []);
