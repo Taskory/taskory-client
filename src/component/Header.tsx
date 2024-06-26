@@ -1,12 +1,10 @@
 import React from 'react';
 import { existAuthCookie, removeAuthCookie } from "../util/CookieUtil";
 import { useNavigate } from "react-router-dom";
+import {useSidebarStateContext} from "../context/SidebarStateContext";
 
-interface HeaderProps {
-    isOpened: boolean;
-}
-
-export const Header: React.FC<HeaderProps> = ({ isOpened }) => {
+export const Header: React.FC = () => {
+    const {isLeftbarOpened} = useSidebarStateContext();
     const navigate = useNavigate();
     const handleLogout = () => {
         if (existAuthCookie()) {
@@ -22,7 +20,7 @@ export const Header: React.FC<HeaderProps> = ({ isOpened }) => {
     return (
         <header
             className={`bg-white border-b border-gray-200 px-4 py-2 flex justify-between items-center fixed top-0 ${
-                isOpened ? 'left-24' : 'left-72'
+                isLeftbarOpened ? 'left-24' : 'left-72'
             } right-0 h-16 transition-all duration-300`}
         >
             <div className="flex items-center w-full space-x-4">

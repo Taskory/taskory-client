@@ -1,21 +1,18 @@
 import React from "react";
+import {useSidebarStateContext} from "../context/SidebarStateContext";
 
-interface RightBarProps {
-    isOpened: boolean;
-    toggle: () => void;
-}
-
-export const RightBar: React.FC<RightBarProps> = ({ isOpened, toggle }) => {
+export const RightBar: React.FC = () => {
+    const {isRightbarOpened, toggleRightbar} = useSidebarStateContext();
     return (
         <>
-            <aside className="bg-gray-100">
-                <div className="btn btn-sm mt-10" onClick={toggle}>
+            <aside>
+                <div className="btn btn-sm mt-10" onClick={toggleRightbar}>
                     {/*<img src="/asset/RightBarBtn.svg" alt="RightBarBtn" className="h-8 w-8" />*/}
-                    {isOpened ? (<p>Close {">"} </p>): (<p>Open {"<"}</p>)}
+                    {isRightbarOpened ? (<p>Close {">"} </p>): (<p>Open {"<"}</p>)}
 
                 </div>
             </aside>
-            <aside className={`bg-white border-l border-gray-200 w-64 p-4 ${isOpened ? '' : 'hidden'}`}>
+            <aside className={`bg-white border-l border-gray-200 w-64 p-4 ${isRightbarOpened ? '' : 'hidden'}`}>
                 <div className="mb-6">
                     <h2 className="text-xl font-bold mb-2">January</h2>
                     <div className="text-gray-600">Calendar widget here</div>
