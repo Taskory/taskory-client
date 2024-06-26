@@ -9,7 +9,7 @@ import {
 import {MonthHeader} from "./component/MonthHeader";
 import {Day} from "./component/Day";
 
-export const Month: React.FC = () => {
+export const MonthCalendar: React.FC = () => {
     // 이벤트 데이터 (현재 월에 맞게 수정)
     const events = [
         { date: `${currentYear}-06-01`, name: 'Event Name', time: '08:00' },

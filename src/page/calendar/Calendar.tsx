@@ -1,14 +1,14 @@
 import {CommonLayout} from "../../layout/CommonLayout";
 import {CalendarHeader} from "./component/CalendarHeader";
 import React from "react";
-import {Month} from "./component/month/Month";
+import {MonthCalendar} from "./component/month/MonthCalendar";
 
 export const Calendar = () => {
 
     return (
         <CommonLayout>
                 <CalendarHeader />
-                <Month />
+                <MonthCalendar />
         </CommonLayout>
     );
 };
