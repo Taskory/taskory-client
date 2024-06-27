@@ -25,7 +25,7 @@ export const MonthCalendar: React.FC = () => {
             }, 500);
         }
         setAbleScroll(true);
-    }, [currentDate, setCurrentDate]);
+    }, [ableScroll, currentDate, setCurrentDate]);
 
     useEffect(() => {
         const container = containerRef.current;
