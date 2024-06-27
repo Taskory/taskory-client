@@ -3,6 +3,7 @@ import { MonthHeader } from "./component/MonthHeader";
 import { Day } from "./component/Day";
 import { useCalendar } from "../../context/CalendarContext";
 import { useSpring, animated } from "react-spring";
+import { EventInterface } from "../../../../api/interface/EventInterface";
 
 export const MonthCalendar: React.FC = () => {
     const { firstDayOfWeek, lastDayOfMonth, events, currentDate, setCurrentDate } = useCalendar();
@@ -32,8 +33,8 @@ export const MonthCalendar: React.FC = () => {
             setFade(true);
             setTimeout(() => {
                 isScrolling.current = false;
-            }, 300); // This should match the fade-out duration to prevent double scrolling
-        }, 300); // This should match the fade-out duration
+            }, 300);
+        }, 300);
 
         if (debounceTimeout.current) {
             clearTimeout(debounceTimeout.current);
@@ -57,6 +58,30 @@ export const MonthCalendar: React.FC = () => {
     const lastDayOfWeek = new Date(currentDate.getFullYear(), currentDate.getMonth(), daysInMonth).getDay();
     const emptyEndDays = 6 - lastDayOfWeek;
 
+    // Corrected getEventDays function
+    const getEventDays = (event: EventInterface): number[] => {
+        const start = new Date(event.startDateTime);
+        const end = new Date(event.dueDateTime);
+        const days: number[] = [];
+
+        const startDay = start.getMonth() === currentDate.getMonth() && start.getFullYear() === currentDate.getFullYear() ? start.getDate() : 1;
+        const endDay = end.getMonth() === currentDate.getMonth() && end.getFullYear() === currentDate.getFullYear() ? end.getDate() : daysInMonth;
+
+        for (let day = startDay; day <= endDay; day++) {
+            days.push(day);
+        }
+
+        return days;
+    };
+
+    const eventsByDay = Array.from({ length: daysInMonth }, () => [] as EventInterface[]);
+    events.forEach((event: EventInterface) => {
+        const eventDays = getEventDays(event);
+        eventDays.forEach(day => {
+            eventsByDay[day - 1].push(event);
+        });
+    });
+
     return (
         <div ref={containerRef} style={{ overflow: 'hidden' }} className="border">
             <MonthHeader />
@@ -65,18 +90,9 @@ export const MonthCalendar: React.FC = () => {
                     {Array(firstDayOfWeek).fill(null).map((_, index) => (
                         <div key={index} className="border p-2 h-36"></div>
                     ))}
-                    {[...Array(daysInMonth)].map((_, index) => {
-                        const dayEvents = events.filter((event) => {
-                            const eventDate = new Date(event.date);
-                            return (
-                                eventDate.getFullYear() === currentDate.getFullYear() &&
-                                eventDate.getMonth() === currentDate.getMonth() &&
-                                eventDate.getDate() === index + 1
-                            );
-                        });
-
-                        return <Day key={index} day={index + 1} events={dayEvents} />;
-                    })}
+                    {eventsByDay.map((dayEvents, index) => (
+                        <Day key={index + 1} day={index + 1} events={dayEvents} />
+                    ))}
                     {Array(emptyEndDays).fill(null).map((_, index) => (
                         <div key={daysInMonth + index} className="border p-2 h-36"></div>
                     ))}

@@ -1,14 +1,9 @@
-import React from "react";
-
-interface Event {
-    date: string;
-    name: string;
-    time: string;
-}
+import React from 'react';
+import {EventInterface} from "../../../../../api/interface/EventInterface";
 
 interface DayProps {
     day: number;
-    events: Event[];
+    events: EventInterface[];
 }
 
 export const Day: React.FC<DayProps> = ({ day, events }) => {
@@ -16,10 +11,10 @@ export const Day: React.FC<DayProps> = ({ day, events }) => {
         <div className="border p-2 h-36 overflow-hidden relative">
             <div className="text-right">{day}</div>
             <div className="overflow-hidden h-full">
-                {events.map((event, idx) => (
+                {events.slice(0, 4).map((event, idx) => (
                     <div key={idx} className="flex justify-between whitespace-nowrap overflow-hidden text-ellipsis">
-                        <span className="text-sm text-blue-500">{event.name}</span>
-                        <div className="text-xs text-gray-500">{event.time}</div>
+                        <span className="text-sm text-blue-500">{event.title}</span>
+                        <div className="text-xs text-gray-500">{new Date(event.startDateTime).toLocaleDateString()}</div>
                     </div>
                 ))}
             </div>
