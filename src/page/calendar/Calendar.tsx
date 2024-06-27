@@ -13,7 +13,7 @@ export const Calendar = () => {
     const renderCalendarView = () => {
         switch(view) {
             case 'year':
-                return <YearCalendar />;
+                return <YearCalendar setView={setView} />;
             case 'month':
                 return <MonthCalendar />;
             case 'week':
