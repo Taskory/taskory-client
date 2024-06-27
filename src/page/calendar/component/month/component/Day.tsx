@@ -13,7 +13,7 @@ interface DayProps {
 
 export const Day: React.FC<DayProps> = ({ day, events }) => {
     return (
-        <div className="border p-2 h-32 overflow-hidden relative">
+        <div className="border p-2 h-36 overflow-hidden relative">
             <div className="text-right">{day}</div>
             <div className="overflow-hidden h-full">
                 {events.map((event, idx) => (
