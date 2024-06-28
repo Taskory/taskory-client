@@ -1,8 +1,8 @@
 import React from "react";
-import {useCalendar} from "../../../context/CalendarContext";
+import calendar from "../../../../../constants/calendar.json";
 
 export const MonthHeader: React.FC = () => {
-    const {daysOfWeek} = useCalendar();
+    const daysOfWeek = calendar.daysOfWeek;
     return (
         <div className="grid grid-cols-7 gap-4 border px-4 py-4">
             {daysOfWeek.map((day) => (

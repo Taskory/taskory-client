@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {useCalendar} from "../context/CalendarContext";
-import monthNames from "../../../constants/monthNames.json";
+import monthNames from "../../../constants/calendar.json";
 
 interface CalendarHeaderProps {
     setView: (view: string) => void;

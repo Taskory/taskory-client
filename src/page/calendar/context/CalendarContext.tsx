@@ -4,7 +4,6 @@ import {EventInterface} from "../../../api/interface/EventInterface";
 
 interface CalendarContextType {
     currentDate: Date;
-    daysOfWeek: string[];
     firstDayOfWeek: number;
     lastDayOfMonth: Date;
     events: EventInterface[];
@@ -16,8 +15,6 @@ const CalendarContext = createContext<CalendarContextType | undefined>(undefined
 
 export const CalendarProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [currentDate, setCurrentDate] = useState(new Date());
-
-    const daysOfWeek = useMemo(() => ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], []);
 
     const [firstDayOfWeek, setFirstDayOfWeek] = useState(new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay());
     const [lastDayOfMonth, setLastDayOfMonth] = useState(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0));
@@ -94,13 +91,12 @@ export const CalendarProvider: React.FC<{ children: ReactNode }> = ({ children }
 
     const contextValue = useMemo(() => ({
         currentDate,
-        daysOfWeek,
         firstDayOfWeek,
         lastDayOfMonth,
         events,
         setEvents,
         setCurrentDate
-    }), [currentDate, daysOfWeek, firstDayOfWeek, lastDayOfMonth, events]);
+    }), [currentDate, firstDayOfWeek, lastDayOfMonth, events]);
 
     return (
         <CalendarContext.Provider value={contextValue}>
