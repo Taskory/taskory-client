@@ -6,7 +6,8 @@ import { useSpring, animated } from "react-spring";
 import { EventInterface } from "../../../../api/interface/EventInterface";
 
 export const MonthCalendar: React.FC = () => {
-    const { firstDayOfWeek, lastDayOfMonth, events, currentDate, setCurrentDate } = useCalendar();
+    const { lastDayOfMonth, events, currentDate, setCurrentDate } = useCalendar();
+    const [firstDayOfWeek, setFirstDayOfWeek] = useState(new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay());
     const containerRef = useRef<HTMLDivElement>(null);
     const [fade, setFade] = useState(true);
     const isScrolling = useRef(false);
@@ -46,6 +47,9 @@ export const MonthCalendar: React.FC = () => {
         }, 300);
     }, [currentDate, setCurrentDate]);
 
+    /*
+    * UseEffects
+    * */
     useEffect(() => {
         const container = containerRef.current;
         if (container) {
@@ -54,6 +58,12 @@ export const MonthCalendar: React.FC = () => {
         }
     }, [handleWheel]);
 
+    useEffect(() => {
+        setFirstDayOfWeek(new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay());
+    }, [currentDate]);
+
+
+    console.log(lastDayOfMonth);
     const daysInMonth = lastDayOfMonth.getDate();
     const lastDayOfWeek = new Date(currentDate.getFullYear(), currentDate.getMonth(), daysInMonth).getDay();
     const emptyEndDays = 6 - lastDayOfWeek;
