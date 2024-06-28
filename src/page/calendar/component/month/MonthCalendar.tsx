@@ -77,8 +77,6 @@ export const MonthCalendar: React.FC = () => {
     }, [currentDate]);
 
 
-    const emptyEndDays = 6 - monthInfo.lastDayOfWeek;
-
     const getEventDays = (event: EventInterface): number[] => {
         const start = new Date(event.startDateTime);
         const end = new Date(event.dueDateTime);
@@ -130,17 +128,28 @@ export const MonthCalendar: React.FC = () => {
             <MonthHeader />
             <animated.div style={fadeStyles}>
                 <div className="grid grid-cols-7 px-4 py-4">
-                    {Array(monthInfo.firstDayOfWeek).fill(null).map((_, index) => (
-                        <div key={index} className="border p-2 h-36"></div>
-                    ))}
+                    <EmptyCells count={monthInfo.firstDayOfWeek} startIndex={0} />
                     {eventsByDay.map((dayEvents, index) => (
                         <Day key={index + 1} day={index + 1} events={dayEvents} />
                     ))}
-                    {Array(emptyEndDays).fill(null).map((_, index) => (
-                        <div key={monthInfo.daysInMonth + index} className="border p-2 h-36"></div>
-                    ))}
+                    <EmptyCells count={6 - monthInfo.lastDayOfWeek} startIndex={monthInfo.daysInMonth} />
                 </div>
             </animated.div>
         </div>
+    );
+};
+
+interface EmptyCellsProps {
+    count: number;
+    startIndex: number;
+}
+
+const EmptyCells: React.FC<EmptyCellsProps> = ({ count, startIndex }) => {
+    return (
+        <>
+            {Array(count).fill(null).map((_, index) => (
+                <div key={startIndex + index} className="border p-2 h-36"></div>
+            ))}
+        </>
     );
 };
