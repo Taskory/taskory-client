@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { CommonLayout } from "../../layout/CommonLayout";
 import { useNavigate } from "react-router-dom";
 import timezone from "../../constants/timezone.json";
-import {requestProfile, requestProfileUpdate, requestUsernameCheck} from "../../api/user/ApiUtil";
+import {requestProfile, requestProfileUpdate, requestUsernameCheck} from "../../api/UserApi";
 import {existAuthCookie} from "../../util/CookieUtil";
 import {UserInfoInterface} from "../../api/interface/UserInfoInterface";
 import {ProfileUpdateRequestInterface} from "../../api/interface/ProfileUpdateRequestInterface";

@@ -3,7 +3,7 @@ import {CommonLayout} from "../../layout/CommonLayout";
 import {existAuthCookie} from "../../util/CookieUtil";
 import {useNavigate} from "react-router-dom";
 import {UserInfoInterface} from "../../api/interface/UserInfoInterface";
-import {requestProfile} from "../../api/user/ApiUtil";
+import {requestProfile} from "../../api/UserApi";
 import timezone from "../../constants/timezone.json";
 
 export const Profile: React.FC = () => {

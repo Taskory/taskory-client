@@ -4,6 +4,7 @@ import { Day } from "./component/Day";
 import { useCalendar } from "../../context/CalendarContext";
 import { useSpring, animated } from "react-spring";
 import { EventInterface } from "../../../../api/interface/EventInterface";
+// import {requestMonthlyEvents} from "../../../../api/CalendarApi";
 
 interface MonthInfoInterface {
     daysInMonth: number;
@@ -12,12 +13,74 @@ interface MonthInfoInterface {
 }
 
 export const MonthCalendar: React.FC = () => {
-    const { events, currentDate, setCurrentDate } = useCalendar();
+    const { currentDate, setCurrentDate } = useCalendar();
     const [monthInfo, setMonthInfo] = useState<MonthInfoInterface>({
         daysInMonth: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate(),
         firstDayOfWeek: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay(),
         lastDayOfWeek: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDay(),
     });
+    const [events, setEvents] = useState<EventInterface[]>([
+        // event happens through multiple month
+        {
+            id: 1,
+            title: 'Daily Standup',
+            tag: { id: 1, title: 'Meeting', color: 'RED'},
+            hashtags: [{ id: 1, title: '#daily' }, { id: 2, title: '#standup' }],
+            description: 'Daily team sync-up meeting',
+            startDateTime: '2024-06-21T08:00:00',
+            dueDateTime: '2024-07-01T08:30:00',
+            location: 'Conference Room A'
+        },
+        // event happens through multiple month
+        {
+            id: 2,
+            title: 'Project Planning',
+            tag: { id: 2, title: 'Workshop', color: 'ORANGE' },
+            hashtags: [{ id: 3, title: '#project' }, { id: 4, title: '#planning' }],
+            description: 'Planning session for the new project',
+            startDateTime: '2024-05-02T10:00:00',
+            dueDateTime: '2024-07-04T11:30:00',
+            location: 'Conference Room B'
+        },
+        // event for single day
+        {
+            id: 3,
+            title: 'Design Review',
+            tag: { id: 3, title: 'Review', color: 'YELLOW' },
+            hashtags: [{ id: 5, title: '#design' }, { id: 6, title: '#review' }],
+            description: 'Review of the new design mockups',
+            startDateTime: '2024-07-17T13:00:00',
+            dueDateTime: '2024-07-17T14:00:00',
+            location: 'Conference Room C'
+        },
+
+        ////////////////////////////
+        // This mock data makes an error
+        // : Cannot read properties of undefined (reading 'push')
+        // // event for single day (last day of a month)
+        // {
+        //     id: 4,
+        //     title: 'Client Meeting',
+        //     tag: { id: 1, title: 'Meeting', color: 'GREEN' },
+        //     hashtags: [{ id: 7, title: '#client' }, { id: 8, title: '#requirements' }],
+        //     description: 'Meeting with the client to discuss requirements',
+        //     startDateTime: '2024-07-31T15:00:00',
+        //     dueDateTime: '2024-07-31T16:30:00',
+        //     location: 'Client Office'
+        // },
+        // // event for single day (last day of Feburary)
+        // {
+        //     id: 5,
+        //     title: 'Team Drinks',
+        //     tag: { id: 4, title: 'Social', color: 'BLUE' },
+        //     hashtags: [{ id: 9, title: '#team' }, { id: 10, title: '#drinks' }],
+        //     description: 'Social event with the team',
+        //     startDateTime: '2024-02-29T17:00:00',
+        //     dueDateTime: '2024-02-29T19:00:00',
+        //     location: 'Local Bar'
+        // }
+    ]);
+
     const containerRef = useRef<HTMLDivElement>(null);
     const [fade, setFade] = useState<boolean>(true);
     const isScrolling = useRef(false);
@@ -74,8 +137,11 @@ export const MonthCalendar: React.FC = () => {
             firstDayOfWeek: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay(),
             lastDayOfWeek: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDay(),
         })
+        // requestMonthlyEvents(currentDate.getMonth().toString())
+        //     .then((result) => {
+        //         setEvents(result);
+        //     });
     }, [currentDate]);
-
 
     const getEventDays = (event: EventInterface): number[] => {
         const start = new Date(event.startDateTime);
