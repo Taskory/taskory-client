@@ -5,11 +5,21 @@ import { useCalendar } from "../../context/CalendarContext";
 import { useSpring, animated } from "react-spring";
 import { EventInterface } from "../../../../api/interface/EventInterface";
 
+interface MonthInfoInterface {
+    daysInMonth: number;
+    firstDayOfWeek: number;
+    lastDayOfWeek: number;
+}
+
 export const MonthCalendar: React.FC = () => {
-    const { lastDayOfMonth, events, currentDate, setCurrentDate } = useCalendar();
-    const [firstDayOfWeek, setFirstDayOfWeek] = useState(new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay());
+    const { events, currentDate, setCurrentDate } = useCalendar();
+    const [monthInfo, setMonthInfo] = useState<MonthInfoInterface>({
+        daysInMonth: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate(),
+        firstDayOfWeek: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay(),
+        lastDayOfWeek: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDay(),
+    });
     const containerRef = useRef<HTMLDivElement>(null);
-    const [fade, setFade] = useState(true);
+    const [fade, setFade] = useState<boolean>(true);
     const isScrolling = useRef(false);
     const debounceTimeout = useRef<number | null>(null);
 
@@ -59,14 +69,15 @@ export const MonthCalendar: React.FC = () => {
     }, [handleWheel]);
 
     useEffect(() => {
-        setFirstDayOfWeek(new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay());
+        setMonthInfo({
+            daysInMonth: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate(),
+            firstDayOfWeek: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay(),
+            lastDayOfWeek: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDay(),
+        })
     }, [currentDate]);
 
 
-    console.log(lastDayOfMonth);
-    const daysInMonth = lastDayOfMonth.getDate();
-    const lastDayOfWeek = new Date(currentDate.getFullYear(), currentDate.getMonth(), daysInMonth).getDay();
-    const emptyEndDays = 6 - lastDayOfWeek;
+    const emptyEndDays = 6 - monthInfo.lastDayOfWeek;
 
     const getEventDays = (event: EventInterface): number[] => {
         const start = new Date(event.startDateTime);
@@ -84,14 +95,14 @@ export const MonthCalendar: React.FC = () => {
 
             // event will continue to the next month
         } else if (startDay !== 0 && endDay === 0) {
-            for (let day = startDay; day <= daysInMonth; day++) {
+            for (let day = startDay; day <= monthInfo.daysInMonth; day++) {
                 days.push(day);
             }
 
             // event started from the previous month, and will continue till next month
         } else if (startDay === 0 && endDay === 0) {
             if ( (start.getMonth()-end.getMonth()) * currentDate.getMonth() < 0){
-                for (let day = 1; day <= daysInMonth; day++) {
+                for (let day = 1; day <= monthInfo.daysInMonth; day++) {
                     days.push(day);
                 }
             }
@@ -106,7 +117,7 @@ export const MonthCalendar: React.FC = () => {
         return days;
     };
 
-    const eventsByDay = Array.from({ length: daysInMonth }, () => [] as EventInterface[]);
+    const eventsByDay = Array.from({ length: monthInfo.daysInMonth }, () => [] as EventInterface[]);
     events.forEach((event: EventInterface) => {
         const eventDays = getEventDays(event);
         eventDays.forEach(day => {
@@ -119,14 +130,14 @@ export const MonthCalendar: React.FC = () => {
             <MonthHeader />
             <animated.div style={fadeStyles}>
                 <div className="grid grid-cols-7 px-4 py-4">
-                    {Array(firstDayOfWeek).fill(null).map((_, index) => (
+                    {Array(monthInfo.firstDayOfWeek).fill(null).map((_, index) => (
                         <div key={index} className="border p-2 h-36"></div>
                     ))}
                     {eventsByDay.map((dayEvents, index) => (
                         <Day key={index + 1} day={index + 1} events={dayEvents} />
                     ))}
                     {Array(emptyEndDays).fill(null).map((_, index) => (
-                        <div key={daysInMonth + index} className="border p-2 h-36"></div>
+                        <div key={monthInfo.daysInMonth + index} className="border p-2 h-36"></div>
                     ))}
                 </div>
             </animated.div>

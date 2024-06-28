@@ -1,10 +1,9 @@
 // CalendarContext.tsx
-import React, { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useMemo } from 'react';
 import {EventInterface} from "../../../api/interface/EventInterface";
 
 interface CalendarContextType {
     currentDate: Date;
-    lastDayOfMonth: Date;
     events: EventInterface[];
     setEvents: React.Dispatch<React.SetStateAction<EventInterface[]>>;
     setCurrentDate: React.Dispatch<React.SetStateAction<Date>>;
@@ -14,12 +13,6 @@ const CalendarContext = createContext<CalendarContextType | undefined>(undefined
 
 export const CalendarProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [currentDate, setCurrentDate] = useState(new Date());
-
-    const [lastDayOfMonth, setLastDayOfMonth] = useState(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0));
-
-    useEffect(() => {
-        setLastDayOfMonth(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0));
-    }, [currentDate]);
 
     const initialEvents: EventInterface[] = [
         // event happens through multiple month
@@ -87,11 +80,10 @@ export const CalendarProvider: React.FC<{ children: ReactNode }> = ({ children }
 
     const contextValue = useMemo(() => ({
         currentDate,
-        lastDayOfMonth,
         events,
         setEvents,
         setCurrentDate
-    }), [currentDate, lastDayOfMonth, events]);
+    }), [currentDate, events]);
 
     return (
         <CalendarContext.Provider value={contextValue}>
