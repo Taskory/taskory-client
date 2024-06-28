@@ -33,8 +33,8 @@ export const MonthCalendar: React.FC = () => {
             setFade(true);
             setTimeout(() => {
                 isScrolling.current = false;
-            }, 300);
-        }, 300);
+            }, 1000);
+        }, 10);
 
         if (debounceTimeout.current) {
             clearTimeout(debounceTimeout.current);
@@ -58,17 +58,39 @@ export const MonthCalendar: React.FC = () => {
     const lastDayOfWeek = new Date(currentDate.getFullYear(), currentDate.getMonth(), daysInMonth).getDay();
     const emptyEndDays = 6 - lastDayOfWeek;
 
-    // Corrected getEventDays function
     const getEventDays = (event: EventInterface): number[] => {
         const start = new Date(event.startDateTime);
         const end = new Date(event.dueDateTime);
         const days: number[] = [];
 
-        const startDay = start.getMonth() === currentDate.getMonth() && start.getFullYear() === currentDate.getFullYear() ? start.getDate() : 1;
-        const endDay = end.getMonth() === currentDate.getMonth() && end.getFullYear() === currentDate.getFullYear() ? end.getDate() : daysInMonth;
+        const startDay = start.getMonth() === currentDate.getMonth() && start.getFullYear() === currentDate.getFullYear() ? start.getDate() : 0;
+        const endDay = end.getMonth() === currentDate.getMonth() && end.getFullYear() === currentDate.getFullYear() ? end.getDate() : 0;
 
-        for (let day = startDay; day <= endDay; day++) {
-            days.push(day);
+        // event started from the previous month
+        if (startDay === 0 && endDay !== 0) {
+            for (let day = 1; day <= endDay; day++) {
+                days.push(day);
+            }
+
+            // event will continue to the next month
+        } else if (startDay !== 0 && endDay === 0) {
+            for (let day = startDay; day <= daysInMonth; day++) {
+                days.push(day);
+            }
+
+            // event started from the previous month, and will continue till next month
+        } else if (startDay === 0 && endDay === 0) {
+            if ( (start.getMonth()-end.getMonth()) * currentDate.getMonth() < 0){
+                for (let day = 1; day <= daysInMonth; day++) {
+                    days.push(day);
+                }
+            }
+
+            // event starts and ends on the current month
+        } else {
+            for (let day = startDay; day <= endDay; day++) {
+                days.push(day);
+            }
         }
 
         return days;
