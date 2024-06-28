@@ -4,7 +4,6 @@ import {EventInterface} from "../../../api/interface/EventInterface";
 
 interface CalendarContextType {
     currentDate: Date;
-    currentMonthName: string;
     daysOfWeek: string[];
     firstDayOfWeek: number;
     lastDayOfMonth: Date;
@@ -18,23 +17,16 @@ const CalendarContext = createContext<CalendarContextType | undefined>(undefined
 export const CalendarProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [currentDate, setCurrentDate] = useState(new Date());
 
-    const monthNames = useMemo(() => [
-        'January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'
-    ], []);
-
     const daysOfWeek = useMemo(() => ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], []);
 
-    const [currentMonthName, setCurrentMonthName] = useState(monthNames[currentDate.getMonth()]);
     const [firstDayOfWeek, setFirstDayOfWeek] = useState(new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay());
     const [lastDayOfMonth, setLastDayOfMonth] = useState(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0));
 
     useEffect(() => {
-        setCurrentMonthName(monthNames[currentDate.getMonth()]);
         const firstDayOfMonth: Date = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
         setFirstDayOfWeek(firstDayOfMonth.getDay());
         setLastDayOfMonth(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0));
-    }, [currentDate, monthNames]);
+    }, [currentDate]);
 
     const initialEvents: EventInterface[] = [
         // event happens through multiple month
@@ -102,14 +94,13 @@ export const CalendarProvider: React.FC<{ children: ReactNode }> = ({ children }
 
     const contextValue = useMemo(() => ({
         currentDate,
-        currentMonthName,
         daysOfWeek,
         firstDayOfWeek,
         lastDayOfMonth,
         events,
         setEvents,
         setCurrentDate
-    }), [currentDate, currentMonthName, daysOfWeek, firstDayOfWeek, lastDayOfMonth, events]);
+    }), [currentDate, daysOfWeek, firstDayOfWeek, lastDayOfMonth, events]);
 
     return (
         <CalendarContext.Provider value={contextValue}>

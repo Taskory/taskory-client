@@ -1,6 +1,7 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {useCalendar} from "../context/CalendarContext";
+import monthNames from "../../../constants/monthNames.json";
 
 interface CalendarHeaderProps {
     setView: (view: string) => void;
@@ -8,11 +9,16 @@ interface CalendarHeaderProps {
 
 export const CalendarHeader: React.FC<CalendarHeaderProps> = ({ setView }) => {
     const navigate = useNavigate();
-    const {currentMonthName, currentDate} = useCalendar();
+    const {currentDate} = useCalendar();
+    const [currentMonthName, setCurrentMonthName] = useState(monthNames.monthNames[currentDate.getMonth()]);
 
     const handleAddEvent = () => {
         navigate('/add-event');
     };
+
+    useEffect(() => {
+        setCurrentMonthName(monthNames.monthNames[currentDate.getMonth()]);
+    }, [currentDate]);
 
     return (
         <div className="flex justify-between items-center mb-6 border px-4 py-4 rounded-xl">
