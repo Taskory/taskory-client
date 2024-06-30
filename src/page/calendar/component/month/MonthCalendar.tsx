@@ -135,7 +135,7 @@ export const MonthCalendar: React.FC = () => {
     return (
         <div ref={containerRef} style={{ overflow: 'hidden' }} className="border">
             <MonthHeader />
-            <div className="grid grid-cols-7 px-4 py-4">
+            <div className="grid grid-cols-7">
                 <EmptyCells count={monthInfo.firstDayOfWeek} startIndex={0} />
                 {Array.from({ length: monthInfo.daysInMonth }, (_, index) => {
                     const day = index + 1;
