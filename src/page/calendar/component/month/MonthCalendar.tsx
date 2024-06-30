@@ -19,14 +19,16 @@ export const MonthCalendar: React.FC = () => {
         firstDayOfWeek: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay(),
         lastDayOfWeek: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDay(),
     });
-    
-    const [events, setEvents] = useState<EventInterface[]>([
+
+    const [events, setEvents] = useState<EventInterface[]>([]);
+
+    const tempEvents: EventInterface[] = [
         // event happens through multiple month
         {
             id: 1,
             title: 'Daily Standup',
-            tag: { id: 1, title: 'Meeting', color: 'RED'},
-            hashtags: [{ id: 1, title: '#daily' }, { id: 2, title: '#standup' }],
+            tag: {id: 1, title: 'Meeting', color: 'RED'},
+            hashtags: [{id: 1, title: '#daily'}, {id: 2, title: '#standup'}],
             description: 'Daily team sync-up meeting',
             startDateTime: '2024-06-21T08:00:00',
             dueDateTime: '2024-07-01T08:30:00',
@@ -36,8 +38,8 @@ export const MonthCalendar: React.FC = () => {
         {
             id: 2,
             title: 'Project Planning',
-            tag: { id: 2, title: 'Workshop', color: 'ORANGE' },
-            hashtags: [{ id: 3, title: '#project' }, { id: 4, title: '#planning' }],
+            tag: {id: 2, title: 'Workshop', color: 'ORANGE'},
+            hashtags: [{id: 3, title: '#project'}, {id: 4, title: '#planning'}],
             description: 'Planning session for the new project',
             startDateTime: '2024-05-02T10:00:00',
             dueDateTime: '2024-07-04T11:30:00',
@@ -47,8 +49,8 @@ export const MonthCalendar: React.FC = () => {
         {
             id: 3,
             title: 'Design Review',
-            tag: { id: 3, title: 'Review', color: 'YELLOW' },
-            hashtags: [{ id: 5, title: '#design' }, { id: 6, title: '#review' }],
+            tag: {id: 3, title: 'Review', color: 'YELLOW'},
+            hashtags: [{id: 5, title: '#design'}, {id: 6, title: '#review'}],
             description: 'Review of the new design mockups',
             startDateTime: '2024-07-17T13:00:00',
             dueDateTime: '2024-07-17T14:00:00',
@@ -80,7 +82,7 @@ export const MonthCalendar: React.FC = () => {
         //     dueDateTime: '2024-02-29T19:00:00',
         //     location: 'Local Bar'
         // }
-    ]);
+    ];
 
     const containerRef = useRef<HTMLDivElement>(null);
     const isScrolling = useRef(false);
@@ -134,6 +136,8 @@ export const MonthCalendar: React.FC = () => {
         //     .then((result) => {
         //         setEvents(result);
         //     });
+
+        setEvents(tempEvents);
     }, [currentDate]);
 
     const getEventDays = (event: EventInterface): number[] => {
