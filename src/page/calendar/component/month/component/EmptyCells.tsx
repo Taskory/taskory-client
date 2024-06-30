@@ -1,4 +1,5 @@
 import React from "react";
+import { Cell } from './Cell'; // Adjust the import path as necessary
 
 interface EmptyCellsProps {
     count: number;
@@ -9,7 +10,7 @@ export const EmptyCells: React.FC<EmptyCellsProps> = ({ count, startIndex }) => 
     return (
         <>
             {Array(count).fill(null).map((_, index) => (
-                <div key={startIndex + index} className="border p-2 h-36"></div>
+                <Cell key={startIndex + index} className="bg-gray-50" />
             ))}
         </>
     );

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useCallback, useState } from "react";
 import { MonthHeader } from "./component/MonthHeader";
-import { Day } from "./component/Day";
+import { DayCell } from "./component/DayCell";
 import { useCalendar } from "../../context/CalendarContext";
 import { EventInterface } from "../../../../api/interface/EventInterface";
 import { EmptyCells } from "./component/EmptyCells";
@@ -141,7 +141,7 @@ export const MonthCalendar: React.FC = () => {
                     const day = index + 1;
                     const dayEvents = getEventsForDay(day);
                     return (
-                        <Day key={day} day={day} events={dayEvents} />
+                        <DayCell key={day} day={day} events={dayEvents} />
                     );
                 })}
                 <EmptyCells count={6 - monthInfo.lastDayOfWeek} startIndex={monthInfo.daysInMonth} />
