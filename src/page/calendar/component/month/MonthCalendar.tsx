@@ -4,6 +4,7 @@ import { Day } from "./component/Day";
 import { useCalendar } from "../../context/CalendarContext";
 import { useSpring, animated } from "react-spring";
 import { EventInterface } from "../../../../api/interface/EventInterface";
+import {EmptyCells} from "./component/EmptyCells";
 // import {requestMonthlyEvents} from "../../../../api/CalendarApi";
 
 interface MonthInfoInterface {
@@ -202,20 +203,5 @@ export const MonthCalendar: React.FC = () => {
                 </div>
             </animated.div>
         </div>
-    );
-};
-
-interface EmptyCellsProps {
-    count: number;
-    startIndex: number;
-}
-
-const EmptyCells: React.FC<EmptyCellsProps> = ({ count, startIndex }) => {
-    return (
-        <>
-            {Array(count).fill(null).map((_, index) => (
-                <div key={startIndex + index} className="border p-2 h-36"></div>
-            ))}
-        </>
     );
 };
