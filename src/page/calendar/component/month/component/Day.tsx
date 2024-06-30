@@ -1,5 +1,5 @@
 import React from 'react';
-import {EventInterface} from "../../../../../api/interface/EventInterface";
+import { EventInterface } from "../../../../../api/interface/EventInterface";
 
 interface DayProps {
     day: number;
@@ -8,21 +8,25 @@ interface DayProps {
 
 export const Day: React.FC<DayProps> = ({ day, events }) => {
     return (
-        <div className="border p-2 h-36 overflow-hidden relative">
-            <div className="text-right">{day}</div>
-            <div className="overflow-hidden h-full">
-                {events.slice(0, 4).map((event, idx) => (
-                    <div key={idx} className="flex justify-between whitespace-nowrap overflow-hidden text-ellipsis">
-                        <span className="text-sm text-blue-500">{event.title}</span>
-                        <div className="text-xs text-gray-500">{new Date(event.startDateTime).toLocaleDateString()}</div>
-                    </div>
-                ))}
-            </div>
-            {events.length > 4 && (
-                <div className="absolute bottom-0 left-0 w-full text-center text-xs text-gray-500">
-                    ...
+        <div className="border h-36 overflow-hidden relative flex flex-col">
+            <div className="text-right mr-1 mt-1">{day}</div>
+            {/* reverse */}
+            <div className="overflow-hidden h-full flex flex-col-reverse mb-1">
+                {events.length > 4 && (
+                <div className="bottom-0 left-0 w-full text-center text-xs text-gray-500">
+                    more..
                 </div>
-            )}
+                )}
+                {events.slice(0, 4).map((event, idx) => {
+                    const textColor = `text-${event.tag.color.toLowerCase()}-500`;
+                    return (
+                        <button key={idx}
+                                className="flex justify-between whitespace-nowrap overflow-hidden text-ellipsis">
+                            <span className={`text-sm px-1 font-semibold ${textColor}`}>●{event.title}</span>
+                        </button>
+                    );
+                })}
+            </div>
         </div>
     );
 };
