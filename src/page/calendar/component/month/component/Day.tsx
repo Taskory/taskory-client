@@ -9,7 +9,7 @@ interface DayProps {
 export const Day: React.FC<DayProps> = ({ day, events }) => {
     return (
         <div className="border h-36 overflow-hidden relative flex flex-col">
-            <div className="text-right mr-1 mt-1">{day}</div>
+            <div className="text-left ml-2 mt-1">{day}</div>
             {/* reverse */}
             <div className="overflow-hidden h-full flex flex-col-reverse mb-1">
                 {events.length > 4 && (
