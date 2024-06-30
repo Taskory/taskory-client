@@ -1,11 +1,12 @@
 import React from 'react';
 import {AppRouter} from "./router/AppRouter";
 import {SidebarStateProvider} from "./context/SidebarStateContext";
+import {setAuthCookie} from "./util/CookieUtil";
 
 const App = () => {
-    window.addEventListener("wheel", (event: WheelEvent) => {
-        event.preventDefault();
-    }, { passive: false });
+
+    // set Temp auth cookie
+    setAuthCookie("temp cookie");
     return (
         <SidebarStateProvider>
             <AppRouter/>
