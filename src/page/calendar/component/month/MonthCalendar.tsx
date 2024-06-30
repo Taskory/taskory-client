@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useCallback, useState } from "react";
 import { MonthHeader } from "./component/MonthHeader";
 import { Day } from "./component/Day";
 import { useCalendar } from "../../context/CalendarContext";
-import { useSpring, animated } from "react-spring";
 import { EventInterface } from "../../../../api/interface/EventInterface";
 import {EmptyCells} from "./component/EmptyCells";
 // import {requestMonthlyEvents} from "../../../../api/CalendarApi";
@@ -20,6 +19,7 @@ export const MonthCalendar: React.FC = () => {
         firstDayOfWeek: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay(),
         lastDayOfWeek: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDay(),
     });
+    
     const [events, setEvents] = useState<EventInterface[]>([
         // event happens through multiple month
         {
@@ -83,14 +83,8 @@ export const MonthCalendar: React.FC = () => {
     ]);
 
     const containerRef = useRef<HTMLDivElement>(null);
-    const [fade, setFade] = useState<boolean>(true);
     const isScrolling = useRef(false);
     const debounceTimeout = useRef<number | null>(null);
-
-    const fadeStyles = useSpring({
-        opacity: fade ? 1 : 0,
-        config: { duration: 100 },
-    });
 
     const handleWheel = useCallback((event: WheelEvent) => {
         event.preventDefault();
@@ -101,11 +95,9 @@ export const MonthCalendar: React.FC = () => {
         const direction = event.deltaY > 0 ? 1 : -1;
         const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + direction, 1);
 
-        setFade(false);
 
         setTimeout(() => {
             setCurrentDate(newDate);
-            setFade(true);
             setTimeout(() => {
                 isScrolling.current = false;
             }, 1000);
@@ -193,7 +185,6 @@ export const MonthCalendar: React.FC = () => {
     return (
         <div ref={containerRef} style={{ overflow: 'hidden' }} className="border">
             <MonthHeader />
-            <animated.div style={fadeStyles}>
                 <div className="grid grid-cols-7 px-4 py-4">
                     <EmptyCells count={monthInfo.firstDayOfWeek} startIndex={0} />
                     {eventsByDay.map((dayEvents, index) => (
@@ -201,7 +192,6 @@ export const MonthCalendar: React.FC = () => {
                     ))}
                     <EmptyCells count={6 - monthInfo.lastDayOfWeek} startIndex={monthInfo.daysInMonth} />
                 </div>
-            </animated.div>
         </div>
     );
 };
