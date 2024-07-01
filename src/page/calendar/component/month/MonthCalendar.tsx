@@ -193,7 +193,7 @@ export const MonthCalendar: React.FC = () => {
             style={{ overflow: 'hidden', height: '90%', gridTemplateRows: '20px 1fr'}} 
             className={`border`}>
             <MonthHeader />
-            <div className={`grid grid-cols-7 h-full grid-rows-${weeksOfCurrentMonth}`}>
+            <div  style={{height: '95%'}} className={`grid grid-cols-7 grid-rows-${weeksOfCurrentMonth()}`}>
                 <EmptyCells count={monthInfo.firstDayOfWeek} startIndex={0} />
                 {Array.from({ length: monthInfo.daysInMonth }, (_, index) => {
                     const day = index + 1;

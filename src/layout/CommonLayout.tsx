@@ -34,7 +34,7 @@ export const CommonLayout: React.FC<CommonLayoutProps> = ({ children }) => {
                 className={`flex flex-col flex-grow transition-all duration-300 ${isLeftbarOpened ? 'ml-20' : 'ml-72'}`}>
                 <Header />
                 <div className="flex flex-grow mt-16">
-                    <main className="flex-grow p-4">
+                    <main className="flex-grow m-4">
                         {children}
                     </main>
                     <RightBar />
