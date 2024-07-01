@@ -164,7 +164,6 @@ export const MonthCalendar: React.FC = () => {
         requestMonthlyEvents(currentDate)
             .then((result) => {
                 if (result) {
-                    console.log(result);
                     setEvents(result);
                 }
             });
