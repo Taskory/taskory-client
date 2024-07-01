@@ -178,10 +178,22 @@ export const MonthCalendar: React.FC = () => {
         ));
     };
 
+    const weeksOfCurrentMonth = (): number => {
+        const countOfCells = (
+            monthInfo.firstDayOfWeek
+            + monthInfo.daysInMonth
+            + 6 - monthInfo.lastDayOfWeek
+        );
+        return countOfCells/7;
+    };
+
     return (
-        <div ref={containerRef} style={{ overflow: 'hidden' }} className="border">
+        <div 
+            ref={containerRef} 
+            style={{ overflow: 'hidden', height: '90%', gridTemplateRows: '20px 1fr'}} 
+            className={`border`}>
             <MonthHeader />
-            <div className="grid grid-cols-7">
+            <div className={`grid grid-cols-7 h-full grid-rows-${weeksOfCurrentMonth}`}>
                 <EmptyCells count={monthInfo.firstDayOfWeek} startIndex={0} />
                 {Array.from({ length: monthInfo.daysInMonth }, (_, index) => {
                     const day = index + 1;
