@@ -57,6 +57,66 @@ export const MonthCalendar: React.FC = () => {
             location: 'Conference Room C'
         },
         {
+            id: 3,
+            title: 'Design Review',
+            tag: { id: 3, title: 'Review', color: 'YELLOW' },
+            hashtags: [{ id: 5, title: '#design' }, { id: 6, title: '#review' }],
+            description: 'Review of the new design mockups',
+            startDateTime: '2024-07-17T13:00:00',
+            dueDateTime: '2024-07-17T14:00:00',
+            location: 'Conference Room C'
+        },
+        {
+            id: 3,
+            title: 'Design Review',
+            tag: { id: 3, title: 'Review', color: 'YELLOW' },
+            hashtags: [{ id: 5, title: '#design' }, { id: 6, title: '#review' }],
+            description: 'Review of the new design mockups',
+            startDateTime: '2024-07-17T13:00:00',
+            dueDateTime: '2024-07-17T14:00:00',
+            location: 'Conference Room C'
+        },
+        {
+            id: 3,
+            title: 'Design Review',
+            tag: { id: 3, title: 'Review', color: 'YELLOW' },
+            hashtags: [{ id: 5, title: '#design' }, { id: 6, title: '#review' }],
+            description: 'Review of the new design mockups',
+            startDateTime: '2024-07-17T13:00:00',
+            dueDateTime: '2024-07-17T14:00:00',
+            location: 'Conference Room C'
+        },
+        {
+            id: 3,
+            title: 'Design Review',
+            tag: { id: 3, title: 'Review', color: 'YELLOW' },
+            hashtags: [{ id: 5, title: '#design' }, { id: 6, title: '#review' }],
+            description: 'Review of the new design mockups',
+            startDateTime: '2024-07-17T13:00:00',
+            dueDateTime: '2024-07-17T14:00:00',
+            location: 'Conference Room C'
+        },
+        {
+            id: 3,
+            title: 'Design Review',
+            tag: { id: 3, title: 'Review', color: 'YELLOW' },
+            hashtags: [{ id: 5, title: '#design' }, { id: 6, title: '#review' }],
+            description: 'Review of the new design mockups',
+            startDateTime: '2024-07-17T13:00:00',
+            dueDateTime: '2024-07-17T14:00:00',
+            location: 'Conference Room C'
+        },
+        {
+            id: 3,
+            title: 'Design Review',
+            tag: { id: 3, title: 'Review', color: 'YELLOW' },
+            hashtags: [{ id: 5, title: '#design' }, { id: 6, title: '#review' }],
+            description: 'Review of the new design mockups',
+            startDateTime: '2024-07-17T13:00:00',
+            dueDateTime: '2024-07-17T14:00:00',
+            location: 'Conference Room C'
+        },
+        {
             id: 4,
             title: 'A Project',
             tag: { id: 3, title: 'Review', color: 'YELLOW' },
