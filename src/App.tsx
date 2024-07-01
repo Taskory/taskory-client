@@ -1,15 +1,15 @@
 import React from 'react';
 import {AppRouter} from "./router/AppRouter";
 import {SidebarStateProvider} from "./context/SidebarStateContext";
-import {setAuthCookie} from "./util/CookieUtil";
+import {CalendarViewProvider} from "./context/CalendarViewContext";
 
 const App = () => {
 
-    // set Temp auth cookie
-    setAuthCookie("temp cookie");
     return (
         <SidebarStateProvider>
-            <AppRouter/>
+            <CalendarViewProvider>
+                <AppRouter/>
+            </CalendarViewProvider>
         </SidebarStateProvider>
     );
 }
