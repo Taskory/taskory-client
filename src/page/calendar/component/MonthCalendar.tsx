@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useCallback, useState } from "react";
 import { WeekdaysHeader } from "./component/WeekdaysHeader";
 import { DayCell } from "./component/DayCell";
-import { useCalendar } from "../../context/CalendarContext";
-import { EventInterface } from "../../../../api/interface/EventInterface";
+import { useCalendar } from "../context/CalendarContext";
+import { EventInterface } from "../../../api/interface/EventInterface";
 import { EmptyCells } from "./component/EmptyCells";
-import {requestMonthlyEvents} from "../../../../api/CalendarApi";
+import {requestMonthlyEvents} from "../../../api/CalendarApi";
 
 interface MonthInfoInterface {
     daysInMonth: number;

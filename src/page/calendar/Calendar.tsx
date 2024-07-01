@@ -1,10 +1,10 @@
 import {CommonLayout} from "../../layout/CommonLayout";
 import {CalendarHeader} from "./component/CalendarHeader";
 import React from "react";
-import {MonthCalendar} from "./component/month/MonthCalendar";
-import {DayCalendar} from "./component/day/DayCalendar";
-import {YearCalendar} from "./component/year/YearCalendar";
-import {WeekCalendar} from "./component/week/WeekCalendar";
+import {MonthCalendar} from "./component/MonthCalendar";
+import {DayCalendar} from "./component/DayCalendar";
+import {YearCalendar} from "./component/YearCalendar";
+import {WeekCalendar} from "./component/WeekCalendar";
 import {CalendarProvider} from "./context/CalendarContext";
 import {useCalendarView} from "../../context/CalendarViewContext";
 
