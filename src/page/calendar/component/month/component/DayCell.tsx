@@ -9,7 +9,7 @@ interface DayProps {
 
 export const DayCell: React.FC<DayProps> = ({ day, events }) => {
     return (
-        <Cell>
+        <Cell className='h-full'>
             <div className="text-left ml-2 mt-1">{day}</div>
             <div className="overflow-hidden h-full flex flex-col-reverse mb-1">
                 {events.length > 4 && (

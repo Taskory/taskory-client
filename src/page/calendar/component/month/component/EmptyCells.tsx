@@ -10,7 +10,7 @@ export const EmptyCells: React.FC<EmptyCellsProps> = ({ count, startIndex }) => 
     return (
         <>
             {Array(count).fill(null).map((_, index) => (
-                <Cell key={startIndex + index} className="bg-gray-50" />
+                <Cell key={startIndex + index} className="h-full w-full bg-gray-50" />
             ))}
         </>
     );
