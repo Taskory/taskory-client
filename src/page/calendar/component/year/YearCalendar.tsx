@@ -2,10 +2,10 @@ import React from 'react';
 import {useCalendar} from "../../context/CalendarContext";
 
 interface YearCalendarProps {
-    setView: (view: string) => void;
+    renderMonthView: () => void;
 }
 
-export const YearCalendar: React.FC<YearCalendarProps> = ({ setView }) => {
+export const YearCalendar: React.FC<YearCalendarProps> = ({ renderMonthView }) => {
     const {currentDate, setCurrentDate} = useCalendar();
     const months = [
         '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'
@@ -16,7 +16,7 @@ export const YearCalendar: React.FC<YearCalendarProps> = ({ setView }) => {
     };
 
     const handleMonthClick = (month: string) => {
-        setView('month');
+        renderMonthView();
         setCurrentDate(new Date(currentDate.getFullYear(), parseInt(month), 0));
     };
 

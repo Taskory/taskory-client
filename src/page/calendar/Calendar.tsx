@@ -10,10 +10,14 @@ import {CalendarProvider} from "./context/CalendarContext";
 export const Calendar = () => {
     const [view, setView] = useState('month');
 
+    const renderMonthView = () => {
+        setView('month');
+    }
+
     const renderCalendarView = () => {
         switch(view) {
             case 'year':
-                return <YearCalendar setView={setView} />;
+                return <YearCalendar renderMonthView={renderMonthView} />;
             case 'month':
                 return <MonthCalendar />;
             case 'week':
