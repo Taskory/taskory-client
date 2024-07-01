@@ -191,7 +191,7 @@ export const MonthCalendar: React.FC = () => {
         <div 
             ref={containerRef} 
             style={{ overflow: 'hidden', height: '90%', gridTemplateRows: '20px 1fr'}} 
-            className={`border`}>
+            className="border sm:h-2/3">
             <MonthHeader />
             <div  style={{height: '95%'}} className={`grid grid-cols-7 grid-rows-${weeksOfCurrentMonth()}`}>
                 <EmptyCells count={monthInfo.firstDayOfWeek} startIndex={0} />

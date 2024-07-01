@@ -24,9 +24,9 @@ export const DayCell: React.FC<DayProps> = ({ day, events }) => {
     }, []);
 
     useEffect(() => {
-        if (windowSize <= 880) {
+        if (windowSize <= 950) {
             setMaxItemLength(1);
-        } else if (windowSize > 880 && windowSize <= 1030) {
+        } else if (windowSize > 950 && windowSize <= 1150) {
             setMaxItemLength(2);
         } else {
             setMaxItemLength(4);
