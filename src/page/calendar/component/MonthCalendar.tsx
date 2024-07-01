@@ -3,8 +3,8 @@ import { WeekdaysHeader } from "./component/WeekdaysHeader";
 import { DayCell } from "./component/DayCell";
 import { useCalendar } from "../context/CalendarContext";
 import { EventInterface } from "../../../api/interface/EventInterface";
-import { EmptyCells } from "./component/EmptyCells";
 import {requestMonthlyEvents} from "../../../api/CalendarApi";
+import {Cell} from "./component/Cell";
 
 interface MonthInfoInterface {
     daysInMonth: number;
@@ -84,22 +84,38 @@ export const MonthCalendar: React.FC = () => {
     };
 
     return (
-        <div 
-            ref={containerRef} 
-            style={{ overflow: 'hidden', height: '90%', gridTemplateRows: '20px 1fr'}} 
+        <div
+            ref={containerRef}
+            style={{overflow: 'hidden', height: '90%', gridTemplateRows: '20px 1fr'}}
             className="border sm:h-2/3">
             <WeekdaysHeader/>
-            <div  style={{height: '95%'}} className={`grid grid-cols-7 grid-rows-${weeksOfCurrentMonth()}`}>
-                <EmptyCells count={monthInfo.firstDayOfWeek} startIndex={0} />
-                {Array.from({ length: monthInfo.daysInMonth }, (_, index) => {
-                    const day = index + 1;
-                    const dayEvents = getEventsForDay(day);
-                    return (
-                        <DayCell key={day} day={day} events={dayEvents}/>
-                    );
-                })}
-                <EmptyCells count={6 - monthInfo.lastDayOfWeek} startIndex={monthInfo.daysInMonth}/>
+            <div style={{height: '95%'}} className={`grid grid-cols-7 grid-rows-${weeksOfCurrentMonth()}`}>
+                {renderEmptyCells(monthInfo.firstDayOfWeek, 0)}
+                {renderDayCells(monthInfo, getEventsForDay)}
+                {renderEmptyCells(monthInfo.lastDayOfWeek, monthInfo.daysInMonth)}
             </div>
         </div>
+    );
+};
+
+function renderDayCells(monthInfo: MonthInfoInterface, getEventsForDay: (day: number) => EventInterface[]) {
+    return <>
+        {Array.from({length: monthInfo.daysInMonth}, (_, index) => {
+            const day = index + 1;
+            const dayEvents = getEventsForDay(day);
+            return (
+                <DayCell key={day} day={day} events={dayEvents}/>
+            );
+        })}
+    </>;
+}
+
+function renderEmptyCells(count: number, startIndex: number) {
+    return (
+        <>
+            {Array(count).fill(null).map((_, index) => (
+                <Cell key={startIndex + index} className="h-full w-full bg-gray-50" />
+            ))}
+        </>
     );
 };
