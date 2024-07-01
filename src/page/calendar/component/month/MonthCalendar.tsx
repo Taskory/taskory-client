@@ -30,8 +30,8 @@ export const MonthCalendar: React.FC = () => {
             tag: { id: 1, title: 'Meeting', color: 'RED' },
             hashtags: [{ id: 1, title: '#daily' }, { id: 2, title: '#standup' }],
             description: 'Daily team sync-up meeting',
-            startDateTime: '2024-06-21T08:00:00',
-            dueDateTime: '2024-07-01T08:30:00',
+            startDateTime: '2024-07-21T08:00:00',
+            dueDateTime: '2024-08-01T08:30:00',
             location: 'Conference Room A'
         },
         // event happens through multiple months
@@ -41,8 +41,8 @@ export const MonthCalendar: React.FC = () => {
             tag: { id: 2, title: 'Workshop', color: 'ORANGE' },
             hashtags: [{ id: 3, title: '#project' }, { id: 4, title: '#planning' }],
             description: 'Planning session for the new project',
-            startDateTime: '2024-05-02T10:00:00',
-            dueDateTime: '2024-07-04T11:30:00',
+            startDateTime: '2024-06-02T10:00:00',
+            dueDateTime: '2024-08-04T11:30:00',
             location: 'Conference Room B'
         },
         // event for a single day
@@ -52,8 +52,8 @@ export const MonthCalendar: React.FC = () => {
             tag: { id: 3, title: 'Review', color: 'YELLOW' },
             hashtags: [{ id: 5, title: '#design' }, { id: 6, title: '#review' }],
             description: 'Review of the new design mockups',
-            startDateTime: '2024-06-17T13:00:00',
-            dueDateTime: '2024-06-17T14:00:00',
+            startDateTime: '2024-07-17T13:00:00',
+            dueDateTime: '2024-07-17T14:00:00',
             location: 'Conference Room C'
         },
         {
@@ -62,41 +62,27 @@ export const MonthCalendar: React.FC = () => {
             tag: { id: 3, title: 'Review', color: 'YELLOW' },
             hashtags: [{ id: 5, title: '#design' }, { id: 6, title: '#review' }],
             description: 'Review of the new design mockups',
-            startDateTime: '2024-06-12T13:00:00',
-            dueDateTime: '2024-06-16T14:00:00',
+            startDateTime: '2024-07-12T13:00:00',
+            dueDateTime: '2024-07-16T14:00:00',
             location: 'Conference Room C'
         }
     ];
 
     const containerRef = useRef<HTMLDivElement>(null);
-    const isScrolling = useRef(false);
-    const debounceTimeout = useRef<number | null>(null);
+    const [isScrolling, setIsScrolling] = useState(false);
 
     const handleWheel = useCallback((event: WheelEvent) => {
         event.preventDefault();
-
-        if (isScrolling.current) return;
-
-        isScrolling.current = true;
+        if (isScrolling) return;
+        setIsScrolling(true);
         const direction = event.deltaY > 0 ? 1 : -1;
         const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + direction, 1);
 
         setTimeout(() => {
             setCurrentDate(newDate);
-            setTimeout(() => {
-                isScrolling.current = false;
-            }, 1000);
-        }, 10);
-
-        if (debounceTimeout.current) {
-            clearTimeout(debounceTimeout.current);
-        }
-
-        debounceTimeout.current = window.setTimeout(() => {
-            isScrolling.current = false;
-            debounceTimeout.current = null;
+            setIsScrolling(false);
         }, 300);
-    }, [currentDate, setCurrentDate]);
+    }, [currentDate, setCurrentDate, isScrolling]);
 
     /*
     * UseEffects
