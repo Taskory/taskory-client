@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useCallback, useState } from "react";
-import { MonthHeader } from "./component/MonthHeader";
+import { WeekdaysHeader } from "./component/WeekdaysHeader";
 import { DayCell } from "./component/DayCell";
 import { useCalendar } from "../../context/CalendarContext";
 import { EventInterface } from "../../../../api/interface/EventInterface";
@@ -22,111 +22,6 @@ export const MonthCalendar: React.FC = () => {
 
     const [events, setEvents] = useState<EventInterface[]>([]);
 
-    const tempEvents: EventInterface[] = [
-        // event happens through multiple months
-        {
-            id: 1,
-            title: 'Daily Standup',
-            tag: { id: 1, title: 'Meeting', color: 'RED' },
-            hashtags: [{ id: 1, title: '#daily' }, { id: 2, title: '#standup' }],
-            description: 'Daily team sync-up meeting',
-            startDateTime: '2024-07-21T08:00:00',
-            dueDateTime: '2024-08-01T08:30:00',
-            location: 'Conference Room A'
-        },
-        // event happens through multiple months
-        {
-            id: 2,
-            title: 'Project Planning',
-            tag: { id: 2, title: 'Workshop', color: 'ORANGE' },
-            hashtags: [{ id: 3, title: '#project' }, { id: 4, title: '#planning' }],
-            description: 'Planning session for the new project',
-            startDateTime: '2024-06-02T10:00:00',
-            dueDateTime: '2024-08-04T11:30:00',
-            location: 'Conference Room B'
-        },
-        // event for a single day
-        {
-            id: 3,
-            title: 'Design Review',
-            tag: { id: 3, title: 'Review', color: 'YELLOW' },
-            hashtags: [{ id: 5, title: '#design' }, { id: 6, title: '#review' }],
-            description: 'Review of the new design mockups',
-            startDateTime: '2024-07-17T13:00:00',
-            dueDateTime: '2024-07-17T14:00:00',
-            location: 'Conference Room C'
-        },
-        {
-            id: 3,
-            title: 'Design Review',
-            tag: { id: 3, title: 'Review', color: 'YELLOW' },
-            hashtags: [{ id: 5, title: '#design' }, { id: 6, title: '#review' }],
-            description: 'Review of the new design mockups',
-            startDateTime: '2024-07-17T13:00:00',
-            dueDateTime: '2024-07-17T14:00:00',
-            location: 'Conference Room C'
-        },
-        {
-            id: 3,
-            title: 'Design Review',
-            tag: { id: 3, title: 'Review', color: 'YELLOW' },
-            hashtags: [{ id: 5, title: '#design' }, { id: 6, title: '#review' }],
-            description: 'Review of the new design mockups',
-            startDateTime: '2024-07-17T13:00:00',
-            dueDateTime: '2024-07-17T14:00:00',
-            location: 'Conference Room C'
-        },
-        {
-            id: 3,
-            title: 'Design Review',
-            tag: { id: 3, title: 'Review', color: 'YELLOW' },
-            hashtags: [{ id: 5, title: '#design' }, { id: 6, title: '#review' }],
-            description: 'Review of the new design mockups',
-            startDateTime: '2024-07-17T13:00:00',
-            dueDateTime: '2024-07-17T14:00:00',
-            location: 'Conference Room C'
-        },
-        {
-            id: 3,
-            title: 'Design Review',
-            tag: { id: 3, title: 'Review', color: 'YELLOW' },
-            hashtags: [{ id: 5, title: '#design' }, { id: 6, title: '#review' }],
-            description: 'Review of the new design mockups',
-            startDateTime: '2024-07-17T13:00:00',
-            dueDateTime: '2024-07-17T14:00:00',
-            location: 'Conference Room C'
-        },
-        {
-            id: 3,
-            title: 'Design Review',
-            tag: { id: 3, title: 'Review', color: 'YELLOW' },
-            hashtags: [{ id: 5, title: '#design' }, { id: 6, title: '#review' }],
-            description: 'Review of the new design mockups',
-            startDateTime: '2024-07-17T13:00:00',
-            dueDateTime: '2024-07-17T14:00:00',
-            location: 'Conference Room C'
-        },
-        {
-            id: 3,
-            title: 'Design Review',
-            tag: { id: 3, title: 'Review', color: 'YELLOW' },
-            hashtags: [{ id: 5, title: '#design' }, { id: 6, title: '#review' }],
-            description: 'Review of the new design mockups',
-            startDateTime: '2024-07-17T13:00:00',
-            dueDateTime: '2024-07-17T14:00:00',
-            location: 'Conference Room C'
-        },
-        {
-            id: 4,
-            title: 'A Project',
-            tag: { id: 3, title: 'Review', color: 'YELLOW' },
-            hashtags: [{ id: 5, title: '#design' }, { id: 6, title: '#review' }],
-            description: 'Review of the new design mockups',
-            startDateTime: '2024-07-12T13:00:00',
-            dueDateTime: '2024-07-16T14:00:00',
-            location: 'Conference Room C'
-        }
-    ];
 
     const containerRef = useRef<HTMLDivElement>(null);
     const [isScrolling, setIsScrolling] = useState(false);
@@ -181,7 +76,7 @@ export const MonthCalendar: React.FC = () => {
 
     return (
         <div ref={containerRef} style={{ overflow: 'hidden' }} className="border">
-            <MonthHeader />
+            <WeekdaysHeader />
             <div className="grid grid-cols-7">
                 <EmptyCells count={monthInfo.firstDayOfWeek} startIndex={0} />
                 {Array.from({ length: monthInfo.daysInMonth }, (_, index) => {

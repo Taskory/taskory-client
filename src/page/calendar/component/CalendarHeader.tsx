@@ -2,12 +2,11 @@ import React, {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {useCalendar} from "../context/CalendarContext";
 import monthNames from "../../../constants/calendar.json";
+import {useCalendarView} from "../../../context/CalendarViewContext";
 
-interface CalendarHeaderProps {
-    setView: (view: string) => void;
-}
 
-export const CalendarHeader: React.FC<CalendarHeaderProps> = ({ setView }) => {
+export const CalendarHeader: React.FC = () => {
+    const {view, setView} = useCalendarView();
     const navigate = useNavigate();
     const {currentDate} = useCalendar();
     const [currentMonthName, setCurrentMonthName] = useState(monthNames.monthNames[currentDate.getMonth()]);
@@ -27,6 +26,7 @@ export const CalendarHeader: React.FC<CalendarHeaderProps> = ({ setView }) => {
                 <select
                     className="btn"
                     onChange={(e) => setView(e.target.value)}
+                    value={view}
                 >
                     <option value="year">Year</option>
                     <option value="month">Month</option>
