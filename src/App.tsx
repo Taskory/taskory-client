@@ -6,7 +6,7 @@ import {setAuthCookie} from "./util/CookieUtil";
 const App = () => {
 
     // set Temp auth cookie
-    setAuthCookie("temp cookie");
+    // setAuthCookie("temp cookie");
     return (
         <SidebarStateProvider>
             <AppRouter/>

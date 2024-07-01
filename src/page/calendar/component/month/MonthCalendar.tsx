@@ -4,7 +4,7 @@ import { DayCell } from "./component/DayCell";
 import { useCalendar } from "../../context/CalendarContext";
 import { EventInterface } from "../../../../api/interface/EventInterface";
 import { EmptyCells } from "./component/EmptyCells";
-// import { requestMonthlyEvents } from "../../../../api/CalendarApi";
+import {requestMonthlyEvents} from "../../../../api/CalendarApi";
 
 interface MonthInfoInterface {
     daysInMonth: number;
@@ -161,12 +161,14 @@ export const MonthCalendar: React.FC = () => {
             firstDayOfWeek: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay(),
             lastDayOfWeek: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDay(),
         })
-        // requestMonthlyEvents(currentDate.getMonth().toString())
-        //     .then((result) => {
-        //         setEvents(result);
-        //     });
+        requestMonthlyEvents(currentDate)
+            .then((result) => {
+                if (result) {
+                    console.log(result);
+                    setEvents(result);
+                }
+            });
 
-        setEvents(tempEvents);
     }, [currentDate]);
 
     const getEventsForDay = (day: number): EventInterface[] => {
