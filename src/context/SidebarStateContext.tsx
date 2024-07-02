@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, {createContext, useContext, useState, ReactNode, useEffect} from 'react';
 
 interface SidebarStateContextProps {
     isLeftbarOpened: boolean;
@@ -14,8 +14,12 @@ interface SidebarStateProviderProps {
 }
 
 export const SidebarStateProvider: React.FC<SidebarStateProviderProps> = ({ children }) => {
-    const [isLeftbarOpened, setLeftbarOpened] = useState(false);
-    const [isRightbarOpened, setRightbarOpened] = useState(false);
+    const leftbarOpenedKey = "leftbar-opened";
+    const leftbarOpened = localStorage.getItem(leftbarOpenedKey) || 'false';
+    const [isLeftbarOpened, setLeftbarOpened] = useState(JSON.parse(leftbarOpened));
+    const rightbarOpenedKey = "rightbar-opened";
+    const rightbarOpened = localStorage.getItem(rightbarOpenedKey) || 'false';
+    const [isRightbarOpened, setRightbarOpened] = useState(JSON.parse(rightbarOpened));
 
     const toggleLeftbar = () => {
         setLeftbarOpened(!isLeftbarOpened);
@@ -24,6 +28,14 @@ export const SidebarStateProvider: React.FC<SidebarStateProviderProps> = ({ chil
     const toggleRightbar = () => {
         setRightbarOpened(!isRightbarOpened);
     };
+
+    useEffect(() => {
+        localStorage.setItem(leftbarOpenedKey, JSON.stringify(isLeftbarOpened));
+    }, [isLeftbarOpened]);
+
+    useEffect(() => {
+        localStorage.setItem(rightbarOpenedKey, JSON.stringify(isRightbarOpened));
+    }, [isRightbarOpened]);
 
     return (
         <SidebarStateContext.Provider value={{ isLeftbarOpened, isRightbarOpened, toggleLeftbar, toggleRightbar }}>
