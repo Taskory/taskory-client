@@ -83,8 +83,6 @@ export const MonthCalendar: React.FC = () => {
         return countOfCells/7;
     };
 
-    console.log(weeksOfCurrentMonth());
-
     return (
         <div
             ref={containerRef}
