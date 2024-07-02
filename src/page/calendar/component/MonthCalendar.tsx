@@ -83,6 +83,8 @@ export const MonthCalendar: React.FC = () => {
         return countOfCells/7;
     };
 
+    console.log(weeksOfCurrentMonth());
+
     return (
         <div
             ref={containerRef}
@@ -92,7 +94,7 @@ export const MonthCalendar: React.FC = () => {
             <div style={{height: '95%'}} className={`grid grid-cols-7 grid-rows-${weeksOfCurrentMonth()}`}>
                 {renderEmptyCells(monthInfo.firstDayOfWeek, 0)}
                 {renderDayCells(monthInfo, getEventsForDay)}
-                {renderEmptyCells(monthInfo.lastDayOfWeek, monthInfo.daysInMonth)}
+                {renderEmptyCells(6 - monthInfo.lastDayOfWeek, monthInfo.daysInMonth)}
             </div>
         </div>
     );
