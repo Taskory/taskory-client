@@ -15,7 +15,7 @@ interface WeekInfoInterface {
 
 export const WeekCalendar: React.FC = () => {
     const { currentDate, setCurrentDate } = useCalendar();
-    const [monthInfo, setMonthInfo] = useState<WeekInfoInterface>({
+    const [weekInfo, setWeekInfo] = useState<WeekInfoInterface>({
         daysInMonth: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate(),
         firstDayOfWeek: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay(),
         lastDayOfWeek: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDay(),
@@ -34,10 +34,10 @@ export const WeekCalendar: React.FC = () => {
         const direction = event.deltaY > 0 ? 1 : -1;
         const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + direction, 1);
 
+        setCurrentDate(newDate);
         setTimeout(() => {
-            setCurrentDate(newDate);
             setIsScrolling(false);
-        }, 300);
+        }, 3000);
     }, [currentDate, setCurrentDate, isScrolling]);
 
     /*
@@ -52,7 +52,7 @@ export const WeekCalendar: React.FC = () => {
     }, [handleWheel]);
 
     useEffect(() => {
-        setMonthInfo({
+        setWeekInfo({
             daysInMonth: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate(),
             firstDayOfWeek: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay(),
             lastDayOfWeek: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDay(),
