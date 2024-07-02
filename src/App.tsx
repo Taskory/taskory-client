@@ -1,7 +1,7 @@
 import React from 'react';
 import {AppRouter} from "./router/AppRouter";
 import {SidebarStateProvider} from "./context/SidebarStateContext";
-import {CalendarViewProvider} from "./context/CalendarViewContext";
+import {CalendarViewProvider} from "./page/calendar/context/CalendarViewContext";
 
 const App = () => {
 

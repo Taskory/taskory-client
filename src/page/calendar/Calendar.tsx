@@ -6,7 +6,7 @@ import {DayCalendar} from "./component/DayCalendar";
 import {YearCalendar} from "./component/YearCalendar";
 import {WeekCalendar} from "./component/WeekCalendar";
 import {CalendarProvider} from "./context/CalendarContext";
-import {useCalendarView} from "../../context/CalendarViewContext";
+import {useCalendarView} from "./context/CalendarViewContext";
 
 export const Calendar = () => {
     const {view} = useCalendarView();

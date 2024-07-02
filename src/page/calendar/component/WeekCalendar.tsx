@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useCallback, useState, useMemo } from "react"
 import { WeekdaysHeader } from "./component/WeekdaysHeader";
 import { useCalendar } from "../context/CalendarContext";
 import { EventInterface } from "../../../api/interface/EventInterface";
-import { requestMonthlyEvents } from "../../../api/CalendarApi";
+import { requestMonthlyEvents } from "../../../api/EventApi";
 import { DayLine } from "./component/DayLine";
 import {DayCell} from "./component/DayCell";
 

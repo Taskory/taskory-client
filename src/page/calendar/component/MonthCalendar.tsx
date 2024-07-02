@@ -3,7 +3,7 @@ import { WeekdaysHeader } from "./component/WeekdaysHeader";
 import { DayCell } from "./component/DayCell";
 import { useCalendar } from "../context/CalendarContext";
 import { EventInterface } from "../../../api/interface/EventInterface";
-import {requestMonthlyEvents} from "../../../api/CalendarApi";
+import {requestMonthlyEvents} from "../../../api/EventApi";
 import {Cell} from "./component/Cell";
 
 interface MonthInfoInterface {
