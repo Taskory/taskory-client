@@ -10,8 +10,7 @@ module.exports = {
     require('daisyui'),
   ],
   safelist: [
-    {
-      pattern: /text-(red|green|blue|yellow|orange|purple|pink)-500/,
-    },
+    {pattern: /text-(red|green|blue|yellow|orange|purple|pink)-500/},
+    {pattern: /bg-(red|green|blue|yellow|orange|purple|pink)-200/}
   ],
 }
