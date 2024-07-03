@@ -28,16 +28,16 @@ export const CommonLayout: React.FC<CommonLayoutProps> = ({ children }) => {
     }, []);
 
     return (
-        <div className="flex h-full">
-            <LeftBar />
+        <div className="flex h-screen w-screen overflow-hidden">
+            <LeftBar/>
             <div
-                className={`flex flex-col flex-grow transition-all duration-300 ${isLeftbarOpened ? 'ml-24' : 'ml-72'}`}>
-                <Header />
+                className={`w-[100%] h-[100%] flex flex-col flex-grow transition-all duration-300 ${isLeftbarOpened ? 'ml-24' : 'ml-72'}`}>
+                <Header/>
                 <div className="flex flex-grow mt-16">
-                    <main className="flex-grow m-4">
+                    <main className="flex-grow p-4">
                         {children}
                     </main>
-                    <RightBar />
+                    <RightBar/>
                 </div>
             </div>
         </div>

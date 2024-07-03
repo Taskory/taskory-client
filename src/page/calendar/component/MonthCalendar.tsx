@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useCallback, useState } from "react";
-import { WeekdaysHeader } from "./component/WeekdaysHeader";
+import { MonthCalendarHeader } from "./component/MonthCalendarHeader";
 import { DayCell } from "./component/DayCell";
 import { useCalendar } from "../context/CalendarContext";
 import { EventInterface } from "../../../api/interface/EventInterface";
@@ -119,8 +119,8 @@ export const MonthCalendar: React.FC = () => {
             ref={containerRef}
             style={{overflow: 'hidden', height: '90%', gridTemplateRows: '20px 1fr'}}
             className="border sm:h-2/3">
-            <WeekdaysHeader/>
-            <div style={{height: '95%'}} className={`grid grid-cols-7 grid-rows-${weeksOfCurrentMonth()}`}>
+            <MonthCalendarHeader/>
+            <div style={{height: '100%'}} className={`grid grid-cols-7 grid-rows-${weeksOfCurrentMonth()}`}>
                 {renderEmptyCells(monthInfo.firstDayOfWeek, 0)}
                 {renderDayCells()}
                 {renderEmptyCells(6 - monthInfo.lastDayOfWeek, monthInfo.daysInMonth)}
