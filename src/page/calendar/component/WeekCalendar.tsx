@@ -4,23 +4,22 @@ import { useCalendar } from "../context/CalendarContext";
 import { EventInterface } from "../../../api/interface/EventInterface";
 import { requestMonthlyEvents } from "../../../api/EventApi";
 import { DayLine } from "./component/DayLine";
-import {DayCell} from "./component/DayCell";
 
 interface WeekInfoInterface {
-    startSunday: number;
-    endSaturday: number;
+    startSunday: Date;
+    endSaturday: Date;
 }
 
 export const WeekCalendar: React.FC = () => {
     const { currentDate, setCurrentDate } = useCalendar();
-    const [weekInfo, setWeekInfo] = useState<WeekInfoInterface>({
-        startSunday: currentDate.getDate() - currentDate.getDay(),
-        endSaturday: currentDate.getDate() - currentDate.getDay() + 6
-    });
-
     const [events, setEvents] = useState<EventInterface[]>([]);
     const containerRef = useRef<HTMLDivElement>(null);
     const [isScrolling, setIsScrolling] = useState(false);
+
+    const weekInfo: WeekInfoInterface = useMemo(() => ({
+        startSunday: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - currentDate.getDay()),
+        endSaturday: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - currentDate.getDay() + 6)
+    }), [currentDate]);
 
     const handleWheel = useCallback((event: WheelEvent) => {
         event.preventDefault();
@@ -44,10 +43,6 @@ export const WeekCalendar: React.FC = () => {
     }, [handleWheel]);
 
     useEffect(() => {
-        setWeekInfo({
-            startSunday: currentDate.getDate() - currentDate.getDay(),
-            endSaturday: currentDate.getDate() - currentDate.getDay() + 6
-        });
         requestMonthlyEvents(currentDate)
             .then((result) => {
                 if (result) {
@@ -56,29 +51,36 @@ export const WeekCalendar: React.FC = () => {
             });
     }, [currentDate]);
 
-    const getEventsForDay = useCallback((day: number): EventInterface[] => {
-        const startOfDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), day).toISOString();
-        const endOfDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), day + 1).toISOString();
+    const getEventsForDay = useCallback((date: Date): EventInterface[] => {
+        const startOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate()).toISOString();
+        const endOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1).toISOString();
 
         return events.filter(event => (
             (event.startDateTime <= endOfDay && event.dueDateTime >= startOfDay)
         ));
-    }, [currentDate, events]);
+    }, [events]);
+
+    function renderDayLines() {
+        return <>
+            {Array.from({length: 7}, (_, index) => {
+                const date = new Date(weekInfo.startSunday.getFullYear(), weekInfo.startSunday.getMonth(), weekInfo.startSunday.getDate() + index);
+                const day = date.getDate();
+                const dayEvents = getEventsForDay(date);
+                return (
+                    <DayLine key={day} day={day} events={dayEvents}/>
+                );
+            })}
+        </>;
+    }
 
     return (
         <div
             ref={containerRef}
-            style={{ overflow: 'hidden', height: '90%', gridTemplateRows: '20px 1fr' }}
+            style={{overflow: 'hidden', height: '90%', gridTemplateRows: '20px 1fr'}}
             className="border sm:h-2/3">
-            <WeekdaysHeader />
-            <div style={{ height: '95%' }} className={`grid grid-cols-7`}>
-                {/*{Array.from({length: 7}, (_, index) => {*/}
-                {/*    const day = weekInfo.startSunday + 1;*/}
-                {/*    const dayEvents = getEventsForDay(day);*/}
-                {/*    return (*/}
-                {/*        <DayLine key={day} day={day} events={dayEvents}/>*/}
-                {/*    );*/}
-                {/*})}*/}
+            <WeekdaysHeader/>
+            <div style={{height: '95%'}} className={`grid grid-cols-7`}>
+                {renderDayLines()}
             </div>
         </div>
     );
