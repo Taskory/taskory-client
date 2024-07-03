@@ -88,7 +88,7 @@ export const MonthCalendar: React.FC = () => {
     /*
     * rendering function
     * */
-    function renderDayCells( getEventsForDay: (date: Date) => EventInterface[]) {
+    function renderDayCells() {
         const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
         return <>
             {Array.from({length: daysInMonth}, (_, index) => {
@@ -122,7 +122,7 @@ export const MonthCalendar: React.FC = () => {
             <WeekdaysHeader/>
             <div style={{height: '95%'}} className={`grid grid-cols-7 grid-rows-${weeksOfCurrentMonth()}`}>
                 {renderEmptyCells(monthInfo.firstDayOfWeek, 0)}
-                {renderDayCells(getEventsForDay)}
+                {renderDayCells()}
                 {renderEmptyCells(6 - monthInfo.lastDayOfWeek, monthInfo.daysInMonth)}
             </div>
         </div>
