@@ -147,14 +147,7 @@ export const WeekCalendar: React.FC = () => {
 
     function renderDayLines() {
         return (
-            <div className="grid grid-cols-8 w-full h-full flex-grow">
-                <div className="grid grid-rows-24">
-                    {Array.from({ length: 24 }, (_, hour) => (
-                        <div key={hour} className="border">
-                            <div className="text-xs p-1">{hour}:00</div>
-                        </div>
-                    ))}
-                </div>
+            <div className="grid grid-cols-7 w-full h-full flex-grow">
                 {Array.from({ length: 7 }, (_, index) => {
                     const date = new Date(weekInfo.startSunday.getFullYear(), weekInfo.startSunday.getMonth(), weekInfo.startSunday.getDate() + index);
                     const dayEvents = getEventsForDay(date);
@@ -169,9 +162,23 @@ export const WeekCalendar: React.FC = () => {
     }
 
     return (
-        <div ref={containerRef} className="border-2 w-full h-[90%] overflow-hidden flex flex-col">
-            <WeekCalendarHeader startDate={weekInfo.startSunday} />
-            {renderDayLines()}
+        <div ref={containerRef} className="border w-full h-full overflow-y-scroll flex flex-col">
+            <div className="flex">
+                <div className="w-20 bg-gray-100" />
+                <div className="w-full">
+                    <WeekCalendarHeader startDate={weekInfo.startSunday} />
+                </div>
+            </div>
+            <div className="flex">
+                <div className="grid grid-rows-24 w-20">
+                    {Array.from({length: 24}, (_, hour) => (
+                        <div key={hour} className="border">
+                            <div className="text-xs p-1">{hour}:00</div>
+                        </div>
+                    ))}
+                </div>
+                {renderDayLines()}
+            </div>
         </div>
     );
 };
