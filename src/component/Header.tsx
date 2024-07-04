@@ -1,11 +1,12 @@
 import React from 'react';
 import { existAuthCookie, removeAuthCookie } from "../util/CookieUtil";
 import { useNavigate } from "react-router-dom";
-import {useSidebarStateContext} from "../context/SidebarStateContext";
+import { useSidebarStateContext } from "../context/SidebarStateContext";
 
 export const Header: React.FC = () => {
-    const {isLeftbarOpened} = useSidebarStateContext();
+    const { isLeftbarOpened } = useSidebarStateContext();
     const navigate = useNavigate();
+
     const handleLogout = () => {
         if (existAuthCookie()) {
             removeAuthCookie();
@@ -29,19 +30,21 @@ export const Header: React.FC = () => {
                         type="text"
                         placeholder="Search"
                         className="px-2 py-1 border-none outline-none flex-grow"
+                        aria-label="Search"
                     />
                     <button
                         className="btn btn-circle btn-sm bg-base-100 border-none"
+                        aria-label="Search Button"
                     >
                         <img src="/asset/img/header/search.svg" alt="search" className="h-6 w-6" />
                     </button>
                 </div>
             </div>
             <div className="flex items-center space-x-4 mr-10">
-                <button className="btn btn-circle bg-white">
+                <button className="btn btn-circle bg-white" aria-label="Notifications">
                     <img src="/asset/img/header/notification.svg" alt="notification" className="h-8 w-8"/>
                 </button>
-                <button className="btn bg-white">
+                <button className="btn bg-white" aria-label="Profile">
                     <img
                         src="/asset/img/Logo.png"
                         alt="Logo"
