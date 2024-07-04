@@ -13,6 +13,7 @@ export const WeekCalendar: React.FC = () => {
     const { currentDate } = useCalendar();
     const [events, setEvents] = useState<EventInterface[]>([]);
     const containerRef = useRef<HTMLDivElement>(null);
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
 
     const weekInfo: WeekInfoInterface = useMemo(() => ({
         startSunday: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - currentDate.getDay()),
@@ -162,20 +163,20 @@ export const WeekCalendar: React.FC = () => {
     }
 
     return (
-        <div ref={containerRef} className="border w-full h-full overflow-y-scroll flex flex-col">
-            <div className="flex">
-                <div className="w-20 bg-gray-100" />
+        <div ref={containerRef} className="h-screen">
+            <div className="flex border">
+                <div className="w-20 bg-gray-100"/>
                 <div className="w-full">
-                    <WeekCalendarHeader startDate={weekInfo.startSunday} />
+                    <WeekCalendarHeader startDate={weekInfo.startSunday}/>
                 </div>
             </div>
-            <div className="flex">
-                <div className="grid grid-rows-24 w-20">
-                    {Array.from({length: 24}, (_, hour) => (
-                        <div key={hour} className="border">
-                            <div className="text-xs p-1">{hour}:00</div>
-                        </div>
-                    ))}
+            <div ref={scrollContainerRef} className="flex overflow-y-auto h-full">
+                <div className="grid w-20 h-full">
+                    <div className="grid grid-rows-24">
+                        {Array.from({length: 24}, (_, hour) => (
+                            <div key={hour} className="border text-xs h-20">{hour}:00</div>
+                        ))}
+                    </div>
                 </div>
                 {renderDayLines()}
             </div>
