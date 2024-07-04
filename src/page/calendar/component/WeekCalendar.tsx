@@ -10,42 +10,19 @@ interface WeekInfoInterface {
 }
 
 export const WeekCalendar: React.FC = () => {
-    const { currentDate, setCurrentDate } = useCalendar();
+    const { currentDate } = useCalendar();
     const [events, setEvents] = useState<EventInterface[]>([]);
     const containerRef = useRef<HTMLDivElement>(null);
-    const [isScrolling, setIsScrolling] = useState(false);
 
     const weekInfo: WeekInfoInterface = useMemo(() => ({
         startSunday: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - currentDate.getDay()),
         endSaturday: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - currentDate.getDay() + 6)
     }), [currentDate]);
 
-    const handleWheel = useCallback((event: WheelEvent) => {
-        event.preventDefault();
-        if (isScrolling) return;
-        setIsScrolling(true);
-        const direction = event.deltaY > 0 ? 7 : -7;
-        const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + direction);
-
-        setCurrentDate(newDate);
-        setTimeout(() => {
-            setIsScrolling(false);
-        }, 300);
-    }, [currentDate, setCurrentDate, isScrolling]);
-
-    useEffect(() => {
-        const container = containerRef.current;
-        if (container) {
-            container.addEventListener("wheel", handleWheel, { passive: false });
-            return () => container.removeEventListener("wheel", handleWheel);
-        }
-    }, [handleWheel]);
-
     useEffect(() => {
         // Dummy data
-        const today = new Date();
-        const startOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay());
-        const endOfWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() + (6 - today.getDay()));
+        const startOfWeek = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - currentDate.getDay());
+        const endOfWeek = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + (6 - currentDate.getDay()));
         const dummyEvents: EventInterface[] = [
             {
                 id: 1,
