@@ -14,29 +14,26 @@ const LeftBarLink: React.FC<LeftBarLinkProps> = ({ opened, name }) => {
                 <img
                     src={`/asset/img/leftbar/${name}.svg`}
                     alt={name}
-                    className="h-8 w-8 mr-2"
+                    className="h-8 w-8 mr-2 ml-2"
                 />
-                {!opened && <span>{name}</span>}
+                {opened && <span>{name}</span>}
             </div>
         </Link>
     );
 };
 
 export const LeftBar: React.FC = () => {
-    const { isLeftbarOpened, toggleLeftbar } = useSidebarStateContext();
+    const { isLeftbarOpened} = useSidebarStateContext();
     return (
-        <aside className={`transition-all duration-300 ease-in-out bg-white border-r border-gray-200 flex flex-col justify-between fixed top-0 left-0 h-full ${isLeftbarOpened ? 'w-24' : 'w-72'}`}>
+        <aside className={`transition-all duration-300 ease-in-out bg-white border-r border-gray-200 flex flex-col justify-between fixed top-0 left-0 h-full ${isLeftbarOpened ? 'w-leftbarOpened' : 'w-leftbarClosed'}`}>
             <div>
                 <div className="px-4 py-4 flex items-center justify-between">
                     <Link to="/">
                         <div className="flex items-center">
-                            <img src="/asset/img/Logo.png" alt="Logo" className="h-8 w-8 mr-2" />
-                            {!isLeftbarOpened && <h1 className="text-xl font-bold ml-10">TASKFLOWER</h1>}
+                            <img src="/asset/img/Logo.png" alt="Logo" className="h-10 w-10 ml-2 mr-2" />
+                            {isLeftbarOpened && <h1 className="text-xl font-bold">TASKFLOWER</h1>}
                         </div>
                     </Link>
-                    <button onClick={toggleLeftbar} aria-label="Toggle Sidebar">
-                        <img src="/asset/img/leftbar/Menu.svg" alt="Menu" className="h-6 w-6 ml-2"/>
-                    </button>
                 </div>
                 <nav className="flex flex-col px-4">
                     <LeftBarLink opened={isLeftbarOpened} name="Dashboard" />

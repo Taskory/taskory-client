@@ -7,7 +7,11 @@ module.exports = {
     extend: {
       gridTemplateRows: {
         '24': 'repeat(24, minmax(0, 1fr))',
-      }
+      },
+      spacing: {
+        'leftbarClosed': '6rem',
+        'leftbarOpened': '18rem',
+      },
     },
   },
   plugins: [
