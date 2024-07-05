@@ -9,7 +9,7 @@ interface WeekInfoInterface {
 }
 
 export const WeekCalendar: React.FC = () => {
-    const { currentDate } = useCalendar();
+    const {currentDate} = useCalendar();
     const [events, setEvents] = useState<EventInterface[]>([]);
 
     const weekInfo: WeekInfoInterface = useMemo(() => ({
@@ -24,8 +24,8 @@ export const WeekCalendar: React.FC = () => {
             {
                 id: 1,
                 title: "Company Meeting",
-                tag: { id: 1, title: "Work", color: "yellow" },
-                hashtags: [{ id: 1, title: "#meeting" }],
+                tag: {id: 1, title: "Work", color: "yellow"},
+                hashtags: [{id: 1, title: "#meeting"}],
                 description: "Weekly team meeting to discuss contract updates.",
                 startDateTime: new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 1, 10, 0).toISOString(),
                 dueDateTime: new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 2, 11, 0).toISOString(),
@@ -34,8 +34,8 @@ export const WeekCalendar: React.FC = () => {
             {
                 id: 2,
                 title: "Team Meeting",
-                tag: { id: 1, title: "Work", color: "blue" },
-                hashtags: [{ id: 1, title: "#meeting" }],
+                tag: {id: 1, title: "Work", color: "blue"},
+                hashtags: [{id: 1, title: "#meeting"}],
                 description: "Weekly team meeting to discuss project updates.",
                 startDateTime: new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 1, 10, 0).toISOString(),
                 dueDateTime: new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 1, 11, 0).toISOString(),
@@ -44,8 +44,8 @@ export const WeekCalendar: React.FC = () => {
             {
                 id: 3,
                 title: "Code Review",
-                tag: { id: 2, title: "Work", color: "green" },
-                hashtags: [{ id: 2, title: "#code" }, { id: 3, title: "#review" }],
+                tag: {id: 2, title: "Work", color: "green"},
+                hashtags: [{id: 2, title: "#code"}, {id: 3, title: "#review"}],
                 description: "Review the latest code commits.",
                 startDateTime: new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 1, 14, 0).toISOString(),
                 dueDateTime: new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 4, 15, 0).toISOString(),
@@ -54,8 +54,8 @@ export const WeekCalendar: React.FC = () => {
             {
                 id: 4,
                 title: "Lunch with Client",
-                tag: { id: 3, title: "Personal", color: "red" },
-                hashtags: [{ id: 4, title: "#lunch" }, { id: 5, title: "#client" }],
+                tag: {id: 3, title: "Personal", color: "red"},
+                hashtags: [{id: 4, title: "#lunch"}, {id: 5, title: "#client"}],
                 description: "Discuss project requirements with the client.",
                 startDateTime: new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 3, 12, 30).toISOString(),
                 dueDateTime: new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 3, 13, 30).toISOString(),
@@ -64,8 +64,8 @@ export const WeekCalendar: React.FC = () => {
             {
                 id: 5,
                 title: "Yoga Class",
-                tag: { id: 4, title: "Health", color: "purple" },
-                hashtags: [{ id: 6, title: "#yoga" }, { id: 7, title: "#fitness" }],
+                tag: {id: 4, title: "Health", color: "purple"},
+                hashtags: [{id: 6, title: "#yoga"}, {id: 7, title: "#fitness"}],
                 description: "Attend the weekly yoga class for relaxation.",
                 startDateTime: new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 4, 18, 0).toISOString(),
                 dueDateTime: new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 4, 19, 0).toISOString(),
@@ -74,8 +74,8 @@ export const WeekCalendar: React.FC = () => {
             {
                 id: 6,
                 title: "Project Deadline",
-                tag: { id: 5, title: "Work", color: "orange" },
-                hashtags: [{ id: 8, title: "#deadline" }, { id: 9, title: "#project" }],
+                tag: {id: 5, title: "Work", color: "orange"},
+                hashtags: [{id: 8, title: "#deadline"}, {id: 9, title: "#project"}],
                 description: "Submit the final project deliverables.",
                 startDateTime: new Date(endOfWeek.getFullYear(), endOfWeek.getMonth(), endOfWeek.getDate(), 17, 0).toISOString(),
                 dueDateTime: new Date(endOfWeek.getFullYear(), endOfWeek.getMonth(), endOfWeek.getDate(), 23, 59).toISOString(),
@@ -86,8 +86,11 @@ export const WeekCalendar: React.FC = () => {
         setEvents(dummyEvents);
     }, [currentDate]);
 
-    const getEventsForDay = useCallback((date: Date): { hourlyEvents: EventInterface[][], allDayEvents: EventInterface[] } => {
-        const hourlyEvents: EventInterface[][] = Array.from({ length: 24 }, () => []);
+    const getEventsForDay = useCallback((date: Date): {
+        hourlyEvents: EventInterface[][],
+        allDayEvents: EventInterface[]
+    } => {
+        const hourlyEvents: EventInterface[][] = Array.from({length: 24}, () => []);
         const allDayEvents: EventInterface[] = [];
 
         const startOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
@@ -138,14 +141,19 @@ export const WeekCalendar: React.FC = () => {
             }
         });
 
-        return { hourlyEvents, allDayEvents };
+        return {hourlyEvents, allDayEvents};
     }, [events]);
 
 
     function renderDayLines() {
         return (
-            <div className="grid grid-cols-7 w-full h-full flex-grow">
-                {Array.from({ length: 7 }, (_, index) => {
+            <div className="grid grid-cols-8 w-full flex-grow overflow-y-auto">
+                <div className="grid grid-rows-24">
+                    {Array.from({length: 24}, (_, hour) => (
+                        <div key={hour} className="border text-right text-xs h-20">{hour}:00</div>
+                    ))}
+                </div>
+                {Array.from({length: 7}, (_, index) => {
                     const date = new Date(weekInfo.startSunday.getFullYear(), weekInfo.startSunday.getMonth(), weekInfo.startSunday.getDate() + index);
                     const dayEvents = getEventsForDay(date);
                     return (
@@ -159,23 +167,9 @@ export const WeekCalendar: React.FC = () => {
     }
 
     return (
-        <div className="h-screen">
-            <div className="flex border">
-                <div className="w-20 bg-gray-100"/>
-                <div className="w-full">
-                    <WeekCalendarHeader startDate={weekInfo.startSunday}/>
-                </div>
-            </div>
-            <div className="flex overflow-y-auto h-full">
-                <div className="grid w-20 h-full">
-                    <div className="grid grid-rows-24">
-                        {Array.from({length: 24}, (_, hour) => (
-                            <div key={hour} className="border text-xs h-20">{hour}:00</div>
-                        ))}
-                    </div>
-                </div>
-                {renderDayLines()}
-            </div>
-        </div>
+        <>
+            <WeekCalendarHeader startDate={weekInfo.startSunday}/>
+            {renderDayLines()}
+        </>
     );
 };
