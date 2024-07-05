@@ -6,18 +6,14 @@ import { WeekCalendarHeader } from "./component/WeekCalendarHeader";
 
 interface WeekInfoInterface {
     startSunday: Date;
-    endSaturday: Date;
 }
 
 export const WeekCalendar: React.FC = () => {
     const { currentDate } = useCalendar();
     const [events, setEvents] = useState<EventInterface[]>([]);
-    const containerRef = useRef<HTMLDivElement>(null);
-    const scrollContainerRef = useRef<HTMLDivElement>(null);
 
     const weekInfo: WeekInfoInterface = useMemo(() => ({
         startSunday: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - currentDate.getDay()),
-        endSaturday: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - currentDate.getDay() + 6)
     }), [currentDate]);
 
     useEffect(() => {
@@ -163,14 +159,14 @@ export const WeekCalendar: React.FC = () => {
     }
 
     return (
-        <div ref={containerRef} className="h-screen">
+        <div className="h-screen">
             <div className="flex border">
                 <div className="w-20 bg-gray-100"/>
                 <div className="w-full">
                     <WeekCalendarHeader startDate={weekInfo.startSunday}/>
                 </div>
             </div>
-            <div ref={scrollContainerRef} className="flex overflow-y-auto h-full">
+            <div className="flex overflow-y-auto h-full">
                 <div className="grid w-20 h-full">
                     <div className="grid grid-rows-24">
                         {Array.from({length: 24}, (_, hour) => (
