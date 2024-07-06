@@ -9,7 +9,7 @@ export const WeekCalendarHeader: React.FC<WeekCalendarHeaderProps> = ({startDate
     const daysOfWeek = calendar.daysOfWeek;
     return (
         <>
-            <div className="grid grid-cols-8 bg-gray-100 w-full flex-none">
+            <div className="grid grid-cols-8 bg-gray-100 w-full flex-none ">
                 <div className="w-20 bg-gray-100"/>
                 {daysOfWeek.map((weekdayString, idx) => {
                     let textColor = "";

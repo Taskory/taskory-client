@@ -147,7 +147,7 @@ export const WeekCalendar: React.FC = () => {
 
     function renderDayLines() {
         return (
-            <div className="grid grid-cols-8 w-full flex-grow overflow-y-auto">
+            <div className="grid grid-cols-8 w-full flex-grow overflow-y-auto h-[90%]">
                 <div className="grid grid-rows-24">
                     {Array.from({length: 24}, (_, hour) => (
                         <div key={hour} className="border text-right text-xs h-20">{hour}:00</div>

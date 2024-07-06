@@ -29,15 +29,19 @@ export const CommonLayout: React.FC<CommonLayoutProps> = ({ children }) => {
     }, []);
 
     return (
-        <div className="flex h-screen w-screen overflow-hidden">
-            <LeftBar />
-            <div className={`w-full h-full flex flex-col flex-grow transition-all duration-300 ${isLeftbarOpened ? 'ml-leftbarOpened' : 'ml-leftbarClosed'}`}>
-                <Header />
-                <div className="flex flex-grow mt-16">
-                    <main className="flex-grow">
-                        {children}
-                    </main>
-                    <RightBar />
+        <div className="w-screen h-screen">
+            <div className="flex h-full w-full">
+                <LeftBar/>
+                <div className={`w-full h-full flex flex-col flex-grow transition-all duration-300 ${isLeftbarOpened ? 'ml-leftbarOpened' : 'ml-leftbarClosed'}`}>
+                    <Header/>
+                    <div className="w-full h-full">
+                        <div className="flex w-full h-full pt-headerHeight">
+                            <main className=" w-full h-full">
+                                {children}
+                            </main>
+                            <RightBar/>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

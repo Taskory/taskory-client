@@ -20,7 +20,7 @@ export const CalendarHeader: React.FC = () => {
     }, [currentDate]);
 
     return (
-        <div className="flex justify-between items-center border-r px-4 py-4">
+        <div className="flex justify-between items-center border-r p-4">
             <h1 className="text-2xl font-bold">{`${currentMonthName} ${currentDate.getFullYear()}`}</h1>
             <div className="flex items-center space-x-4">
                 <select

@@ -11,6 +11,7 @@ module.exports = {
       spacing: {
         'leftbarClosed': '6rem',
         'leftbarOpened': '18rem',
+        'headerHeight': '4rem',
       },
     },
   },

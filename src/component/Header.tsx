@@ -22,7 +22,7 @@ export const Header: React.FC = () => {
         <header
             className={`bg-white border-b border-gray-200 px-4 py-2 flex justify-between items-center fixed top-0 ${
                 isLeftbarOpened ? 'left-leftbarOpened' : 'left-leftbarClosed'
-            } right-0 h-16 transition-all duration-300`}
+            } right-0 h-headerHeight transition-all duration-300`}
         >
             <button onClick={toggleLeftbar} aria-label="Toggle Sidebar">
                 <img src="/asset/img/leftbar/Menu.svg" alt="Menu" className="h-8 w-8 mr-2"/>
