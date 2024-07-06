@@ -69,9 +69,12 @@ export const MonthCalendar: React.FC = () => {
             const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + scrollDirection, 1);
             setCurrentDate(newDate);
             setEnableDateUpdate(false);
-            setScrollAmount(0);
         }
     }, [scrollAmount])
+
+    useEffect(() => {
+        if (!enableDateUpdate) setScrollAmount(0);
+    }, [enableDateUpdate]);
     /**/
 
     const getEventsForDay = (date: Date): EventInterface[] => {
