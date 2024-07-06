@@ -23,7 +23,7 @@ export const MonthCalendar: React.FC = () => {
     const [events, setEvents] = useState<EventInterface[]>([]);
     const containerRef = useRef<HTMLDivElement>(null);
     const [enableDateUpdate, setEnableDateUpdate] = useState<boolean>(true);
-    const [scrollDirection, setScrollDirection] = useState<number>(1);  // 1 for down, -1 for up, and 0 for fixed
+    const [scrollDirection, setScrollDirection] = useState<number>(0);  // 1 for down, -1 for up, and 0 for fixed
     const [scrollAmount, setScrollAmount] = useState<number>(0);
     const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
 
