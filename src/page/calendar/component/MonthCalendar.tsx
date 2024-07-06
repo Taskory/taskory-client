@@ -21,23 +21,22 @@ export const MonthCalendar: React.FC = () => {
     });
 
     const [events, setEvents] = useState<EventInterface[]>([]);
-
-
     const containerRef = useRef<HTMLDivElement>(null);
-    const [isScrolling, setIsScrolling] = useState(false);
+    const [enableDateUpdate, setEnableDateUpdate] = useState<boolean>(true);
+    const [scrollDirection, setScrollDirection] = useState<number>(1);  // 1 for down, -1 for up, and 0 for fixed
+    const [scrollAmount, setScrollAmount] = useState<number>(0);
+    const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
 
     const handleWheel = useCallback((event: WheelEvent) => {
         event.preventDefault();
-        if (isScrolling) return;
-        setIsScrolling(true);
-        const direction = event.deltaY > 0 ? 1 : -1;
-        const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + direction, 1);
+        setScrollDirection(event.deltaY > 0 ? 1 : -1);
+        setScrollAmount(event.deltaY);
 
-        setTimeout(() => {
-            setCurrentDate(newDate);
-            setIsScrolling(false);
-        }, 300);
-    }, [currentDate, setCurrentDate, isScrolling]);
+        if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+        scrollTimeout.current = setTimeout(() => { 
+            setEnableDateUpdate(true); 
+        }, 100);
+    }, []);
 
     /*
     * UseEffects
@@ -64,6 +63,15 @@ export const MonthCalendar: React.FC = () => {
             });
 
     }, [currentDate]);
+
+    useEffect(() => {
+        if (enableDateUpdate) {
+            const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + scrollDirection, 1);
+            setCurrentDate(newDate);
+            setEnableDateUpdate(false);
+            setScrollAmount(0);
+        }
+    }, [scrollAmount])
     /**/
 
     const getEventsForDay = (date: Date): EventInterface[] => {
