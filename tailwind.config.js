@@ -21,6 +21,6 @@ module.exports = {
   safelist: [
     {pattern: /grid-cols-([123456789])/},
     {pattern: /text-(red|green|blue|yellow|orange|purple|pink)-500/},
-    {pattern: /bg-(red|green|blue|yellow|orange|purple|pink)-200/}
+    {pattern: /bg-(red|green|blue|yellow|orange|purple|pink)-400/}
   ],
 }
