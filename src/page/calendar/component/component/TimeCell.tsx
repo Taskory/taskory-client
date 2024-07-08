@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { EventInterface } from '../../../../api/interface/EventInterface';
 
 interface TimeCellProps {
@@ -6,10 +6,18 @@ interface TimeCellProps {
 }
 
 export const TimeCell: React.FC<TimeCellProps> = ({ events }) => {
+    const getGridCols = (count: number) => {
+        return `grid-cols-${count}`
+    };
+
+
     return (
-        <div className={`w-full h-20 grid  grid-cols-${events.length} ${(events.length > 0) ? '' : 'border'}`}>
-            {events.map((event, idx) => (
-                <div key={idx} className={`col-span-1 p-1 text-xs bg-${event.tag.color.toLowerCase()}-200 w-full h-full`}>
+        <div className={`h-20 grid ${events.length > 0 ? getGridCols(events.length) : 'border'}`}>
+            {events.map((event, index) => (
+                <div
+                    key={index}
+                    className={`p-1 text-xs bg-${event.tag.color.toLowerCase()}-200 w-full h-full`}
+                >
                     {event.title}
                 </div>
             ))}
