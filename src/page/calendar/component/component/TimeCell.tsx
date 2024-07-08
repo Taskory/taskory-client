@@ -6,18 +6,10 @@ interface TimeCellProps {
 }
 
 export const TimeCell: React.FC<TimeCellProps> = ({ events }) => {
-    const getGridCols = (count: number) => {
-        return `grid-cols-${count}`
-    };
-
-
     return (
-        <div className={`h-20 grid ${events.length > 0 ? getGridCols(events.length) : 'border'}`}>
+        <div className={`h-20 grid ${events.length > 0 ? `grid-cols-${events.length}` : 'border'}`}>
             {events.map((event, index) => (
-                <div
-                    key={index}
-                    className={`p-1 text-xs bg-${event.tag.color.toLowerCase()}-200 w-full h-full`}
-                >
+                <div key={index} className={`p-1 text-xs text-center bg-${event.tag.color.toLowerCase()}-200 w-full h-full`}>
                     {event.title}
                 </div>
             ))}
