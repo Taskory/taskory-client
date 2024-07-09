@@ -1,6 +1,7 @@
 import React from 'react';
 import {useCalendar} from "../context/CalendarContext";
 import {useCalendarView} from "../context/CalendarViewContext";
+import {Cell} from "./component/Cell";
 
 export const YearCalendar: React.FC = () => {
     const {currentDate, setCurrentDate} = useCalendar();
@@ -18,14 +19,20 @@ export const YearCalendar: React.FC = () => {
         setCurrentDate(new Date(currentDate.getFullYear(), parseInt(month), 0));
     };
 
+    const firstDayOfWeek = (month: number) => {
+        return new Date(currentDate.getFullYear(), month, 1).getDay();
+    };
     return (
         <div className="grid grid-cols-4 grid-rows-3 gap-2 p-2 h-full flex-grow">
             {months.map((month) => (
                 <div key={month} className="p-1 border rounded-lg cursor-pointer" onClick={() => handleMonthClick(month)}>
-                    <div className="text-center font-semibold mb-1">{month}</div>
-                    <div className="grid grid-cols-7 text-center">
-                        {Array.from({ length: daysInMonth(parseInt(month)) }, (_, day) => (
-                            <div key={day} className="p-1">
+                    <div className="text-center content-center font-semibold h-[15%]">{month}</div>
+                    <div className="grid grid-cols-7 text-center h-[85%]">
+                        {Array(firstDayOfWeek(parseInt(month))).fill(null).map((_, index) => (
+                            <div/>
+                        ))}
+                        {Array.from({length: daysInMonth(parseInt(month))}, (_, day) => (
+                            <div key={day}>
                                 {day + 1}
                             </div>
                         ))}
