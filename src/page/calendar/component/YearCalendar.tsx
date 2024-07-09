@@ -1,7 +1,6 @@
 import React from 'react';
 import {useCalendar} from "../context/CalendarContext";
 import {useCalendarView} from "../context/CalendarViewContext";
-import {Cell} from "./component/Cell";
 
 export const YearCalendar: React.FC = () => {
     const {currentDate, setCurrentDate} = useCalendar();

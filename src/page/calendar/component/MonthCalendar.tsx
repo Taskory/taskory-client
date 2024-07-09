@@ -70,7 +70,7 @@ export const MonthCalendar: React.FC = () => {
             setCurrentDate(newDate);
             setEnableDateUpdate(false);
         }
-    }, [scrollAmount])
+    }, [currentDate, enableDateUpdate, scrollDirection, setCurrentDate, scrollAmount]);
 
     useEffect(() => {
         if (!enableDateUpdate) setScrollAmount(0);
