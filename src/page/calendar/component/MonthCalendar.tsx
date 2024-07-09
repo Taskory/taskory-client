@@ -128,10 +128,10 @@ export const MonthCalendar: React.FC = () => {
     return (
         <div
             ref={containerRef}
-            style={{overflow: 'hidden', height: '90%', gridTemplateRows: '20px 1fr'}}
-            className="border sm:h-2/3">
+            style={{overflow: 'hidden', gridTemplateRows: '20px 1fr'}}
+            className="border h-full">
             <MonthCalendarHeader/>
-            <div style={{height: '100%'}} className={`grid grid-cols-7 grid-rows-${weeksOfCurrentMonth()}`}>
+            <div className={`grid grid-cols-7 grid-rows-${weeksOfCurrentMonth()} h-full`}>
                 {renderEmptyCells(monthInfo.firstDayOfWeek, 0)}
                 {renderDayCells()}
                 {renderEmptyCells(6 - monthInfo.lastDayOfWeek, monthInfo.daysInMonth)}

@@ -20,11 +20,11 @@ export const CalendarHeader: React.FC = () => {
     }, [currentDate]);
 
     return (
-        <div className="flex justify-between items-center border-r p-4">
-            <h1 className="text-2xl font-bold">{`${currentMonthName} ${currentDate.getFullYear()}`}</h1>
+        <div className="flex justify-between items-center p-4 h-headerHeight">
+            <h1 className="text-xl font-bold">{`${currentMonthName} ${currentDate.getFullYear()}`}</h1>
             <div className="flex items-center space-x-4">
                 <select
-                    className="btn"
+                    className="btn btn-sm"
                     onChange={(e) => setView(e.target.value)}
                     value={view}
                 >
@@ -33,7 +33,7 @@ export const CalendarHeader: React.FC = () => {
                     <option value="week">Week</option>
                     <option value="day">Day</option>
                 </select>
-                <button className="btn btn-primary" onClick={handleAddEvent}>
+                <button className="btn btn-sm btn-primary" onClick={handleAddEvent}>
                     Add event +
                 </button>
             </div>

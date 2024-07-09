@@ -8,7 +8,7 @@ interface WeekCalendarHeaderProps {
 export const WeekCalendarHeader: React.FC<WeekCalendarHeaderProps> = ({startDate}) => {
     const daysOfWeek = calendar.daysOfWeek;
     return (
-        <div className="flex w-full">
+        <div className="flex w-full h-[5%]">
             <div className="bg-gray-100 w-[10%]"/>
             <div className="grid grid-cols-7 bg-gray-100 flex-none w-[90%]">
                 {daysOfWeek.map((weekdayString, idx) => {

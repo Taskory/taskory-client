@@ -19,10 +19,10 @@ export const YearCalendar: React.FC = () => {
     };
 
     return (
-        <div className="grid grid-cols-4 gap-4 p-4">
+        <div className="grid grid-cols-4 grid-rows-3 gap-2 p-2 h-full flex-grow">
             {months.map((month) => (
-                <div key={month} className="p-4 border rounded-lg cursor-pointer" onClick={() => handleMonthClick(month)}>
-                    <div className="text-center font-semibold mb-2">{month}</div>
+                <div key={month} className="p-1 border rounded-lg cursor-pointer" onClick={() => handleMonthClick(month)}>
+                    <div className="text-center font-semibold mb-1">{month}</div>
                     <div className="grid grid-cols-7 text-center">
                         {Array.from({ length: daysInMonth(parseInt(month)) }, (_, day) => (
                             <div key={day} className="p-1">

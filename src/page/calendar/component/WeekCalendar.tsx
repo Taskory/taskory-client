@@ -172,12 +172,12 @@ export const WeekCalendar: React.FC = () => {
     }
 
     return (
-        <>
+        <div className="w-full h-full">
             <WeekCalendarHeader startDate={weekInfo.startSunday}/>
-            <div className="flex overflow-y-auto flex-grow h-[90%]">
+            <div className="flex overflow-y-auto flex-grow h-[95%]">
                 {renderTimeLines()}
                 {renderDayLines()}
             </div>
-        </>
+        </div>
     );
 };

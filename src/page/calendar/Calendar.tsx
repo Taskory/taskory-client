@@ -29,8 +29,14 @@ export const Calendar = () => {
     return (
         <CommonLayout>
             <CalendarProvider>
-                <CalendarHeader />
-                {renderCalendarView()}
+                <div className="w-full h-full">
+                    <div className="h-[10%]">
+                        <CalendarHeader/>
+                    </div>
+                    <div className="h-[90%]">
+                        {renderCalendarView()}
+                    </div>
+                </div>
             </CalendarProvider>
         </CommonLayout>
     );
