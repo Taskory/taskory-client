@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {GOOGLE_AUTH_URL} from "../../constants";
-import {existAuthCookie, removeAuthCookie} from "../../util/CookieUtil";
+import {existAuthCookie, removeAuthCookie, setAuthCookie} from "../../util/CookieUtil";
 
 
 export const Login = () => {
@@ -19,6 +19,11 @@ export const Login = () => {
                     <a className="flex justify-start btn w-full h-min" href={GOOGLE_AUTH_URL}>
                         <img className={"size-1/12"} src="/asset/img/social/google-logo.png" alt="Google"/>
                         <p className={"ml-4"}>Log in with Google</p>
+                    </a>
+                </div>
+                <div className="h-auto space-y-2 my-4 btn w-full">
+                    <a className="flex justify-start btn w-full h-min" onClick={() => setAuthCookie("temporary access cookie")} href={"/"}>
+                        <p className={"ml-4"}>Temporary login for test</p>
                     </a>
                 </div>
             </div>
