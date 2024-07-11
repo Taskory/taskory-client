@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect } from 'react';
+import React, { ReactNode } from 'react';
 import { LeftBar } from '../component/LeftBar';
 import { Header } from '../component/Header';
 import { RightBar } from '../component/RightBar';
