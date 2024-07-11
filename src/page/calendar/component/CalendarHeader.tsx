@@ -1,14 +1,13 @@
-import React, {useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
-import {useCalendar} from "../context/CalendarContext";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useCalendar } from "../context/CalendarContext";
 import monthNames from "../../../constants/calendar.json";
-import {useCalendarView} from "../context/CalendarViewContext";
-
+import { useCalendarView } from "../context/CalendarViewContext";
 
 export const CalendarHeader: React.FC = () => {
-    const {view, setView} = useCalendarView();
+    const { view, setView } = useCalendarView();
     const navigate = useNavigate();
-    const {currentDate, goToNext, goToPrev} = useCalendar();
+    const { currentDate, goToNext, goToPrev, goToToday } = useCalendar();
     const [currentMonthName, setCurrentMonthName] = useState(monthNames.monthNames[currentDate.getMonth()]);
 
     const handleAddEvent = () => {
@@ -50,6 +49,7 @@ export const CalendarHeader: React.FC = () => {
             <h1 className="text-xl font-bold">{formatDate()}</h1>
             <button className="btn btn-sm" onClick={() => goToPrev(view)}>Previous</button>
             <button className="btn btn-sm" onClick={() => goToNext(view)}>Next</button>
+            <button className="btn btn-sm" onClick={goToToday}>Today</button>
             <div className="flex items-center space-x-4">
                 <select
                     className="btn btn-sm"
@@ -66,5 +66,5 @@ export const CalendarHeader: React.FC = () => {
                 </button>
             </div>
         </div>
-    )
-}
+    );
+};

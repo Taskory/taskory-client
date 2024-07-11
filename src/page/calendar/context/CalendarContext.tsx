@@ -5,6 +5,7 @@ interface CalendarContextType {
     setCurrentDate: React.Dispatch<React.SetStateAction<Date>>;
     goToNext: (view: string) => void;
     goToPrev: (view: string) => void;
+    goToToday: () => void;
 }
 
 const CalendarContext = createContext<CalendarContextType | undefined>(undefined);
@@ -74,11 +75,16 @@ export const CalendarProvider: React.FC<{ children: ReactNode }> = ({ children }
         setCurrentDate(newDate);
     };
 
+    const goToToday = () => {
+        setCurrentDate(new Date());
+    };
+
     const contextValue = useMemo(() => ({
         currentDate,
         setCurrentDate,
         goToNext,
-        goToPrev
+        goToPrev,
+        goToToday
     }), [currentDate]);
 
     return (
