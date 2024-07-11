@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode, useMemo } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react';
 
 interface CalendarContextType {
     currentDate: Date;
@@ -9,8 +9,28 @@ interface CalendarContextType {
 
 const CalendarContext = createContext<CalendarContextType | undefined>(undefined);
 
+const getInitialDate = () => {
+    const savedDate = localStorage.getItem('currentDate');
+    const savedTimestamp = localStorage.getItem('currentDateTimestamp');
+    if (savedDate && savedTimestamp) {
+        const savedDateObj = new Date(savedDate);
+        const savedTimestampObj = new Date(savedTimestamp);
+        const now = new Date();
+        const diff = now.getTime() - savedTimestampObj.getTime();
+        if (diff <= 24 * 60 * 60 * 1000) { // 24 hours in milliseconds
+            return savedDateObj;
+        }
+    }
+    return new Date();
+};
+
 export const CalendarProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [currentDate, setCurrentDate] = useState(new Date());
+    const [currentDate, setCurrentDate] = useState<Date>(getInitialDate);
+
+    useEffect(() => {
+        localStorage.setItem('currentDate', currentDate.toISOString());
+        localStorage.setItem('currentDateTimestamp', new Date().toISOString());
+    }, [currentDate]);
 
     const goToNext = (view: string) => {
         const newDate = new Date(currentDate);
