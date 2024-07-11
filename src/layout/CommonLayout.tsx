@@ -11,23 +11,6 @@ interface CommonLayoutProps {
 export const CommonLayout: React.FC<CommonLayoutProps> = ({ children }) => {
     const { isLeftbarOpened } = useSidebarStateContext();
 
-    useEffect(() => {
-        // Drag prevention event handler
-        const preventDefault = (e: Event) => {
-            e.preventDefault();
-        };
-
-        // Register drag prevention event listeners
-        document.addEventListener('dragstart', preventDefault);
-        document.addEventListener('drop', preventDefault);
-
-        // Cleanup function
-        return () => {
-            document.removeEventListener('dragstart', preventDefault);
-            document.removeEventListener('drop', preventDefault);
-        };
-    }, []);
-
     return (
         <div className="w-screen h-screen overflow-x-hidden">
             <div className="flex h-full w-full">
