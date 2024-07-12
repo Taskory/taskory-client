@@ -3,6 +3,7 @@ import { useCalendar } from "../context/CalendarContext";
 import { EventInterface } from "../../../api/interface/EventInterface";
 import { DayLine } from "./component/DayLine";
 import { WeekCalendarHeader } from "./component/WeekCalendarHeader";
+import {TimeCell} from "./component/TimeCell";
 
 interface WeekInfoInterface {
     startSunday: Date;
@@ -163,9 +164,20 @@ export const WeekCalendar: React.FC = () => {
 
     function renderTimeLines() {
         return (
-            <div className="grid h-full flex-grow w-[10%]">
+            // <div className="grid grid-cols-1 h-full w-[10%] bg-gray-100">
+            //     {Array.from({length: 24}, (_, hour) => (
+            //         <div key={hour} className="flex-grow text-right text-xs h-20 pr-1">
+            //             {hour}:00
+            //         </div>
+            //     ))}
+            // </div>
+            <div className="w-[10%]">
                 {Array.from({length: 24}, (_, hour) => (
-                    <div key={hour} className="border text-right text-xs h-20 pr-1">{hour}:00</div>
+                    <div key={hour} className="h-20 w-full bg-gray-100">
+                        <div className="flex justify-end text-xs pr-1 border-gray-200 w-full">
+                            {hour}:00
+                        </div>
+                    </div>
                 ))}
             </div>
         );
