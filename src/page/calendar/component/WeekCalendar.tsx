@@ -1,7 +1,6 @@
 import React, { useEffect, useCallback, useState, useMemo } from "react";
 import { useCalendar } from "../context/CalendarContext";
 import { EventInterface } from "../../../api/interface/EventInterface";
-import { DayLine } from "./component/DayLine";
 import { WeekCalendarHeader } from "./component/WeekCalendarHeader";
 import {useTestData} from "../context/TestDataContext";
 
@@ -89,7 +88,16 @@ export const WeekCalendar: React.FC = () => {
                     const dayEvents = getEventsForDay(date);
                     return (
                         <div key={index} className="grid grid-rows-24">
-                            <DayLine key={date.toISOString()} hourlyEvents={dayEvents.hourlyEvents}/>
+                            {dayEvents.hourlyEvents.map((events, hour) => (
+                                <div className={`h-20 grid ${events.length > 0 ? `grid-cols-${events.length}` : 'border'}`}>
+                                    {events.map((event, index) => (
+                                        <div key={index}
+                                             className={`p-1 text-xs text-center content-center bg-${event.tag.color.toLowerCase()}-400 w-full h-full`}>
+                                            {event.title}
+                                        </div>
+                                    ))}
+                                </div>
+                            ))}
                         </div>
                     );
                 })}
