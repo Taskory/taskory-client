@@ -25,6 +25,26 @@ export const TestDataProvider: React.FC<{ children: ReactNode }> = ({ children }
             location: "Conference Room B"
         },
         {
+            id: 0,
+            title: "Company Meeting",
+            tag: {id: 1, title: "Work", color: "purple"},
+            hashtags: [{id: 1, title: "#meeting"}],
+            description: "Weekly team meeting to discuss contract updates.",
+            startDateTime: new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 1, 10, 0).toISOString(),
+            dueDateTime: new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 1, 12, 0).toISOString(),
+            location: "Conference Room B"
+        },
+        {
+            id: 1,
+            title: "Company Meeting",
+            tag: {id: 1, title: "Work", color: "red"},
+            hashtags: [{id: 1, title: "#meeting"}],
+            description: "Weekly team meeting to discuss contract updates.",
+            startDateTime: new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 1, 10, 0).toISOString(),
+            dueDateTime: new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 1, 11, 30).toISOString(),
+            location: "Conference Room B"
+        },
+        {
             id: 2,
             title: "Team Meeting",
             tag: {id: 1, title: "Work", color: "blue"},

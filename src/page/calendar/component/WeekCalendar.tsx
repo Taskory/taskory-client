@@ -2,15 +2,44 @@ import React, { useEffect, useCallback, useState, useMemo } from "react";
 import { useCalendar } from "../context/CalendarContext";
 import { EventInterface } from "../../../api/interface/EventInterface";
 import { WeekCalendarHeader } from "./component/WeekCalendarHeader";
-import {useTestData} from "../context/TestDataContext";
+import { useTestData } from "../context/TestDataContext";
 
 interface WeekInfoInterface {
     startSunday: Date;
 }
 
+interface EventComponentProps {
+    event: EventInterface;
+    start: Date;
+    end: Date;
+    left: string;
+    width: string;
+}
+
+const Event: React.FC<EventComponentProps> = ({ event, start, end, left, width }) => {
+    const startHour = start.getHours() + start.getMinutes() / 60;
+    const endHour = end.getHours() + end.getMinutes() / 60;
+    const eventDuration = endHour - startHour;
+
+    const top = `${(startHour / 24) * 100}%`;
+    const height = `${(eventDuration / 24) * 100}%`;
+
+    return (
+        <div
+            className={`absolute p-1 text-xs text-center content-center bg-${event.tag.color.toLowerCase()}-100`}
+            style={{ top, height, left, width }}
+        >
+            <div
+                className="absolute left-0 top-0 h-full"
+                style={{ width: '4px', backgroundColor: `${event.tag.color.toLowerCase()}` }}
+            ></div>
+            <div className="pl-4">{event.title}</div>
+        </div>
+    );
+};
 export const WeekCalendar: React.FC = () => {
-    const {currentDate} = useCalendar();
-    const {dummyEvents} = useTestData();
+    const { currentDate } = useCalendar();
+    const { dummyEvents } = useTestData();
     const [events, setEvents] = useState<EventInterface[]>([]);
 
     const weekInfo: WeekInfoInterface = useMemo(() => ({
@@ -21,11 +50,9 @@ export const WeekCalendar: React.FC = () => {
         setEvents(dummyEvents);
     }, [dummyEvents]);
 
-    const getEventsForDay = useCallback((date: Date): {
-        hourlyEvents: EventInterface[][],
-        allDayEvents: EventInterface[]
-    } => {
-        const hourlyEvents: EventInterface[][] = Array.from({length: 24}, () => []);
+    const getEventsForDay = useCallback((date: Date) => {
+        const overlappingEvents: EventInterface[] = [];
+        const nonOverlappingEvents: EventInterface[] = [];
         const allDayEvents: EventInterface[] = [];
 
         const startOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
@@ -36,95 +63,163 @@ export const WeekCalendar: React.FC = () => {
             const eventEnd = new Date(event.dueDateTime);
 
             if (eventStart <= endOfDay && eventEnd >= startOfDay) {
-                // Event spans across the entire day
                 if (eventStart <= startOfDay && eventEnd >= endOfDay) {
                     allDayEvents.push(event);
-                }
-                // Event spans multiple days but not the entire day
-                else if (eventStart.getDate() !== date.getDate() || eventEnd.getDate() !== date.getDate()) {
-                    if (eventStart <= startOfDay && eventEnd >= startOfDay && eventEnd <= endOfDay) {
-                        // Event ends within the day
-                        const endHour = eventEnd.getHours();
-                        for (let hour = 0; hour <= endHour; hour++) {
-                            hourlyEvents[hour].push(event);
-                        }
-                    } else if (eventStart >= startOfDay && eventStart <= endOfDay && eventEnd >= endOfDay) {
-                        // Event starts within the day
-                        const startHour = eventStart.getHours();
-                        for (let hour = startHour; hour < 24; hour++) {
-                            hourlyEvents[hour].push(event);
-                        }
-                    } else if (eventStart <= startOfDay && eventEnd >= endOfDay) {
-                        // Event spans the entire day
-                        allDayEvents.push(event);
+                } else {
+                    const isOverlapping = events.some(otherEvent => {
+                        if (otherEvent === event) return false;
+                        const otherStart = new Date(otherEvent.startDateTime);
+                        const otherEnd = new Date(otherEvent.dueDateTime);
+                        return (
+                            (eventStart < otherEnd && eventEnd > otherStart) || // overlaps with other event
+                            (eventStart < otherEnd && eventEnd > otherStart)   // overlaps with other event
+                        );
+                    });
+                    if (isOverlapping) {
+                        overlappingEvents.push(event);
                     } else {
-                        // Event spans multiple days but not starting or ending on this day
-                        allDayEvents.push(event);
-                    }
-                }
-                // Event is within the day
-                else {
-                    const startHour = eventStart.getHours();
-                    const endHour = eventEnd.getHours();
-
-                    for (let hour = startHour; hour <= endHour; hour++) {
-                        if (hour >= 0 && hour < 24) {
-                            hourlyEvents[hour].push(event);
-                        }
+                        nonOverlappingEvents.push(event);
                     }
                 }
             }
         });
 
-        return {hourlyEvents, allDayEvents};
+        return { overlappingEvents, nonOverlappingEvents, allDayEvents };
     }, [events]);
 
+    const calculateOverlaps = (events: EventInterface[]) => {
+        const overlaps: { [key: number]: { overlapCount: number; overlapPosition: number } } = {};
+        const sortedEvents = [...events].sort((a, b) => new Date(a.startDateTime).getTime() - new Date(b.startDateTime).getTime());
 
-    function renderDayLines() {
-        return (
-            <div className="grid grid-cols-7 w-[90%] h-full">
-                {Array.from({length: 7}, (_, index) => {
-                    const date = new Date(weekInfo.startSunday.getFullYear(), weekInfo.startSunday.getMonth(), weekInfo.startSunday.getDate() + index);
-                    const dayEvents = getEventsForDay(date);
-                    return (
-                        <div key={index} className="grid grid-rows-24">
-                            {dayEvents.hourlyEvents.map((events, hour) => (
-                                <div className={`h-20 grid ${events.length > 0 ? `grid-cols-${events.length}` : 'border'}`}>
-                                    {events.map((event, index) => (
-                                        <div key={index}
-                                             className={`p-1 text-xs text-center content-center bg-${event.tag.color.toLowerCase()}-400 w-full h-full`}>
-                                            {event.title}
-                                        </div>
-                                    ))}
-                                </div>
-                            ))}
-                        </div>
-                    );
-                })}
-            </div>
-        );
-    }
+        sortedEvents.forEach((event, index) => {
+            overlaps[index] = { overlapCount: 1, overlapPosition: 0 };
 
-    function renderTimeLines() {
-        return (
-            <div className="w-[10%]">
-                {Array.from({length: 24}, (_, hour) => (
-                    <div key={hour} className="h-20 w-full bg-gray-100">
-                        <div className="flex justify-end text-xs pr-1 border-gray-200 w-full">
-                            {hour}:00
-                        </div>
-                    </div>
-                ))}
-            </div>
-        );
-    }
+            let maxOverlapCount = 1;
+            let currentOverlapPosition = 0;
+
+            for (let i = 0; i < index; i++) {
+                const comparedEventStart = new Date(sortedEvents[i].startDateTime).getTime();
+                const comparedEventEnd = new Date(sortedEvents[i].dueDateTime).getTime();
+                const eventStart = new Date(event.startDateTime).getTime();
+                const eventEnd = new Date(event.dueDateTime).getTime();
+
+                if (
+                    (eventStart >= comparedEventStart && eventStart < comparedEventEnd) ||
+                    (eventEnd > comparedEventStart && eventEnd <= comparedEventEnd) ||
+                    (eventStart <= comparedEventStart && eventEnd >= comparedEventEnd)
+                ) {
+                    maxOverlapCount = Math.max(maxOverlapCount, overlaps[i].overlapCount + 1);
+                    currentOverlapPosition = Math.max(currentOverlapPosition, overlaps[i].overlapPosition + 1);
+                }
+            }
+
+            overlaps[index].overlapCount = maxOverlapCount;
+            overlaps[index].overlapPosition = currentOverlapPosition;
+        });
+
+        return overlaps;
+    };
+
+
+    const splitEventsByDay = useCallback((events: EventInterface[], date: Date) => {
+        const startOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
+        const endOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
+
+        return events.map(event => {
+            const eventStart = new Date(event.startDateTime);
+            const eventEnd = new Date(event.dueDateTime);
+
+            // 이벤트 시작과 종료 시간을 각각 일별로 잘라내기
+            const start = eventStart < startOfDay ? startOfDay : eventStart;
+            const end = eventEnd > endOfDay ? endOfDay : eventEnd;
+
+            return { ...event, start, end };
+        });
+    }, []);
 
     return (
-        <div className="w-full h-full">
-            <WeekCalendarHeader startDate={weekInfo.startSunday}/>
-            <div className="flex overflow-y-auto flex-grow h-[95%]">
-                {renderTimeLines()}
-                {renderDayLines()}
+        <div className="w-full h-full flex flex-col">
+            <WeekCalendarHeader startDate={weekInfo.startSunday} />
+            <div className="flex flex-grow h-full overflow-y-scroll">
+                <div className="w-[10%]">
+                    {Array.from({ length: 24 }, (_, hour) => (
+                        <div key={hour}
+                             className="h-[50px] border-t border-gray-200 flex items-start justify-end pr-1 text-xs">
+                            {hour}:00
+                        </div>
+                    ))}
+                </div>
+                <div className="w-[90%] grid grid-cols-7 border-l border-gray-200">
+                    {Array.from({ length: 7 }, (_, index) => {
+                        const date = new Date(weekInfo.startSunday.getFullYear(), weekInfo.startSunday.getMonth(), weekInfo.startSunday.getDate() + index);
+                        const { overlappingEvents, nonOverlappingEvents, allDayEvents } = getEventsForDay(date);
+
+                        const splitOverlappingEvents = splitEventsByDay(overlappingEvents, date);
+                        const splitNonOverlappingEvents = splitEventsByDay(nonOverlappingEvents, date);
+
+                        const overlaps = calculateOverlaps(splitOverlappingEvents);
+
+                        return (
+                            <div key={index} className="relative border-r border-gray-200 h-full">
+                                <div className="absolute w-full h-full">
+                                    {splitOverlappingEvents.map((event, idx) => {
+                                        const { overlapCount, overlapPosition } = overlaps[idx];
+                                        //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                        const left = (overlapPosition / overlapCount) * 100 + 30;
+                                        // const new_left = left === 100 ? 100 : left + 30;
+                                        const width = left === 100 ? 70 - left : 100 - left ;
+                                        // let left;
+                                        // if ((overlapPosition / overlapCount) === 1) {
+                                        //     // left = (overlapPosition / overlapCount) * 100;
+                                        //     left = 0;
+                                        // } else {
+                                        //      left = 100 - (overlapPosition / overlapCount) * 100;
+                                        // }
+                                        // const width = 100 - left;
+                                        // if (event.id === 3) {
+                                            console.log(event);
+                                            // console.log(splitOverlappingEvents);
+                                            console.log("overlapCount");
+                                            console.log(overlapCount)
+                                            console.log("overlapPosition");
+                                            console.log(overlapPosition);
+                                            console.log("left");
+                                            console.log(left);
+                                            console.log("width");
+                                            console.log(width);
+                                        // }
+                                        //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                        return (
+                                            <Event
+                                                key={idx}
+                                                event={event}
+                                                start={event.start}
+                                                end={event.end}
+                                                left={`${left}%`}
+                                                width={`${width}%`}
+                                            />
+                                        );
+                                    })}
+                                    {splitNonOverlappingEvents.map((event, idx) => {
+                                        return (
+                                            <Event
+                                                key={`non-${idx}`}
+                                                event={event}
+                                                start={event.start}
+                                                end={event.end}
+                                                left={'0'}
+                                                width={'100'}
+                                            />
+                                            )
+                                    })}
+                                </div>
+                                {Array.from({ length: 24 }, (_, hour) => (
+                                    <div key={hour} className="h-[50px] border-t border-gray-200"></div>
+                                ))}
+                            </div>
+                        );
+                    })}
+                </div>
             </div>
         </div>
     );
