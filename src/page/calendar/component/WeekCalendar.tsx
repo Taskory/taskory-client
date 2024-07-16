@@ -21,13 +21,13 @@ const Event: React.FC<EventComponentProps> = ({ event, start, end, left, width }
     const endHour = end.getHours() + end.getMinutes() / 60;
     const eventDuration = endHour - startHour;
 
-    const top = `${(startHour / 24) * 100}%`;
-    const height = `${(eventDuration / 24) * 100}%`;
+    const top = `${(startHour / 24) * 100}`;
+    const height = `${(eventDuration / 24) * 100}`;
 
     return (
         <div
             className={`absolute p-1 text-xs text-center content-center bg-${event.tag.color.toLowerCase()}-100`}
-            style={{ top, height, left, width }}
+            style={{ top: `${top}%`, left: `${left}%`, width: `${width}%`, height: `${height}%` }}
         >
             <div
                 className="absolute left-0 top-0 h-full"
@@ -88,14 +88,14 @@ export const WeekCalendar: React.FC = () => {
     }, [events]);
 
     const calculateOverlaps = (events: EventInterface[]) => {
-        const overlaps: { [key: number]: { overlapCount: number; overlapPosition: number } } = {};
+        const eventCount = events.length;
+        const overlaps: { [key: number]: { itemCount: number; itemPosition: number } } = {};
         const sortedEvents = [...events].sort((a, b) => new Date(a.startDateTime).getTime() - new Date(b.startDateTime).getTime());
 
         sortedEvents.forEach((event, index) => {
-            overlaps[index] = { overlapCount: 1, overlapPosition: 0 };
+            overlaps[index] = { itemCount: eventCount, itemPosition: 0 };
 
-            let maxOverlapCount = 1;
-            let currentOverlapPosition = 0;
+            let currentItemPosition = 0;
 
             for (let i = 0; i < index; i++) {
                 const comparedEventStart = new Date(sortedEvents[i].startDateTime).getTime();
@@ -108,13 +108,10 @@ export const WeekCalendar: React.FC = () => {
                     (eventEnd > comparedEventStart && eventEnd <= comparedEventEnd) ||
                     (eventStart <= comparedEventStart && eventEnd >= comparedEventEnd)
                 ) {
-                    maxOverlapCount = Math.max(maxOverlapCount, overlaps[i].overlapCount + 1);
-                    currentOverlapPosition = Math.max(currentOverlapPosition, overlaps[i].overlapPosition + 1);
+                    currentItemPosition = currentItemPosition + 1;
                 }
             }
-
-            overlaps[index].overlapCount = maxOverlapCount;
-            overlaps[index].overlapPosition = currentOverlapPosition;
+            overlaps[index].itemPosition = currentItemPosition;
         });
 
         return overlaps;
@@ -163,31 +160,10 @@ export const WeekCalendar: React.FC = () => {
                             <div key={index} className="relative border-r border-gray-200 h-full">
                                 <div className="absolute w-full h-full">
                                     {splitOverlappingEvents.map((event, idx) => {
-                                        const { overlapCount, overlapPosition } = overlaps[idx];
+                                        const { itemCount, itemPosition } = overlaps[idx];
                                         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                        const left = (overlapPosition / overlapCount) * 100 + 30;
-                                        // const new_left = left === 100 ? 100 : left + 30;
-                                        const width = left === 100 ? 70 - left : 100 - left ;
-                                        // let left;
-                                        // if ((overlapPosition / overlapCount) === 1) {
-                                        //     // left = (overlapPosition / overlapCount) * 100;
-                                        //     left = 0;
-                                        // } else {
-                                        //      left = 100 - (overlapPosition / overlapCount) * 100;
-                                        // }
-                                        // const width = 100 - left;
-                                        // if (event.id === 3) {
-                                            console.log(event);
-                                            // console.log(splitOverlappingEvents);
-                                            console.log("overlapCount");
-                                            console.log(overlapCount)
-                                            console.log("overlapPosition");
-                                            console.log(overlapPosition);
-                                            console.log("left");
-                                            console.log(left);
-                                            console.log("width");
-                                            console.log(width);
-                                        // }
+                                        const left = (itemPosition / itemCount) * 100;
+                                        const width = 100 - left ;
                                         //////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                         return (
                                             <Event
@@ -195,8 +171,8 @@ export const WeekCalendar: React.FC = () => {
                                                 event={event}
                                                 start={event.start}
                                                 end={event.end}
-                                                left={`${left}%`}
-                                                width={`${width}%`}
+                                                left={`${left}`}
+                                                width={`${width}`}
                                             />
                                         );
                                     })}
