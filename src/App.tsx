@@ -13,15 +13,11 @@ const App = () => {
         // Register drag prevention event listeners
         window.addEventListener('dragstart', preventDefault);
         window.addEventListener('drop', preventDefault);
-        window.addEventListener('scroll', preventDefault);
-        window.addEventListener('wheel', preventDefault);
 
         // Cleanup function
         return () => {
             window.removeEventListener('dragstart', preventDefault);
             window.removeEventListener('drop', preventDefault);
-            window.removeEventListener('scroll', preventDefault);
-            window.removeEventListener('wheel', preventDefault);
         };
     }, []);
 
