@@ -37,6 +37,7 @@ const Event: React.FC<EventComponentProps> = ({ event, start, end, left, width }
         </div>
     );
 };
+
 export const WeekCalendar: React.FC = () => {
     const { currentDate } = useCalendar();
     const { dummyEvents } = useTestData();
@@ -161,10 +162,8 @@ export const WeekCalendar: React.FC = () => {
                                 <div className="absolute w-full h-full">
                                     {splitOverlappingEvents.map((event, idx) => {
                                         const { itemCount, itemPosition } = overlaps[idx];
-                                        //////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                         const left = (itemPosition / itemCount) * 100;
                                         const width = 100 - left ;
-                                        //////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                         return (
                                             <Event
                                                 key={idx}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { EventInterface } from "../../../../api/interface/EventInterface";
+import { EventInterface } from "../../../api/interface/EventInterface";
 import { Cell } from './Cell'; // Adjust the import path as necessary
 
 interface DayProps {
