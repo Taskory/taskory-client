@@ -12,6 +12,7 @@ module.exports = {
         'leftbarClosed': '6rem',
         'leftbarOpened': '18rem',
         'headerHeight': '4rem',
+        'weekCalendarCellHeight': '50px'
       },
     },
   },
