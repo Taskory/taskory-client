@@ -26,7 +26,7 @@ export const TestDataProvider: React.FC<{ children: ReactNode }> = ({ children }
         },
         {
             id: 0,
-            title: "Company Meeting",
+            title: "Client Meeting",
             tag: {id: 1, title: "Work", color: "purple"},
             hashtags: [{id: 1, title: "#meeting"}],
             description: "Weekly team meeting to discuss contract updates.",
@@ -35,23 +35,23 @@ export const TestDataProvider: React.FC<{ children: ReactNode }> = ({ children }
             location: "Conference Room B"
         },
         {
-            id: 1,
-            title: "Company Meeting",
-            tag: {id: 1, title: "Work", color: "red"},
-            hashtags: [{id: 1, title: "#meeting"}],
-            description: "Weekly team meeting to discuss contract updates.",
-            startDateTime: new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 1, 10, 0).toISOString(),
-            dueDateTime: new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 1, 11, 30).toISOString(),
-            location: "Conference Room B"
-        },
-        {
             id: 2,
-            title: "Team Meeting",
+            title: "A Team Meeting",
             tag: {id: 1, title: "Work", color: "blue"},
             hashtags: [{id: 1, title: "#meeting"}],
             description: "Weekly team meeting to discuss project updates.",
             startDateTime: new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 1, 10, 30).toISOString(),
             dueDateTime: new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 1, 11, 30).toISOString(),
+            location: "Conference Room A"
+        },
+        {
+            id: 2,
+            title: "B Team Meeting2",
+            tag: {id: 1, title: "Work", color: "blue"},
+            hashtags: [{id: 1, title: "#meeting"}],
+            description: "Weekly team meeting to discuss project updates.",
+            startDateTime: new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 1, 10, 30).toISOString(),
+            dueDateTime: new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 1, 12, 30).toISOString(),
             location: "Conference Room A"
         },
         {
@@ -82,6 +82,16 @@ export const TestDataProvider: React.FC<{ children: ReactNode }> = ({ children }
             description: "Discuss project requirements with the client.",
             startDateTime: new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 3, 11, 30).toISOString(),
             dueDateTime: new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 3, 16, 30).toISOString(),
+            location: "Restaurant B"
+        },
+        {
+            id: 4,
+            title: "Lunch with Client",
+            tag: {id: 3, title: "Personal", color: "red"},
+            hashtags: [{id: 4, title: "#lunch"}, {id: 5, title: "#client"}],
+            description: "Discuss project requirements with the client.",
+            startDateTime: new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 1, 11, 30).toISOString(),
+            dueDateTime: new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 1, 16, 30).toISOString(),
             location: "Restaurant B"
         },
         {
