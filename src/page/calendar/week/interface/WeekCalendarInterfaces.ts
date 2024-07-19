@@ -13,6 +13,5 @@ export interface StylesForEachEventInterface {
     top: string;
     bottom: string;
     left: string;
-    right: string;
     color: string;
 }

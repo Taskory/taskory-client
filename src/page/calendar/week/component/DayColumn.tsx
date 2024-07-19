@@ -40,7 +40,6 @@ export const DayColumn: React.FC<DayColumnProps> = ({events}) => {
                                 top={event.top}
                                 bottom={event.bottom}
                                 title={event.title}
-                                right={event.right}
                                 left={event.left}
                                 color={event.color}
                             />

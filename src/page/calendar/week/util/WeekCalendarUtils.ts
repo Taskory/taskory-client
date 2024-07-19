@@ -79,7 +79,6 @@ export function processEventPosition(events: EventInterface[]): { styledEvents: 
                 top: topHeight,
                 bottom: bottomHeight,
                 left: "0", // initial value
-                right: "0", // initial value
                 color: event.tag.color.toLowerCase()
             })
         }
