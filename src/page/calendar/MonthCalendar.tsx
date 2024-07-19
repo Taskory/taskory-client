@@ -5,12 +5,7 @@ import { useCalendar } from "./context/CalendarContext";
 import { EventInterface } from "../../api/interface/EventInterface";
 import { requestMonthlyEvents } from "../../api/EventApi";
 import { Cell } from "./component/Cell";
-
-interface MonthInfoInterface {
-    daysInMonth: number;
-    firstDayOfWeek: number;
-    lastDayOfWeek: number;
-}
+import {MonthInfoInterface} from "./interface/MonthCalendarInterfaces";
 
 export const MonthCalendar: React.FC = () => {
     const { currentDate, setCurrentDate } = useCalendar();
@@ -27,7 +22,7 @@ export const MonthCalendar: React.FC = () => {
     const [scrollAmount, setScrollAmount] = useState<number>(0);
     const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
 
-    const handleWheel = useCallback((event: WheelEvent) => {
+    const handleWheel: (event: WheelEvent) => void = useCallback((event: WheelEvent) => {
         event.preventDefault();
         setScrollDirection(event.deltaY > 0 ? 1 : -1);
         setScrollAmount(event.deltaY);
@@ -66,7 +61,7 @@ export const MonthCalendar: React.FC = () => {
 
     useEffect(() => {
         if (enableDateUpdate) {
-            const newDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + scrollDirection, 1);
+            const newDate: Date = new Date(currentDate.getFullYear(), currentDate.getMonth() + scrollDirection, 1);
             setCurrentDate(newDate);
             setEnableDateUpdate(false);
         }
@@ -77,17 +72,17 @@ export const MonthCalendar: React.FC = () => {
     }, [enableDateUpdate]);
     /**/
 
-    const getEventsForDay = (date: Date): EventInterface[] => {
-        const startOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate()).toISOString();
-        const endOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1).toISOString();
+    function getEventsForDay(date: Date): EventInterface[] {
+        const startOfDay: string = new Date(date.getFullYear(), date.getMonth(), date.getDate()).toISOString();
+        const endOfDay: string = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1).toISOString();
 
-        return events.filter(event => (
+        return events.filter((event: EventInterface) => (
             (event.startDateTime <= endOfDay && event.dueDateTime >= startOfDay)
         ));
-    };
+    }
 
     const weeksOfCurrentMonth = (): number => {
-        const countOfCells = (
+        const countOfCells: number = (
             monthInfo.firstDayOfWeek
             + monthInfo.daysInMonth
             + 6 - monthInfo.lastDayOfWeek
@@ -99,12 +94,12 @@ export const MonthCalendar: React.FC = () => {
     * rendering function
     * */
     function renderDayCells() {
-        const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+        const daysInMonth: number = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
         return <>
             {Array.from({ length: daysInMonth }, (_, index) => {
-                const day = index + 1;
-                const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day)
-                const dayEvents = getEventsForDay(date);
+                const day: number = index + 1;
+                const date: Date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day)
+                const dayEvents: EventInterface[] = getEventsForDay(date);
                 return (
                     <DayCell key={day} day={day} events={dayEvents} />
                 );
@@ -113,12 +108,12 @@ export const MonthCalendar: React.FC = () => {
     }
 
     function renderEmptyCells(count: number, startIndex: number, previousMonth: boolean) {
-        const days = [];
+        const days: number[] = [];
         if (previousMonth) {
-            const prevMonthDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
-            const prevMonthDays = prevMonthDate.getDate();
+            const prevMonthDate: Date = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+            const prevMonthDays: number = prevMonthDate.getDate();
             for (let i = 0; i < count; i++) {
-                const day = prevMonthDays - count + i + 1;
+                const day: number = prevMonthDays - count + i + 1;
                 days.push(day);
             }
         } else {
