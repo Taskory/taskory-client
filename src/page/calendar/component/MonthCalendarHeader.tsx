@@ -1,5 +1,5 @@
 import React from "react";
-import calendar from "../../../../constants/calendar.json";
+import calendar from "../../../constants/calendar.json";
 
 export const MonthCalendarHeader: React.FC = () => {
     const daysOfWeek = calendar.daysOfWeek;

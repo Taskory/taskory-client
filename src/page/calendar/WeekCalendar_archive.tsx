@@ -1,8 +1,8 @@
 import React, { useEffect, useCallback, useState, useMemo } from "react";
-import { useCalendar } from "../context/CalendarContext";
-import { EventInterface } from "../../../api/interface/EventInterface";
+import { useCalendar } from "./context/CalendarContext";
+import { EventInterface } from "../../api/interface/EventInterface";
 import { WeekCalendarHeader } from "./component/WeekCalendarHeader";
-import { useTestData } from "../context/TestDataContext";
+import { useTestData } from "./context/TestDataContext";
 
 interface WeekInfoInterface {
     startSunday: Date;

@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useCallback, useState } from "react";
 import { MonthCalendarHeader } from "./component/MonthCalendarHeader";
 import { DayCell } from "./component/DayCell";
-import { useCalendar } from "../context/CalendarContext";
-import { EventInterface } from "../../../api/interface/EventInterface";
-import { requestMonthlyEvents } from "../../../api/EventApi";
+import { useCalendar } from "./context/CalendarContext";
+import { EventInterface } from "../../api/interface/EventInterface";
+import { requestMonthlyEvents } from "../../api/EventApi";
 import { Cell } from "./component/Cell";
 
 interface MonthInfoInterface {

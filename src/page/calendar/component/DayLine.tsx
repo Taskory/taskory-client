@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
 import {DayColumnProps, StylesForEachEventInterface} from "../interface/WeekCalendarInterfaces";
-import {EventInterface} from "../../../../api/interface/EventInterface";
+import {EventInterface} from "../../../api/interface/EventInterface";
 import {processEventPosition} from "../util/WeekCalendarUtils";
 import {EventCell} from "./EventCell";
 
-export const DayColumn: React.FC<DayColumnProps> = ({events}) => {
+export const DayLine: React.FC<DayColumnProps> = ({events}) => {
     const [styledEvents, setStyledEvents] = useState<StylesForEachEventInterface[]>([]);
     const [allDayEvents, setAllDayEvents] = useState<EventInterface[]>([]);
 

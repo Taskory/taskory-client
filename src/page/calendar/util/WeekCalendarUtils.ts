@@ -1,4 +1,4 @@
-import {EventInterface} from "../../../../api/interface/EventInterface";
+import {EventInterface} from "../../../api/interface/EventInterface";
 import {add, set} from "date-fns";
 import {StylesForEachEventInterface} from "../interface/WeekCalendarInterfaces";
 

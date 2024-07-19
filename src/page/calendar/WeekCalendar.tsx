@@ -1,11 +1,12 @@
 import React, {useCallback, useEffect, useState} from "react";
-import {useCalendar} from "../context/CalendarContext";
-import {EventInterface} from "../../../api/interface/EventInterface";
+import {useCalendar} from "./context/CalendarContext";
+import {EventInterface} from "../../api/interface/EventInterface";
 import {WeekCalendarHeader} from "./component/WeekCalendarHeader";
-import {useTestData} from "../context/TestDataContext";
+import {useTestData} from "./context/TestDataContext";
 import {WeekInfoInterface} from "./interface/WeekCalendarInterfaces";
 import {splitEvents} from "./util/WeekCalendarUtils";
-import {DayColumn} from "./component/DayColumn";
+import {DayLine} from "./component/DayLine";
+import {TimeLine} from "./component/TimeLine";
 
 export const WeekCalendar: React.FC = () => {
     const { currentDate } = useCalendar();
@@ -57,28 +58,25 @@ export const WeekCalendar: React.FC = () => {
         updateWeeklyEvents(events);
     }, [events, updateWeeklyEvents]);
 
+    function renderDayLines() {
+        return <>
+            {weeklyEvents.map((events: EventInterface[], index: number) => (
+                <DayLine key={index} events={events}/>
+            ))}
+        </>;
+    }
+
     return (
         <div className="w-full h-full flex flex-col">
             <WeekCalendarHeader startDate={weekInfo.startSunday}/>
             <div className="flex flex-grow h-full overflow-y-scroll">
                 {/* Weekly Calendar Row Header */}
                 <div className="w-[10%]">
-                    <div
-                        className="h-weekCalendarCellHeight border-t border-gray-200 flex items-start justify-end pr-1 text-xs font-semibold">
-                        all day events
-                    </div>
-                    {Array.from({length: 24}, (_, hour: number) => (
-                        <div key={hour}
-                             className="h-weekCalendarCellHeight border-t border-gray-200 flex items-start justify-end pr-1 text-xs font-semibold">
-                            {hour}:00
-                        </div>
-                    ))}
+                    <TimeLine />
                 </div>
                 {/* Day Columns */}
                 <div className="w-[90%] grid grid-cols-7 border-l border-gray-200">
-                    {weeklyEvents.map((events: EventInterface[], index: number) => (
-                        <DayColumn key={index} events={events}/>
-                    ))}
+                    {renderDayLines()}
                 </div>
             </div>
         </div>
