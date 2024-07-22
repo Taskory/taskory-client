@@ -3,19 +3,17 @@ import { MonthCalendarHeader } from "./component/MonthCalendarHeader";
 import { DayCell } from "./component/DayCell";
 import { useCalendar } from "./context/CalendarContext";
 import { EventInterface } from "../../api/interface/EventInterface";
-import { requestMonthlyEvents } from "../../api/EventApi";
 import { Cell } from "./component/Cell";
 import {MonthInfoInterface} from "./interface/MonthCalendarInterfaces";
 
 export const MonthCalendar: React.FC = () => {
-    const { currentDate, setCurrentDate } = useCalendar();
+    const { currentDate, setCurrentDate, events } = useCalendar();
     const [monthInfo, setMonthInfo] = useState<MonthInfoInterface>({
         daysInMonth: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate(),
         firstDayOfWeek: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay(),
         lastDayOfWeek: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDay(),
     });
 
-    const [events, setEvents] = useState<EventInterface[]>([]);
     const containerRef = useRef<HTMLDivElement>(null);
     const [enableDateUpdate, setEnableDateUpdate] = useState<boolean>(true);
     const [scrollDirection, setScrollDirection] = useState<number>(0);  // 1 for down, -1 for up, and 0 for fixed
@@ -50,13 +48,6 @@ export const MonthCalendar: React.FC = () => {
             firstDayOfWeek: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay(),
             lastDayOfWeek: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDay(),
         })
-        requestMonthlyEvents(currentDate)
-            .then((result) => {
-                if (result) {
-                    setEvents(result);
-                }
-            });
-
     }, [currentDate]);
 
     useEffect(() => {
@@ -100,6 +91,10 @@ export const MonthCalendar: React.FC = () => {
                 const day: number = index + 1;
                 const date: Date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day)
                 const dayEvents: EventInterface[] = getEventsForDay(date);
+                // console.log("date");
+                // console.log(date);
+                // console.log("events");
+                // console.log(dayEvents);
                 return (
                     <DayCell key={day} day={day} events={dayEvents} />
                 );

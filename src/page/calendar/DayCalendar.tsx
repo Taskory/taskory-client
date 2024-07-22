@@ -1,18 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {useCalendar} from "./context/CalendarContext";
-import {EventInterface} from "../../api/interface/EventInterface";
-import {useTestData} from "./context/TestDataContext";
 import {TimeLine} from "./component/TimeLine";
 import {DayLine} from "./component/DayLine";
 
 export const DayCalendar: React.FC = () => {
-    const { currentDate } = useCalendar();
-    const { dummyEvents } = useTestData();
-    const [events, setEvents] = useState<EventInterface[]>([]);
-
-    useEffect(() => {
-        setEvents(dummyEvents);
-    }, [currentDate]);
+    const { events } = useCalendar();
 
     return (
         <div className="w-full h-full flex flex-col">

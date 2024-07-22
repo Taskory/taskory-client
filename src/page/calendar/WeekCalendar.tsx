@@ -1,38 +1,26 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useCalendar} from "./context/CalendarContext";
 import {EventInterface} from "../../api/interface/EventInterface";
 import {WeekCalendarHeader} from "./component/WeekCalendarHeader";
-import {useTestData} from "./context/TestDataContext";
 import {WeekInfoInterface} from "./interface/WeekCalendarInterfaces";
 import {splitEvents} from "./util/WeekCalendarUtils";
 import {DayLine} from "./component/DayLine";
 import {TimeLine} from "./component/TimeLine";
 
 export const WeekCalendar: React.FC = () => {
-    const { currentDate } = useCalendar();
+    const { currentDate, events } = useCalendar();
     const [weekInfo, setWeekInfo] = useState<WeekInfoInterface>({
         startSunday: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - currentDate.getDay()),
     });
-    const { dummyEvents } = useTestData();
-    const [events, setEvents] = useState<EventInterface[]>([]);
-    const initialWeeklyEvents: EventInterface[][] = [[], [], [], [], [], [], []];
-    const [weeklyEvents, setWeeklyEvents] = useState<EventInterface[][]>(initialWeeklyEvents);
+    const [weeklyEvents, setWeeklyEvents] = useState<EventInterface[][]>([[], [], [], [], [], [], []]);
 
-    const updateWeekInfo = useCallback(() => {
+    useEffect(() => {
         setWeekInfo({
             startSunday: new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - currentDate.getDay()),
         });
     }, [currentDate]);
 
     useEffect(() => {
-        updateWeekInfo();
-    }, [currentDate, updateWeekInfo]);
-
-    useEffect(() => {
-        setEvents(splitEvents(dummyEvents, weekInfo.startSunday));
-    }, [dummyEvents, weekInfo.startSunday]);
-
-    const updateWeeklyEvents = useCallback((events: EventInterface[]) => {
         const startingTimeOfWeek: Date = new Date(weekInfo.startSunday.getFullYear(), weekInfo.startSunday.getMonth(), weekInfo.startSunday.getDate(), 0, 0, 0);
         const endingTimeOfWeek: Date = new Date(weekInfo.startSunday);
         endingTimeOfWeek.setDate(endingTimeOfWeek.getDate() + 6);
@@ -40,7 +28,7 @@ export const WeekCalendar: React.FC = () => {
 
         const newWeeklyEvents: EventInterface[][] = [[], [], [], [], [], [], []];
 
-        events.forEach((event: EventInterface) => {
+        splitEvents(events, weekInfo.startSunday).forEach((event: EventInterface) => {
             const eventStart: Date = new Date(event.startDateTime);
             const eventEnd: Date = new Date(event.dueDateTime);
 
@@ -52,11 +40,7 @@ export const WeekCalendar: React.FC = () => {
         });
 
         setWeeklyEvents(newWeeklyEvents);
-    }, [weekInfo.startSunday]);
-
-    useEffect(() => {
-        updateWeeklyEvents(events);
-    }, [events, updateWeeklyEvents]);
+    }, [events, weekInfo.startSunday]);
 
     function renderDayLines() {
         return <>

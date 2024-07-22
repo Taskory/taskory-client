@@ -7,7 +7,6 @@ import {YearCalendar} from "./YearCalendar";
 import {WeekCalendar} from "./WeekCalendar";
 import {CalendarProvider} from "./context/CalendarContext";
 import {useCalendarView} from "./context/CalendarViewContext";
-import {TestDataProvider} from "./context/TestDataContext";
 
 export const Calendar = () => {
     const {view} = useCalendarView();
@@ -30,7 +29,6 @@ export const Calendar = () => {
     return (
         <CommonLayout>
             <CalendarProvider>
-                <TestDataProvider>
                 <div className="w-full h-full">
                     <div className="h-[10%]">
                         <CalendarHeader/>
@@ -39,7 +37,6 @@ export const Calendar = () => {
                         {renderCalendarView()}
                     </div>
                 </div>
-                </TestDataProvider>
             </CalendarProvider>
         </CommonLayout>
     );
