@@ -10,10 +10,7 @@ export const DayLine: React.FC<DayColumnProps> = ({under24hoursEvents, over24hou
 
     useEffect(() => {
         if (under24hoursEvents) {
-            const {styledEvents, allDayEvents}: {
-                styledEvents: StylesForEachEventInterface[];
-                allDayEvents: EventInterface[]
-            } = processEventPosition(under24hoursEvents);
+            const styledEvents: StylesForEachEventInterface[] = processEventPosition(under24hoursEvents);
             setStyledEvents(styledEvents);
         }
     }, [under24hoursEvents]);

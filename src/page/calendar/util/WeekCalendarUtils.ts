@@ -64,29 +64,22 @@ function updateWidthStyles(events: StylesForEachEventInterface[]) {
 }
 
 
-export function processEventPosition(events: EventInterface[]): { styledEvents: StylesForEachEventInterface[]; allDayEvents: EventInterface[]; } {
+export function processEventPosition(events: EventInterface[]): StylesForEachEventInterface[] {
     const sortedEvents: EventInterface[] = sortEvents(events);
     let stylesForEachEvent: StylesForEachEventInterface[] = [];
-    let allDayEvents: EventInterface[] = [];
 
     sortedEvents.forEach((event: EventInterface) => {
-        if (new Date(event.dueDateTime).getTime() - new Date(event.startDateTime).getTime() === 86399000) {
-            allDayEvents.push(event);
-        } else {
-            const {topHeight, bottomHeight}: { topHeight: string; bottomHeight: string; } = calculateHeightRange(event);
-            stylesForEachEvent.push({
-                title: event.title,
-                top: topHeight,
-                bottom: bottomHeight,
-                left: "0", // initial value
-                color: event.tag.color.toLowerCase()
-            })
-        }
-    })
+        const {topHeight, bottomHeight}: { topHeight: string; bottomHeight: string; } = calculateHeightRange(event);
+        stylesForEachEvent.push({
+            title: event.title,
+            top: topHeight,
+            bottom: bottomHeight,
+            left: "0", // initial value
+            color: event.tag.color.toLowerCase()
+        })
+    });
 
-    const styledEvents: StylesForEachEventInterface[] = updateWidthStyles(stylesForEachEvent);
-
-    return {styledEvents, allDayEvents}
+    return updateWidthStyles(stylesForEachEvent)
 }
 
 export function splitEvents(events: EventInterface[], startSunday: Date): {under24hours: EventInterface[], over24hours: EventInterface[]} {
