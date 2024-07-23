@@ -1,7 +1,8 @@
-import React from "react";
+import React, {useState} from "react";
 import {useCalendar} from "./context/CalendarContext";
 import {TimeLine} from "./component/TimeLine";
 import {DayLine} from "./component/DayLine";
+import {EventInterface} from "../../api/interface/EventInterface";
 
 export const DayCalendar: React.FC = () => {
     const { events } = useCalendar();
@@ -14,7 +15,7 @@ export const DayCalendar: React.FC = () => {
                 </div>
                 {/* Day Columns */}
                 <div className="w-[90%] border-l border-gray-200">
-                <DayLine events={events} />
+                {/*<DayLine events={events} />*/}
                 </div>
             </div>
         </div>

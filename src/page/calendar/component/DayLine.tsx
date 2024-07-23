@@ -4,24 +4,29 @@ import {EventInterface} from "../../../api/interface/EventInterface";
 import {processEventPosition} from "../util/WeekCalendarUtils";
 import {EventCell} from "./EventCell";
 
-export const DayLine: React.FC<DayColumnProps> = ({events}) => {
+export const DayLine: React.FC<DayColumnProps> = ({under24hoursEvents, over24hoursEvents}) => {
     const [styledEvents, setStyledEvents] = useState<StylesForEachEventInterface[]>([]);
-    const [allDayEvents, setAllDayEvents] = useState<EventInterface[]>([]);
+    const [multiDayEvents, setMultiDayEvents] = useState<EventInterface[]>([]);
 
     useEffect(() => {
-        if (events) {
+        if (under24hoursEvents) {
             const {styledEvents, allDayEvents}: {
                 styledEvents: StylesForEachEventInterface[];
                 allDayEvents: EventInterface[]
-            } = processEventPosition(events);
+            } = processEventPosition(under24hoursEvents);
             setStyledEvents(styledEvents);
-            setAllDayEvents(allDayEvents);
         }
-    }, [events]);
+    }, [under24hoursEvents]);
+
+    useEffect(() => {
+        setMultiDayEvents(over24hoursEvents);
+    }, [over24hoursEvents]);
+
+
     return (
         <div className="grid">
             <div className="h-weekCalendarCellHeight border-t border-r border-gray-200">
-                {allDayEvents.map((event: EventInterface, idx: number) => {
+                {multiDayEvents.map((event: EventInterface, idx: number) => {
                     const textColor: string = `text-${event.tag.color.toLowerCase()}-500`;
                     return (
                         <button key={idx}

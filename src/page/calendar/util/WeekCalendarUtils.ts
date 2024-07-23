@@ -1,6 +1,6 @@
 import {EventInterface} from "../../../api/interface/EventInterface";
 import {add, set} from "date-fns";
-import {StylesForEachEventInterface} from "../interface/WeekCalendarInterfaces";
+import {StylesForEachEventInterface, WeekInfoInterface} from "../interface/WeekCalendarInterfaces";
 
 function calculateHeightRange( event : EventInterface) {
     const startingTime: Date = new Date(event.startDateTime);
@@ -89,50 +89,69 @@ export function processEventPosition(events: EventInterface[]): { styledEvents: 
     return {styledEvents, allDayEvents}
 }
 
-export function splitEvents(events: EventInterface[], startSunday: Date): EventInterface[] {
-    let result: EventInterface[] = [];
+export function splitEvents(events: EventInterface[], startSunday: Date): {under24hours: EventInterface[], over24hours: EventInterface[]} {
+    let under24hours: EventInterface[] = [];
+    let over24hours: EventInterface[] = [];
     events.forEach((event: EventInterface) => {
-        // 시작 시간이 현재 주의 일요일 이전이라면 일요일로 설정
-        if (new Date(event.startDateTime) < startSunday) {
-            event.startDateTime = startSunday.toISOString();
-        }
+        const eventStart: Date = new Date(event.startDateTime);
+        const eventEnd: Date = new Date(event.dueDateTime);
 
-        let present00: Date = set(new Date(event.startDateTime), { hours: 0, minutes: 0, seconds: 0 });
-        let present24: Date = set(new Date(event.startDateTime), { hours: 23, minutes: 59, seconds: 59 });
-
-        // 이벤트가 하루 안에 끝나는 경우
-        if (present24 >= new Date(event.dueDateTime)) {
-            result.push({
-                ...event,
-                startDateTime: event.startDateTime,
-                dueDateTime: event.dueDateTime
-            });
+        if (eventEnd.getTime() - eventStart.getTime() >= (24 * 60 * 60 * 1000) ) {
+            over24hours.push(event);
         } else {
-            // 이벤트가 여러 날에 걸쳐 있는 경우
-            while (present24 < new Date(event.dueDateTime)) {
-                if (present00 <= new Date(event.startDateTime)) {
-                    result.push({
-                        ...event,
-                        startDateTime: event.startDateTime,
-                        dueDateTime: present24.toISOString()
-                    });
-                } else {
-                    result.push({
-                        ...event,
-                        startDateTime: present00.toISOString(),
-                        dueDateTime: present24.toISOString()
-                    });
-                }
-                present00 = add(present00, { days: 1 });
-                present24 = add(present24, { days: 1});
+            // 시작 시간이 현재 주의 일요일 이전이라면 일요일로 설정
+            if (new Date(event.startDateTime) < startSunday) {
+                event.startDateTime = startSunday.toISOString();
             }
-            // 마지막 부분을 처리
-            result.push({
-                ...event,
-                startDateTime: present00.toISOString(),
-                dueDateTime: event.dueDateTime
-            });
+
+            let present00: Date = set(new Date(event.startDateTime), { hours: 0, minutes: 0, seconds: 0 });
+            let present24: Date = set(new Date(event.startDateTime), { hours: 23, minutes: 59, seconds: 59 });
+
+            // 이벤트가 하루 안에 끝나는 경우
+            if (present24 >= new Date(event.dueDateTime)) {
+                under24hours.push({
+                    ...event,
+                    startDateTime: event.startDateTime,
+                    dueDateTime: event.dueDateTime
+                });
+            } else {
+                // 이벤트가 여러 날에 걸쳐 있는 경우
+                while (present24 < new Date(event.dueDateTime)) {
+                    if (present00 <= new Date(event.startDateTime)) {
+                        under24hours.push({
+                            ...event,
+                            startDateTime: event.startDateTime,
+                            dueDateTime: present24.toISOString()
+                        });
+                    } else {
+                        under24hours.push({
+                            ...event,
+                            startDateTime: present00.toISOString(),
+                            dueDateTime: present24.toISOString()
+                        });
+                    }
+                    present00 = add(present00, { days: 1 });
+                    present24 = add(present24, { days: 1});
+                }
+                // 마지막 부분을 처리
+                under24hours.push({
+                    ...event,
+                    startDateTime: present00.toISOString(),
+                    dueDateTime: event.dueDateTime
+                });
+            }
         }
+
     });
-    return result;
+    return {under24hours: under24hours, over24hours: over24hours};
 }
+
+export const initializeWeekInfo = (date: Date): WeekInfoInterface => ({
+    startSunday: new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay()),
+});
+
+export function getEventDayIndex(eventStart: Date, startingTimeOfWeek: Date): number {
+    let dayIndex = Math.floor((eventStart.getTime() - startingTimeOfWeek.getTime()) / (1000 * 60 * 60 * 24));
+    return Math.max(0, Math.min(dayIndex, 6)); // Ensure index is within bounds of the week
+}
+

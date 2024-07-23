@@ -5,7 +5,8 @@ export interface WeekInfoInterface {
 }
 
 export interface DayColumnProps {
-    events?: EventInterface[];
+    under24hoursEvents: EventInterface[];
+    over24hoursEvents: EventInterface[];
 }
 
 export interface StylesForEachEventInterface {
