@@ -126,12 +126,6 @@ export function splitEvents(events: EventInterface[], startSunday: Date): {under
                     present00 = add(present00, { days: 1 });
                     present24 = add(present24, { days: 1});
                 }
-                // 마지막 부분을 처리
-                under24hours.push({
-                    ...event,
-                    startDateTime: present00.toISOString(),
-                    dueDateTime: event.dueDateTime
-                });
             }
         }
 
