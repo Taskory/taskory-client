@@ -22,7 +22,7 @@ export const DayLine: React.FC<DayColumnProps> = ({under24hoursEvents, over24hou
 
     return (
         <div className="grid">
-            <div className="h-weekCalendarCellHeight border-t border-r border-gray-200">
+            <div className="h-weekCalendarCellHeight border-t border-r border-gray-200 border-b-2">
                 {multiDayEvents.map((event: EventInterface, idx: number) => {
                     const textColor: string = `text-${event.tag.color.toLowerCase()}-500`;
                     return (
