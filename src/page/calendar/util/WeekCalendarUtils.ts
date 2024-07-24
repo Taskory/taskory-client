@@ -1,5 +1,4 @@
 import {EventInterface} from "../../../api/interface/EventInterface";
-import {add, set} from "date-fns";
 import {StylesForEachEventInterface, WeekInfoInterface} from "../interface/WeekCalendarInterfaces";
 
 function calculateHeightRange( event : EventInterface) {
@@ -82,57 +81,6 @@ export function processEventPosition(events: EventInterface[]): StylesForEachEve
     return updateWidthStyles(stylesForEachEvent)
 }
 
-export function splitEvents(events: EventInterface[], startSunday: Date): {under24hours: EventInterface[], over24hours: EventInterface[]} {
-    let under24hours: EventInterface[] = [];
-    let over24hours: EventInterface[] = [];
-    events.forEach((event: EventInterface) => {
-        const eventStart: Date = new Date(event.startDateTime);
-        const eventEnd: Date = new Date(event.dueDateTime);
-
-        if (eventEnd.getTime() - eventStart.getTime() >= (24 * 60 * 60 * 1000) ) {
-            over24hours.push(event);
-        } else {
-            // 시작 시간이 현재 주의 일요일 이전이라면 일요일로 설정
-            if (new Date(event.startDateTime) < startSunday) {
-                event.startDateTime = startSunday.toISOString();
-            }
-
-            let present00: Date = set(new Date(event.startDateTime), { hours: 0, minutes: 0, seconds: 0 });
-            let present24: Date = set(new Date(event.startDateTime), { hours: 23, minutes: 59, seconds: 59 });
-
-            // 이벤트가 하루 안에 끝나는 경우
-            if (present24 >= new Date(event.dueDateTime)) {
-                under24hours.push({
-                    ...event,
-                    startDateTime: event.startDateTime,
-                    dueDateTime: event.dueDateTime
-                });
-            } else {
-                // 이벤트가 여러 날에 걸쳐 있는 경우
-                while (present24 < new Date(event.dueDateTime)) {
-                    if (present00 <= new Date(event.startDateTime)) {
-                        under24hours.push({
-                            ...event,
-                            startDateTime: event.startDateTime,
-                            dueDateTime: present24.toISOString()
-                        });
-                    } else {
-                        under24hours.push({
-                            ...event,
-                            startDateTime: present00.toISOString(),
-                            dueDateTime: present24.toISOString()
-                        });
-                    }
-                    present00 = add(present00, { days: 1 });
-                    present24 = add(present24, { days: 1});
-                }
-            }
-        }
-
-    });
-    return {under24hours: under24hours, over24hours: over24hours};
-}
-
 export const initializeWeekInfo = (date: Date): WeekInfoInterface => ({
     startSunday: new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay()),
 });
@@ -142,3 +90,17 @@ export function getEventDayIndex(eventStart: Date, startingTimeOfWeek: Date): nu
     return Math.max(0, Math.min(dayIndex, 6)); // Ensure index is within bounds of the week
 }
 
+export function getWeeklyEvents(events: EventInterface[], startSunday: Date): EventInterface[] {
+    const result: EventInterface[] = [];
+    const endSaturday = new Date(startSunday);
+    endSaturday.setDate(startSunday.getDate() + 6);
+
+    events.forEach((event: EventInterface) => {
+        const eventStartDateTime = new Date(event.startDateTime);
+        if (eventStartDateTime >= startSunday && eventStartDateTime <= endSaturday) {
+            result.push(event);
+        }
+    });
+
+    return result;
+}

@@ -3,12 +3,12 @@ import { useCalendar } from "./context/CalendarContext";
 import { EventInterface } from "../../api/interface/EventInterface";
 import { WeekCalendarHeader } from "./component/WeekCalendarHeader";
 import { WeekInfoInterface } from "./interface/WeekCalendarInterfaces";
-import {getEventDayIndex, initializeWeekInfo, splitEvents} from "./util/WeekCalendarUtils";
+import {getEventDayIndex, getWeeklyEvents, initializeWeekInfo} from "./util/WeekCalendarUtils";
 import { DayLine } from "./component/DayLine";
 import { TimeLine } from "./component/TimeLine";
 
 export const WeekCalendar: React.FC = () => {
-    const { currentDate, events } = useCalendar();
+    const { currentDate, splitEvents } = useCalendar();
     const [weekInfo, setWeekInfo] = useState<WeekInfoInterface>(initializeWeekInfo(currentDate));
     const [under24hoursEvents, setUnder24hoursEvents] = useState<EventInterface[][]>([[], [], [], [], [], [], []]);
     const [over24hoursEvents, setOver24hoursEvents] = useState<EventInterface[][]>([[], [], [], [], [], [], []]);
@@ -23,10 +23,9 @@ export const WeekCalendar: React.FC = () => {
         endingTimeOfWeek.setDate(endingTimeOfWeek.getDate() + 6);
         endingTimeOfWeek.setHours(23, 59, 59);
 
-        const { under24hours, over24hours } = splitEvents(events, weekInfo.startSunday);
 
         const newUnder24hoursEvents: EventInterface[][] = [[], [], [], [], [], [], []];
-        under24hours.forEach((event: EventInterface) => {
+        getWeeklyEvents(splitEvents.eventsUnder24, weekInfo.startSunday).forEach((event: EventInterface) => {
             const eventStart = new Date(event.startDateTime);
             const eventEnd = new Date(event.dueDateTime);
 
@@ -38,27 +37,24 @@ export const WeekCalendar: React.FC = () => {
 
         const newOver24hoursEvents: EventInterface[][] = [[], [], [], [], [], [], []];
 
-        over24hours.forEach((event: EventInterface) => {
-            const eventStart = new Date(event.startDateTime);
-            const eventEnd = new Date(event.dueDateTime);
+        getWeeklyEvents(splitEvents.eventsOver24, weekInfo.startSunday).forEach((event: EventInterface) => {
+            const eventStart: Date = new Date(event.startDateTime);
+            const eventEnd: Date = new Date(event.dueDateTime);
 
             if (eventEnd >= startingTimeOfWeek && eventStart <= endingTimeOfWeek) {
-                // 이벤트의 시작일과 종료일 사이의 모든 요일에 이벤트를 추가합니다.
-                let currentDay = new Date(eventStart);
+                let currentDay: Date = new Date(eventStart);
                 while (currentDay <= eventEnd && currentDay <= endingTimeOfWeek) {
                     if (currentDay >= startingTimeOfWeek) {
-                        const dayIndex = getEventDayIndex(currentDay, startingTimeOfWeek);
+                        const dayIndex: number = getEventDayIndex(currentDay, startingTimeOfWeek);
                         newOver24hoursEvents[dayIndex].push(event);
                     }
                     currentDay.setDate(currentDay.getDate() + 1);
                 }
             }
         });
-
-        // console.log(newOver24hoursEvents);
         setOver24hoursEvents(newOver24hoursEvents);
 
-    }, [events, weekInfo.startSunday]);
+    }, [splitEvents, weekInfo.startSunday]);
 
     const renderDayLines = () =>
         Array.from({length: 7}, (_, index) => (

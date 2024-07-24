@@ -1,41 +1,44 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {useCalendar} from "./context/CalendarContext";
 import {TimeLine} from "./component/TimeLine";
-import {FullDayLine} from "./component/FullDayLine";
 import {EventInterface} from "../../api/interface/EventInterface";
+import {DayLine} from "./component/DayLine";
 
 export const DayCalendar: React.FC = () => {
-    const { currentDate, events } = useCalendar();
+    const { currentDate, splitEvents } = useCalendar();
+    const [eventsUnder24, setEventsUnder24] = useState<EventInterface[]>(getEventsForDate(splitEvents.eventsUnder24, currentDate));
+    const [eventsOver24, setEventsOver24] = useState<EventInterface[]>(getEventsForDate(splitEvents.eventsOver24, currentDate));
 
-    function getEventsForDay(date: Date): EventInterface[] {
-        const startOfDay: string = new Date(date.getFullYear(), date.getMonth(), date.getDate()).toISOString();
-        const endOfDay: string = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1).toISOString();
+    useEffect(() => {
+        setEventsUnder24(getEventsForDate(splitEvents.eventsUnder24, currentDate));
+        setEventsOver24(getEventsForDate(splitEvents.eventsOver24, currentDate));
+    }, [currentDate, splitEvents]);
 
-        return events.map((event: EventInterface) => {
-            let startDateTime = new Date(event.startDateTime);
-            let dueDateTime = new Date(event.dueDateTime);
+    function getEventsForDate(events: EventInterface[], date: Date): EventInterface[] {
+        const result: EventInterface[] = [];
 
-            if (startDateTime < new Date(startOfDay)) {
-                startDateTime = new Date(startOfDay);
+        // Normalize the input date to ignore the time part
+        const inputDate: Date = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+        events.forEach((event: EventInterface) => {
+            const eventStartDate: Date = new Date(event.startDateTime);
+            const eventDueDate: Date = new Date(event.dueDateTime);
+
+            // Normalize event start and due dates to ignore the time part
+            const normalizedStartDate: Date = new Date(eventStartDate.getFullYear(), eventStartDate.getMonth(), eventStartDate.getDate());
+            const normalizedDueDate: Date = new Date(eventDueDate.getFullYear(), eventDueDate.getMonth(), eventDueDate.getDate());
+
+            // Check if the input date is within the event's start and due date range (inclusive)
+            if (
+                normalizedStartDate <= inputDate &&
+                normalizedDueDate >= inputDate
+            ) {
+                result.push(event);
             }
+        });
 
-            if (dueDateTime > new Date(endOfDay)) {
-                dueDateTime = new Date(new Date(endOfDay).getTime() - 1); // Set to 23:59:59
-            }
-
-            return {
-                ...event,
-                startDateTime: startDateTime.toISOString(),
-                dueDateTime: dueDateTime.toISOString()
-            };
-        }).filter((event: EventInterface) => (
-            event.startDateTime <= endOfDay && event.dueDateTime >= startOfDay
-        ));
+        return result;
     }
-
-    console.log("events");
-    console.log(events);
-
     return (
         <div className="w-full h-full flex flex-col">
             <div className="flex flex-grow h-full overflow-y-scroll">
@@ -44,7 +47,7 @@ export const DayCalendar: React.FC = () => {
                 </div>
                 {/* Day Columns */}
                 <div className="w-[90%] border-l border-gray-200">
-                    <FullDayLine events={getEventsForDay(currentDate)} />
+                    <DayLine under24hoursEvents={eventsUnder24} over24hoursEvents={eventsOver24} />
                 </div>
             </div>
         </div>

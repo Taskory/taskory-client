@@ -2,12 +2,13 @@ import React, { useEffect, useRef, useCallback, useState } from "react";
 import { MonthCalendarHeader } from "./component/MonthCalendarHeader";
 import { DayCell } from "./component/DayCell";
 import { useCalendar } from "./context/CalendarContext";
-import { EventInterface } from "../../api/interface/EventInterface";
 import { Cell } from "./component/Cell";
 import {MonthInfoInterface} from "./interface/MonthCalendarInterfaces";
+import {getMonthlyEvents} from "./util/MonthCalendarUtils";
 
 export const MonthCalendar: React.FC = () => {
-    const { currentDate, setCurrentDate, events } = useCalendar();
+    const { currentDate, setCurrentDate, originEvents } = useCalendar();
+    const [monthlyEvents, setMonthlyEvents] = useState(getMonthlyEvents(originEvents, currentDate));
     const [monthInfo, setMonthInfo] = useState<MonthInfoInterface>({
         daysInMonth: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate(),
         firstDayOfWeek: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay(),
@@ -61,16 +62,13 @@ export const MonthCalendar: React.FC = () => {
     useEffect(() => {
         if (!enableDateUpdate) setScrollAmount(0);
     }, [enableDateUpdate]);
+
+    useEffect(() => {
+        setMonthlyEvents(getMonthlyEvents(originEvents, currentDate));
+    }, [originEvents]);
     /**/
 
-    function getEventsForDay(date: Date): EventInterface[] {
-        const startOfDay: string = new Date(date.getFullYear(), date.getMonth(), date.getDate()).toISOString();
-        const endOfDay: string = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1).toISOString();
 
-        return events.filter((event: EventInterface) => (
-            (event.startDateTime <= endOfDay && event.dueDateTime >= startOfDay)
-        ));
-    }
 
     const weeksOfCurrentMonth = (): number => {
         const countOfCells: number = (
@@ -85,18 +83,11 @@ export const MonthCalendar: React.FC = () => {
     * rendering function
     * */
     function renderDayCells() {
-        const daysInMonth: number = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
         return <>
-            {Array.from({ length: daysInMonth }, (_, index) => {
+            {monthlyEvents.map((events, index) => {
                 const day: number = index + 1;
-                const date: Date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day)
-                const dayEvents: EventInterface[] = getEventsForDay(date);
-                // console.log("date");
-                // console.log(date);
-                // console.log("events");
-                // console.log(dayEvents);
                 return (
-                    <DayCell key={day} day={day} events={dayEvents} />
+                    <DayCell key={day} day={day} events={events}/>
                 );
             })}
         </>;
