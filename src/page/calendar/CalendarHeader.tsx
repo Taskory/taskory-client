@@ -1,20 +1,22 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
 import { useCalendar } from "./context/CalendarContext";
 import monthNames from "../../constants/calendar.json";
 import { useCalendarView } from "./context/CalendarViewContext";
+import {CalendarModal} from "./CalendarModal";
 
 export const CalendarHeader: React.FC = () => {
     const { view, setView } = useCalendarView();
-    const navigate = useNavigate();
     const { currentDate, setCurrentDate, goToNext, goToPrev, goToToday } = useCalendar();
     const [currentMonthName, setCurrentMonthName] = useState(monthNames.monthNames[currentDate.getMonth()]);
     const [inputYear, setInputYear] = useState(currentDate.getFullYear().toString());
     const [selectedMonth, setSelectedMonth] = useState(currentDate.getMonth().toString());
     const [selectedDay, setSelectedDay] = useState(currentDate.getDate().toString());
+    const calendarModalRef = useRef<HTMLDialogElement>(null);
 
     const handleAddEvent = () => {
-        navigate('/add-event');
+        if (calendarModalRef.current) {
+            calendarModalRef.current.showModal();
+        }
     };
 
     useEffect(() => {
@@ -124,9 +126,8 @@ export const CalendarHeader: React.FC = () => {
                     <option value="week">Week</option>
                     <option value="day">Day</option>
                 </select>
-                <button className="btn btn-sm btn-primary" onClick={handleAddEvent}>
-                    Add event +
-                </button>
+                <button className="btn" onClick={handleAddEvent}>open modal</button>
+                <CalendarModal ref={calendarModalRef} />
             </div>
         </div>
     );
