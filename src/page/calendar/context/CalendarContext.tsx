@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode, useMe
 import {EventInterface} from "../../../api/interface/EventInterface";
 import {SplitEventsInterface} from "../interface/CalendarContextInterface";
 import {getSplitEvents} from "../util/CalendarContextUtils";
+import {requestMonthlyEvents} from "../../../api/EventApi";
 
 interface CalendarContextType {
     currentDate: Date;
@@ -42,48 +43,12 @@ export const CalendarProvider: React.FC<{ children: ReactNode }> = ({ children }
 
         const newSum = currentDate.getFullYear() + currentDate.getFullYear();
         if (newSum !== sumOfMonthAndYear) {
-            // requestMonthlyEvents(currentDate)
-            //     .then((result) => {
-            //         if (result) {
-            //             setEvents(result);
-            //         }
-            //     });
-
-            // Dummy data
-            const startOfWeek = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - currentDate.getDay());
-            const initData: EventInterface[] = [
-                {
-                    id: 1,
-                    title: "under 24, 1day event",
-                    tag: {id: 1, title: "Work", color: "red"},
-                    hashtags: [{id: 1, title: "#meeting"}],
-                    description: "",
-                    startDateTime: new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 1, 10, 0).toISOString(),
-                    dueDateTime: new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 1, 11, 0).toISOString(),
-                    location: ""
-                },
-                {
-                    id: 2,
-                    title: "under 24, 2day event",
-                    tag: {id: 1, title: "Work", color: "orange"},
-                    hashtags: [{id: 1, title: "#meeting"}],
-                    description: "",
-                    startDateTime: new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 1, 13, 0).toISOString(),
-                    dueDateTime: new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 2, 11, 0).toISOString(),
-                    location: ""
-                },
-                {
-                    id: 3,
-                    title: "over 24 event",
-                    tag: {id: 1, title: "Work", color: "yellow"},
-                    hashtags: [{id: 1, title: "#meeting"}],
-                    description: "",
-                    startDateTime: new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 1, 10, 0).toISOString(),
-                    dueDateTime: new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 3, 11, 0).toISOString(),
-                    location: ""
-                },
-            ];
-            setOriginEvents(initData);
+            requestMonthlyEvents(currentDate)
+                .then((result) => {
+                    if (result) {
+                        setOriginEvents(result);
+                    }
+                });
 
             setSumOfMonthAndYear(currentDate.getFullYear() + currentDate.getMonth());
         }
