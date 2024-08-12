@@ -3,8 +3,8 @@ import { MonthCalendarHeader } from "./component/MonthCalendarHeader";
 import { DayCell } from "./component/DayCell";
 import { useCalendar } from "./context/CalendarContext";
 import { Cell } from "./component/Cell";
-import {MonthInfoInterface} from "./interface/MonthCalendarInterfaces";
-import {getMonthlyEvents} from "./util/MonthCalendarUtils";
+import { MonthInfoInterface } from "./interface/MonthCalendarInterfaces";
+import { getMonthlyEvents } from "./util/MonthCalendarUtils";
 
 export const MonthCalendar: React.FC = () => {
     const { currentDate, setCurrentDate, originEvents } = useCalendar();
@@ -48,7 +48,7 @@ export const MonthCalendar: React.FC = () => {
             daysInMonth: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate(),
             firstDayOfWeek: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay(),
             lastDayOfWeek: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDay(),
-        })
+        });
     }, [currentDate]);
 
     useEffect(() => {
@@ -65,18 +65,16 @@ export const MonthCalendar: React.FC = () => {
 
     useEffect(() => {
         setMonthlyEvents(getMonthlyEvents(originEvents, currentDate));
-    }, [originEvents]);
+    }, [originEvents, currentDate]);
     /**/
-
-
 
     const weeksOfCurrentMonth = (): number => {
         const countOfCells: number = (
             monthInfo.firstDayOfWeek
             + monthInfo.daysInMonth
-            + 6 - monthInfo.lastDayOfWeek
+            + (6 - monthInfo.lastDayOfWeek)
         );
-        return countOfCells / 7;
+        return Math.ceil(countOfCells / 7);
     };
 
     /*
@@ -87,7 +85,7 @@ export const MonthCalendar: React.FC = () => {
             {monthlyEvents.map((events, index) => {
                 const day: number = index + 1;
                 return (
-                    <DayCell key={day} day={day} events={events}/>
+                    <DayCell key={day} day={day} events={events} />
                 );
             })}
         </>;
@@ -128,7 +126,7 @@ export const MonthCalendar: React.FC = () => {
             <div className={`grid grid-cols-7 grid-rows-${weeksOfCurrentMonth()} h-full`}>
                 {renderEmptyCells(monthInfo.firstDayOfWeek, 0, true)}
                 {renderDayCells()}
-                {renderEmptyCells(6 - monthInfo.lastDayOfWeek, monthInfo.daysInMonth, false)}
+                {renderEmptyCells(6 - monthInfo.lastDayOfWeek, monthInfo.daysInMonth + 1, false)}
             </div>
         </div>
     );
