@@ -1,6 +1,6 @@
-import {EventInterface} from "../../../api/interface/EventInterface";
+import {EventSummary} from "../../../api/event/eventsTypes";
 
 export interface SplitEventsInterface {
-    eventsUnder24: EventInterface[];
-    eventsOver24: EventInterface[];
+    eventsUnder24: EventSummary[];
+    eventsOver24: EventSummary[];
 }

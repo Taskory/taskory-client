@@ -1,12 +1,12 @@
-import {EventInterface} from "../../../api/interface/EventInterface";
+import {EventSummary} from "../../../api/event/eventsTypes";
 
 export interface WeekInfoInterface {
     startSunday: Date;
 }
 
 export interface DayColumnProps {
-    under24hoursEvents: EventInterface[];
-    over24hoursEvents: EventInterface[];
+    under24hoursEvents: EventSummary[];
+    over24hoursEvents: EventSummary[];
 }
 
 export interface StylesForEachEventInterface {

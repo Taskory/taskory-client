@@ -1,30 +1,33 @@
-import {EventInterface} from "../../../api/interface/EventInterface";
 import {set} from "date-fns";
 import {SplitEventsInterface} from "../interface/CalendarContextInterface";
+import {EventSummary} from "../../../api/event/eventsTypes";
 
-export function getSplitEvents(events: EventInterface[], firstDate: Date): SplitEventsInterface {
-    let under24hours: EventInterface[] = [];
-    let over24hours: EventInterface[] = [];
+export function getSplitEvents(events: EventSummary[], firstDate: Date): SplitEventsInterface {
+    let under24hours: EventSummary[] = [];
+    let over24hours: EventSummary[] = [];
     const oneDayMilliSeconds = (24 * 60 * 60 * 1000);
-    events.forEach((event: EventInterface) => {
+
+    events.forEach((event: EventSummary) => {
         const eventStart: Date = new Date(event.startDateTime);
         const eventEnd: Date = new Date(event.dueDateTime);
-
 
         // events over 24 hours
         if (eventEnd.getTime() - eventStart.getTime() >=  oneDayMilliSeconds) {
             over24hours.push(event);
         }
         // events under 24hours - start date <= previous month
-        else if (new Date(event.startDateTime) < firstDate) {
-            event.startDateTime = firstDate.toISOString();
-            under24hours.push(event);
+        else if (eventStart < firstDate) {
+            under24hours.push({
+                ...event,
+                startDateTime: firstDate.toISOString(),
+            });
         }
         // events under 24hours
         else {
             const dueDate: Date = new Date(event.dueDateTime);
             const startDate: Date = new Date(event.startDateTime);
-            // under 24 hours and cross 2day
+
+            // under 24 hours and cross 2 days
             if (new Date(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate()).getTime() - new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate()).getTime() >= oneDayMilliSeconds) {
                 under24hours.push({
                     ...event,
@@ -42,8 +45,7 @@ export function getSplitEvents(events: EventInterface[], firstDate: Date): Split
                 under24hours.push(event);
             }
         }
-
     });
+
     return {eventsUnder24: under24hours, eventsOver24: over24hours};
 }
-

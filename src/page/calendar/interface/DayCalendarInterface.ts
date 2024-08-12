@@ -1,5 +1,5 @@
-import {EventInterface} from "../../../api/interface/EventInterface";
+import {EventSummary} from "../../../api/event/eventsTypes";
 
 export interface FullDayLineProps {
-    events: EventInterface[];
+    events: EventSummary[];
 }

@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from "react";
 import {DayColumnProps, StylesForEachEventInterface} from "../interface/WeekCalendarInterfaces";
-import {EventInterface} from "../../../api/interface/EventInterface";
 import {processEventPosition} from "../util/WeekCalendarUtils";
 import {EventCell} from "./EventCell";
+import {EventSummary} from "../../../api/event/eventsTypes";
 
 export const DayLine: React.FC<DayColumnProps> = ({under24hoursEvents, over24hoursEvents}) => {
     const [styledEvents, setStyledEvents] = useState<StylesForEachEventInterface[]>([]);
-    const [multiDayEvents, setMultiDayEvents] = useState<EventInterface[]>([]);
+    const [multiDayEvents, setMultiDayEvents] = useState<EventSummary[]>([]);
 
     useEffect(() => {
         if (under24hoursEvents) {
@@ -23,8 +23,8 @@ export const DayLine: React.FC<DayColumnProps> = ({under24hoursEvents, over24hou
     return (
         <div className="grid">
             <div className="h-weekCalendarCellHeight border-t border-r border-gray-200 border-b-2">
-                {multiDayEvents.map((event: EventInterface, idx: number) => {
-                    const textColor: string = `text-${event.tag.color.toLowerCase()}-500`;
+                {multiDayEvents.map((event: EventSummary, idx: number) => {
+                    const textColor: string = `text-${event.tagColor.toLowerCase()}-500`;
                     return (
                         <button key={idx}
                                 className="flex justify-between whitespace-nowrap overflow-hidden text-ellipsis">

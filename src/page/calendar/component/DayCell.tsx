@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { EventInterface } from "../../../api/interface/EventInterface";
-import { Cell } from './Cell'; // Adjust the import path as necessary
+import React from 'react';
+import { Cell } from './Cell';
+import {EventSummary} from "../../../api/event/eventsTypes"; // Adjust the import path as necessary
 
 interface DayProps {
     day: number;
-    events: EventInterface[];
+    events: EventSummary[];
 }
 
 export const DayCell: React.FC<DayProps> = ({ day, events }) => {
@@ -46,7 +46,7 @@ export const DayCell: React.FC<DayProps> = ({ day, events }) => {
                     {/*)}*/}
                     {events.map((event, idx) => {
                         // {events.slice(0, maxItemLength).map((event, idx) => {
-                        const textColor = `text-${event.tag.color.toLowerCase()}-500`;
+                        const textColor = `text-${event.tagColor.toLowerCase()}-500`;
                         return (
                             <button key={idx}
                                     className="flex justify-between whitespace-nowrap overflow-hidden text-ellipsis">

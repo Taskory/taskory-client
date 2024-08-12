@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useCalendar } from "./context/CalendarContext";
-import { EventInterface } from "../../api/interface/EventInterface";
 import { WeekCalendarHeader } from "./component/WeekCalendarHeader";
 import { WeekInfoInterface } from "./interface/WeekCalendarInterfaces";
 import {getEventDayIndex, getWeeklyEvents, initializeWeekInfo} from "./util/WeekCalendarUtils";
 import { DayLine } from "./component/DayLine";
 import { TimeLine } from "./component/TimeLine";
+import {EventSummary} from "../../api/event/eventsTypes";
 
 export const WeekCalendar: React.FC = () => {
     const { currentDate, splitEvents } = useCalendar();
     const [weekInfo, setWeekInfo] = useState<WeekInfoInterface>(initializeWeekInfo(currentDate));
-    const [under24hoursEvents, setUnder24hoursEvents] = useState<EventInterface[][]>([[], [], [], [], [], [], []]);
-    const [over24hoursEvents, setOver24hoursEvents] = useState<EventInterface[][]>([[], [], [], [], [], [], []]);
+    const [under24hoursEvents, setUnder24hoursEvents] = useState<EventSummary[][]>([[], [], [], [], [], [], []]);
+    const [over24hoursEvents, setOver24hoursEvents] = useState<EventSummary[][]>([[], [], [], [], [], [], []]);
 
     useEffect(() => {
         setWeekInfo(initializeWeekInfo(currentDate));
@@ -24,8 +24,8 @@ export const WeekCalendar: React.FC = () => {
         endingTimeOfWeek.setHours(23, 59, 59);
 
 
-        const newUnder24hoursEvents: EventInterface[][] = [[], [], [], [], [], [], []];
-        getWeeklyEvents(splitEvents.eventsUnder24, weekInfo.startSunday).forEach((event: EventInterface) => {
+        const newUnder24hoursEvents: EventSummary[][] = [[], [], [], [], [], [], []];
+        getWeeklyEvents(splitEvents.eventsUnder24, weekInfo.startSunday).forEach((event: EventSummary) => {
             const eventStart = new Date(event.startDateTime);
             const eventEnd = new Date(event.dueDateTime);
 
@@ -35,9 +35,9 @@ export const WeekCalendar: React.FC = () => {
         });
         setUnder24hoursEvents(newUnder24hoursEvents);
 
-        const newOver24hoursEvents: EventInterface[][] = [[], [], [], [], [], [], []];
+        const newOver24hoursEvents: EventSummary[][] = [[], [], [], [], [], [], []];
 
-        getWeeklyEvents(splitEvents.eventsOver24, weekInfo.startSunday).forEach((event: EventInterface) => {
+        getWeeklyEvents(splitEvents.eventsOver24, weekInfo.startSunday).forEach((event: EventSummary) => {
             const eventStart: Date = new Date(event.startDateTime);
             const eventEnd: Date = new Date(event.dueDateTime);
 

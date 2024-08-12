@@ -3,24 +3,25 @@ import {useCalendar} from "./context/CalendarContext";
 import {TimeLine} from "./component/TimeLine";
 import {EventInterface} from "../../api/interface/EventInterface";
 import {DayLine} from "./component/DayLine";
+import {EventSummary} from "../../api/event/eventsTypes";
 
 export const DayCalendar: React.FC = () => {
     const { currentDate, splitEvents } = useCalendar();
-    const [eventsUnder24, setEventsUnder24] = useState<EventInterface[]>(getEventsForDate(splitEvents.eventsUnder24, currentDate));
-    const [eventsOver24, setEventsOver24] = useState<EventInterface[]>(getEventsForDate(splitEvents.eventsOver24, currentDate));
+    const [eventsUnder24, setEventsUnder24] = useState<EventSummary[]>(getEventsForDate(splitEvents.eventsUnder24, currentDate));
+    const [eventsOver24, setEventsOver24] = useState<EventSummary[]>(getEventsForDate(splitEvents.eventsOver24, currentDate));
 
     useEffect(() => {
         setEventsUnder24(getEventsForDate(splitEvents.eventsUnder24, currentDate));
         setEventsOver24(getEventsForDate(splitEvents.eventsOver24, currentDate));
     }, [currentDate, splitEvents]);
 
-    function getEventsForDate(events: EventInterface[], date: Date): EventInterface[] {
-        const result: EventInterface[] = [];
+    function getEventsForDate(events: EventSummary[], date: Date): EventSummary[] {
+        const result: EventSummary[] = [];
 
         // Normalize the input date to ignore the time part
         const inputDate: Date = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
-        events.forEach((event: EventInterface) => {
+        events.forEach((event: EventSummary) => {
             const eventStartDate: Date = new Date(event.startDateTime);
             const eventDueDate: Date = new Date(event.dueDateTime);
 

@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react';
-import {EventInterface} from "../../../api/interface/EventInterface";
 import {SplitEventsInterface} from "../interface/CalendarContextInterface";
 import {getSplitEvents} from "../util/CalendarContextUtils";
-import {requestMonthlyEvents} from "../../../api/EventApi";
+import {getMonthlyEvents} from "../../../api/event/EventApi";
+import {EventSummary} from "../../../api/event/eventsTypes";
 
 interface CalendarContextType {
     currentDate: Date;
@@ -10,7 +10,7 @@ interface CalendarContextType {
     goToNext: (view: string) => void;
     goToPrev: (view: string) => void;
     goToToday: () => void;
-    originEvents: EventInterface[];
+    originEvents: EventSummary[];
     splitEvents: SplitEventsInterface;
 }
 
@@ -33,7 +33,7 @@ const getInitialDate = () => {
 
 export const CalendarProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [currentDate, setCurrentDate] = useState<Date>(getInitialDate);
-    const [originEvents, setOriginEvents] = useState<EventInterface[]>([]);
+    const [originEvents, setOriginEvents] = useState<EventSummary[]>([]);
     const [splitEvents, setSplitEvents] = useState<SplitEventsInterface>({eventsUnder24: [], eventsOver24: []});
     const [sumOfMonthAndYear, setSumOfMonthAndYear] = useState<number>(currentDate.getFullYear() + currentDate.getMonth());
 
@@ -43,14 +43,16 @@ export const CalendarProvider: React.FC<{ children: ReactNode }> = ({ children }
 
         const newSum = currentDate.getFullYear() + currentDate.getFullYear();
         if (newSum !== sumOfMonthAndYear) {
-            requestMonthlyEvents(currentDate)
-                .then((result) => {
-                    if (result) {
-                        setOriginEvents(result);
-                    }
-                });
-
-            setSumOfMonthAndYear(currentDate.getFullYear() + currentDate.getMonth());
+            const fetchEvents = async () => {
+                try {
+                    const response = await getMonthlyEvents(`${currentDate.getFullYear()}-${currentDate.getMonth()}-${currentDate.getDate()}`);
+                    setOriginEvents(response.data);
+                    setSumOfMonthAndYear(currentDate.getFullYear() + currentDate.getMonth());
+                } catch (error) {
+                    console.error('Error fetching events:', error);
+                }
+            }
+            fetchEvents();
         }
     }, [sumOfMonthAndYear]);
 
