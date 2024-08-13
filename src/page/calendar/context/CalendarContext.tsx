@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode, useMe
 import {SplitEventsInterface} from "../interface/CalendarContextInterface";
 import {getSplitEvents} from "../util/CalendarContextUtils";
 import {getMonthlyEvents} from "../../../api/event/EventApi";
-import {EventSummary} from "../../../api/event/eventsTypes";
+import {EventSummary} from "../../../api/event/EventsTypes";
 
 interface CalendarContextType {
     currentDate: Date;

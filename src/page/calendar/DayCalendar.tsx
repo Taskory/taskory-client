@@ -3,7 +3,7 @@ import {useCalendar} from "./context/CalendarContext";
 import {TimeLine} from "./component/TimeLine";
 import {EventInterface} from "../../api/interface/EventInterface";
 import {DayLine} from "./component/DayLine";
-import {EventSummary} from "../../api/event/eventsTypes";
+import {EventSummary} from "../../api/event/EventsTypes";
 
 export const DayCalendar: React.FC = () => {
     const { currentDate, splitEvents } = useCalendar();

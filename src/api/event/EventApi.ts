@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { EventResponse, EventSummary, SaveEventRequest } from './eventsTypes';
+import { EventResponse, EventSummary, SaveEventRequest } from './EventsTypes';
 import {API_URL} from "../../constants";
 
 // API 요청 함수들 정의

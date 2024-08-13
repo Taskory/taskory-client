@@ -1,5 +1,5 @@
 import {StylesForEachEventInterface, WeekInfoInterface} from "../interface/WeekCalendarInterfaces";
-import {EventSummary} from "../../../api/event/eventsTypes";
+import {EventSummary} from "../../../api/event/EventsTypes";
 
 function calculateHeightRange(event: EventSummary) {
     const startingTime: Date = new Date(event.startDateTime);

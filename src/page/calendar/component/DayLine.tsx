@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {DayColumnProps, StylesForEachEventInterface} from "../interface/WeekCalendarInterfaces";
 import {processEventPosition} from "../util/WeekCalendarUtils";
 import {EventCell} from "./EventCell";
-import {EventSummary} from "../../../api/event/eventsTypes";
+import {EventSummary} from "../../../api/event/EventsTypes";
 
 export const DayLine: React.FC<DayColumnProps> = ({under24hoursEvents, over24hoursEvents}) => {
     const [styledEvents, setStyledEvents] = useState<StylesForEachEventInterface[]>([]);

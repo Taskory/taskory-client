@@ -1,6 +1,6 @@
 import {set} from "date-fns";
 import {SplitEventsInterface} from "../interface/CalendarContextInterface";
-import {EventSummary} from "../../../api/event/eventsTypes";
+import {EventSummary} from "../../../api/event/EventsTypes";
 
 export function getSplitEvents(events: EventSummary[], firstDate: Date): SplitEventsInterface {
     let under24hours: EventSummary[] = [];

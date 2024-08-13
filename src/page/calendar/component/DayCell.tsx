@@ -1,6 +1,6 @@
 import React from 'react';
 import { Cell } from './Cell';
-import {EventSummary} from "../../../api/event/eventsTypes"; // Adjust the import path as necessary
+import {EventSummary} from "../../../api/event/EventsTypes"; // Adjust the import path as necessary
 
 interface DayProps {
     day: number;

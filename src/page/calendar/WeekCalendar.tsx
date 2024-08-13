@@ -5,7 +5,7 @@ import { WeekInfoInterface } from "./interface/WeekCalendarInterfaces";
 import {getEventDayIndex, getWeeklyEvents, initializeWeekInfo} from "./util/WeekCalendarUtils";
 import { DayLine } from "./component/DayLine";
 import { TimeLine } from "./component/TimeLine";
-import {EventSummary} from "../../api/event/eventsTypes";
+import {EventSummary} from "../../api/event/EventsTypes";
 
 export const WeekCalendar: React.FC = () => {
     const { currentDate, splitEvents } = useCalendar();

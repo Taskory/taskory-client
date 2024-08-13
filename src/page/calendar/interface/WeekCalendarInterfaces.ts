@@ -1,4 +1,4 @@
-import {EventSummary} from "../../../api/event/eventsTypes";
+import {EventSummary} from "../../../api/event/EventsTypes";
 
 export interface WeekInfoInterface {
     startSunday: Date;
