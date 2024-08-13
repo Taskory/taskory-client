@@ -20,8 +20,8 @@ export interface EventSummary {
 
 export interface SaveEventRequest {
     title: string;
-    tag?: { id: number; title: string; color: string };
-    hashtags?: { id: number; name: string }[];
+    tagId?: number;
+    hashtagIds?: number[];
     description?: string;
     startDateTime?: string;
     dueDateTime?: string;

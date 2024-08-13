@@ -3,12 +3,6 @@ import { EventResponse, EventSummary, SaveEventRequest } from './EventsTypes';
 import {API_URL} from "../../constants";
 
 // API 요청 함수들 정의
-export const getEventsInPeriod = async (startDate: string, dueDate: string): Promise<AxiosResponse<EventResponse[]>> => {
-    return axios.get(`${API_URL}/event`, {
-        params: { startDate, dueDate }
-    });
-};
-
 export const getMonthlyEvents = async (date: string): Promise<AxiosResponse<EventSummary[]>> => {
     return axios.get(`${API_URL}/event/month`, {
         params: { date }
