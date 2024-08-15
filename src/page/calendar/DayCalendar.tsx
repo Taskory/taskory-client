@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {useCalendar} from "./context/CalendarContext";
 import {TimeLine} from "./component/TimeLine";
-import {EventInterface} from "../../api/interface/EventInterface";
 import {DayLine} from "./component/DayLine";
 import {EventSummary} from "../../api/event/EventsTypes";
 
