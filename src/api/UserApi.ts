@@ -27,6 +27,7 @@ export async function requestUsernameCheck(username: string) {
 }
 
 export async function requestProfile() {
+    console.log(getAuthCookie());
     const requestOptions = {
         method: "GET",
         headers: {

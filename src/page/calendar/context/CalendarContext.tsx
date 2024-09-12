@@ -62,12 +62,16 @@ export const CalendarProvider: React.FC<{ children: ReactNode }> = ({ children }
         // Fetch events for the current month whenever the sumOfMonthAndYear or date changes
         const fetchEvents = async () => {
             try {
-                const response = await getMonthlyEvents(`${state.currentDate.getFullYear()}-${state.currentDate.getMonth()}-${state.currentDate.getDate()}`);
+                const isoDate = state.currentDate.toISOString();
+                console.log(isoDate);
+                const response = await getMonthlyEvents(isoDate);
                 setOriginEvents(response.data);
+                console.log(response.data);
             } catch (error) {
                 console.error('Error fetching events:', error);
             }
         };
+
 
         fetchEvents();
     }, [state.sumOfMonthAndYear, state.currentDate]);
