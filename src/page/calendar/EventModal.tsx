@@ -45,22 +45,24 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id }) => {
         }
     };
 
-    // Fetches the event data if the id is provided (for editing existing event)
+    // Fetches the event data if the id is provided (for editing an existing event)
     const fetchEvent = async (eventId: number) => {
         setLoading(true); // Show loading state
         try {
             const response = await getEventById(eventId); // Fetch event by ID
             if (response.status === 200) {
                 const data: EventResponse = response.data;
-                // Populate form fields with fetched event data
-                setTitle(data.title);
-                setTagId(data.tag.id);
-                setHashtags(data.hashtags);
-                setHashtagIds(data.hashtags.map((hashtag) => hashtag.id));
-                setDescription(data.description);
-                setStartDateTime(data.startDateTime);
-                setDueDateTime(data.dueDateTime);
-                setLocation(data.location);
+                console.log(data);
+
+                // Populate form fields with fetched event data, safely handle null/undefined values
+                setTitle(data.title ?? ""); // Default to empty string if null
+                setTagId(data.tag?.id ?? undefined); // Default to undefined if tag or tag.id is null
+                setHashtags(data.hashtags ?? []); // Default to empty array if hashtags is null
+                setHashtagIds(data.hashtags ? data.hashtags.map((hashtag) => hashtag.id) : []); // Map hashtag IDs if present, else empty array
+                setDescription(data.description ?? ""); // Default to empty string if null
+                setStartDateTime(data.startDateTime ?? ""); // Default to empty string if null
+                setDueDateTime(data.dueDateTime ?? ""); // Default to empty string if null
+                setLocation(data.location ?? ""); // Default to empty string if null
             } else {
                 console.error('Failed to fetch event');
             }
@@ -70,6 +72,7 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id }) => {
             setLoading(false); // Hide loading state
         }
     };
+
 
     // Fetches tags and event data when the modal is opened
     useEffect(() => {

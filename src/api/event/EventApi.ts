@@ -44,7 +44,6 @@ export const getEventById = async (eventId: number): Promise<AxiosResponse<Event
         ...requestOptions,   // Include headers for the get request
     });
 };
-
 export const getAllEvents = async (): Promise<AxiosResponse<EventResponse[]>> => {
     return axios.get(`${API_URL}/event/all`, {
         ...requestOptions,   // Include headers for the get request
