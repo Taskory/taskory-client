@@ -2,7 +2,7 @@ import React, { useState, useEffect, KeyboardEvent } from 'react';
 import { API_URL } from "../../constants";
 import { format, addHours } from 'date-fns';
 import { getAllTags } from "../../api/tag/TagApi";
-import { createEvent, getEventById } from "../../api/event/EventApi"; // Fetch event by ID
+import { createEvent, getEventById, updateEvent } from "../../api/event/EventApi"; // Added updateEvent function
 import { SaveEventRequest, EventResponse } from "../../api/event/EventsTypes";
 import { TagResponse } from "../../api/tag/TagTypes";
 
@@ -52,7 +52,6 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id }) => {
             const response = await getEventById(eventId); // Fetch event by ID
             if (response.status === 200) {
                 const data: EventResponse = response.data;
-                console.log(data);
 
                 // Populate form fields with fetched event data, safely handle null/undefined values
                 setTitle(data.title ?? ""); // Default to empty string if null
@@ -72,7 +71,6 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id }) => {
             setLoading(false); // Hide loading state
         }
     };
-
 
     // Fetches tags and event data when the modal is opened
     useEffect(() => {
@@ -159,15 +157,26 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id }) => {
             };
 
             try {
-                const response = await createEvent(eventPayload); // Save the event
-                if (response.status === 200) {
-                    console.log('Event successfully created:', response.data);
-                    onClose(); // Close the modal on successful save
+                if (id) {
+                    // Update existing event
+                    const response = await updateEvent(id, eventPayload);
+                    if (response.status === 200) {
+                        console.log('Event successfully updated');
+                        onClose(); // Close the modal on successful update
+                    } else {
+                        console.error('Failed to update event');
+                    }
                 } else {
-                    console.error('Failed to create event');
+                    // Create new event
+                    const response = await createEvent(eventPayload); // Save the event
+                    if (response.status === 200) {
+                        onClose(); // Close the modal on successful save
+                    } else {
+                        console.error('Failed to create event');
+                    }
                 }
             } catch (error) {
-                console.error('Error creating event:', error);
+                console.error('Error saving event:', error);
             }
         } else {
             console.error('Missing required fields: title, startDateTime, or dueDateTime');
@@ -280,7 +289,7 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id }) => {
                             </div>
                         </div>
                         <div className="modal-action">
-                            <button className="btn" onClick={handleSave}>Save</button>
+                            <button className="btn" onClick={handleSave}>{id ? 'Update' : 'Save'}</button> {/* Button label changes */}
                             <button className="btn btn-error" onClick={onClose}>Cancel</button>
                         </div>
                     </>

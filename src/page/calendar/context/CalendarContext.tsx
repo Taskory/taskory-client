@@ -63,10 +63,8 @@ export const CalendarProvider: React.FC<{ children: ReactNode }> = ({ children }
         const fetchEvents = async () => {
             try {
                 const isoDate = state.currentDate.toISOString();
-                console.log(isoDate);
                 const response = await getMonthlyEvents(isoDate);
                 setOriginEvents(response.data);
-                console.log(response.data);
             } catch (error) {
                 console.error('Error fetching events:', error);
             }
