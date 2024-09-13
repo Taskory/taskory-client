@@ -30,7 +30,6 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
     const [location, setLocation] = useState('');
     const [loading, setLoading] = useState(false); // Tracks if event data is loading
 
-    // Fetches available tags when modal opens
     const fetchTags = async () => {
         try {
             const response = await getAllTags();
@@ -45,7 +44,6 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
         }
     };
 
-    // Fetches the event data if the id is provided (for editing an existing event)
     const fetchEvent = async (eventId: number) => {
         setLoading(true); // Show loading state
         try {
@@ -53,7 +51,6 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
             if (response.status === 200) {
                 const data: EventResponse = response.data;
 
-                // Populate form fields with fetched event data, safely handle null/undefined values
                 setTitle(data.title ?? ""); // Default to empty string if null
                 setTagId(data.tag?.id ?? undefined); // Default to undefined if tag or tag.id is null
                 setHashtags(data.hashtags ?? []); // Default to empty array if hashtags is null
@@ -72,7 +69,6 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
         }
     };
 
-    // Fetches tags and event data when the modal is opened
     useEffect(() => {
         if (isOpen) {
             fetchTags();
@@ -80,7 +76,6 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
             if (id) {
                 fetchEvent(id); // Fetch event data if id is provided (edit mode)
             } else {
-                // Default new event start and due time
                 const now = new Date();
                 const oneHourLater = addHours(now, 1);
                 const formattedStartDateTime = format(oneHourLater, 'yyyy-MM-dd\'T\'HH:00');
@@ -93,7 +88,6 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
         }
     }, [isOpen, id]);
 
-    // Updates start date/time and auto-adjusts due date/time
     const handleStartDateTimeChange = (value: string) => {
         setStartDateTime(value);
 
@@ -103,7 +97,10 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
         setDueDateTime(formattedDueDateTime);
     };
 
-    // Handles adding a hashtag when pressing Enter
+    const handleDueDateTimeChange = (value: string) => {
+        setDueDateTime(value);
+    };
+
     const handleHashtagKeyPress = async (event: KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter' && hashtagTitle.trim() !== '') {
             event.preventDefault();
@@ -113,7 +110,6 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                     const hashtagData: HashtagResponse = await response.json();
                     addHashtagToList(hashtagData); // Add fetched hashtag
                 } else if (response.status === 404) {
-                    // Create hashtag if it doesn't exist
                     const createResponse = await fetch(`${API_URL}/hashtags`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -134,13 +130,11 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
         }
     };
 
-    // Adds hashtag to the state and hashtag ID list
     const addHashtagToList = (hashtag: HashtagResponse) => {
         setHashtags((prev) => [...prev, hashtag]);
         setHashtagIds((prev) => [...prev, hashtag.id]);
     };
 
-    // Modify the handleSave function to call refetchEvents after saving/updating the event
     const handleSave = async () => {
         if (title && startDateTime && dueDateTime) {
             const formattedStartDateTime = new Date(startDateTime).toISOString();
@@ -183,13 +177,11 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
         }
     };
 
-    // Modify onClose to call refetchEvents after closing
     const handleClose = () => {
         refetchEvents(); // Call refetchEvents when modal is closed
         onClose(); // Call onClose prop to close the modal
     };
 
-    // Return null if modal is closed
     if (!isOpen) return null;
 
     return (
@@ -201,7 +193,6 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                     <>
                         <h3 className="font-bold text-lg">{id ? 'Edit Event' : 'Create New Event'}</h3>
                         <div className="py-4 space-y-4">
-                            {/* Event Title Input */}
                             <div className="flex items-center">
                                 <label className="w-1/3">Event Title:</label>
                                 <input
@@ -212,7 +203,6 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                                 />
                             </div>
 
-                            {/* Tag Selection */}
                             <div className="flex items-center">
                                 <label className="w-1/3">Tag:</label>
                                 <select
@@ -229,7 +219,6 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                                 </select>
                             </div>
 
-                            {/* Hashtag Input */}
                             <div className="flex items-center">
                                 <label className="w-1/3">Hashtags:</label>
                                 <input
@@ -242,7 +231,6 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                                 />
                             </div>
 
-                            {/* Display Added Hashtags */}
                             <div className="mt-2">
                                 {hashtags.map(hashtag => (
                                     <span key={hashtag.id} className="badge badge-secondary m-1">
@@ -251,7 +239,6 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                                 ))}
                             </div>
 
-                            {/* Description Input */}
                             <div className="flex items-center">
                                 <label className="w-1/3">Description:</label>
                                 <textarea
@@ -261,7 +248,6 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                                 />
                             </div>
 
-                            {/* Start Date Input */}
                             <div className="flex items-center">
                                 <label className="w-1/3">Start Date:</label>
                                 <input
@@ -272,18 +258,16 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                                 />
                             </div>
 
-                            {/* Due Date Input (auto-calculated) */}
                             <div className="flex items-center">
                                 <label className="w-1/3">Due Date:</label>
                                 <input
                                     type="datetime-local"
                                     className="input input-bordered w-full"
                                     value={dueDateTime}
-                                    readOnly // Due date is auto-calculated
+                                    onChange={(e) => handleDueDateTimeChange(e.target.value)}
                                 />
                             </div>
 
-                            {/* Location Input */}
                             <div className="flex items-center">
                                 <label className="w-1/3">Location:</label>
                                 <input
@@ -295,7 +279,7 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                             </div>
                         </div>
                         <div className="modal-action">
-                            <button className="btn" onClick={handleSave}>{id ? 'Update' : 'Save'}</button> {/* Button label changes */}
+                            <button className="btn" onClick={handleSave}>{id ? 'Update' : 'Save'}</button>
                             <button className="btn btn-error" onClick={handleClose}>Cancel</button>
                         </div>
                     </>
