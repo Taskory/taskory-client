@@ -82,12 +82,12 @@ export const CalendarHeader: React.FC = React.memo(() => {
   };
 
   return (
-      <div className="flex justify-between items-center p-4 min-h-headerHeight h-full">
-        <h1 className="text-xl font-bold">{formatDate()}</h1>
+      <div className="flex justify-between items-center p-4 min-h-headerHeight h-full bg-white shadow-md">
+        <h1 className="text-2xl font-bold">{formatDate()}</h1>
         <div className="flex space-x-2">
-          <button className="btn btn-sm" onClick={() => goToPrev(view)}>Previous</button>
-          <button className="btn btn-sm" onClick={() => goToNext(view)}>Next</button>
-          <button className="btn btn-sm" onClick={goToToday}>Today</button>
+          <button className="btn btn-sm bg-blue-500 text-white hover:bg-blue-600 transition-all" onClick={() => goToPrev(view)}>Previous</button>
+          <button className="btn btn-sm bg-blue-500 text-white hover:bg-blue-600 transition-all" onClick={() => goToNext(view)}>Next</button>
+          <button className="btn btn-sm bg-green-500 text-white hover:bg-green-600 transition-all" onClick={goToToday}>Today</button>
         </div>
 
         <div className="flex items-center space-x-4">
@@ -96,7 +96,7 @@ export const CalendarHeader: React.FC = React.memo(() => {
               value={inputYear}
               onChange={(e) => debouncedHandleYearChange(e.target.value)}
               onKeyDown={handleYearKeyDown}
-              className="btn btn-sm"
+              className="btn btn-sm border border-gray-300 rounded-md p-2"
               placeholder="Year"
           />
           <select
@@ -106,7 +106,7 @@ export const CalendarHeader: React.FC = React.memo(() => {
                 setSelectedDay('1');
               }}
               onBlur={handleDateChange}
-              className="btn btn-sm"
+              className="btn btn-sm border border-gray-300 rounded-md p-2"
           >
             {monthNames.monthNames.map((month, index) => (
                 <option key={index} value={index}>{month}</option>
@@ -116,7 +116,7 @@ export const CalendarHeader: React.FC = React.memo(() => {
               value={selectedDay}
               onChange={(e) => setSelectedDay(e.target.value)}
               onBlur={handleDateChange}
-              className="btn btn-sm"
+              className="btn btn-sm border border-gray-300 rounded-md p-2"
           >
             {Array.from(
                 { length: daysInMonth(parseInt(inputYear), parseInt(selectedMonth)) },
@@ -129,7 +129,7 @@ export const CalendarHeader: React.FC = React.memo(() => {
 
         <div className="flex items-center space-x-4">
           <select
-              className="btn btn-sm"
+              className="btn btn-sm border border-gray-300 rounded-md p-2"
               onChange={(e) => setView(e.target.value)}
               value={view}
           >
@@ -138,7 +138,7 @@ export const CalendarHeader: React.FC = React.memo(() => {
             <option value="week">Week</option>
             <option value="day">Day</option>
           </select>
-          <button className="btn btn-sm" onClick={handleAddEvent}>
+          <button className="btn btn-sm bg-purple-500 text-white hover:bg-purple-600 transition-all" onClick={handleAddEvent}>
             Create Event
           </button>
         </div>
