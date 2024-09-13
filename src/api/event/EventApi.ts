@@ -20,15 +20,15 @@ export const getMonthlyEvents = async (date: string): Promise<AxiosResponse<Even
 };
 
 export const createEvent = async (event: SaveEventRequest): Promise<AxiosResponse<EventResponse>> => {
-    console.log(JSON.stringify(event));
     return axios.post(`${API_URL}/event/create`, event, {
         ...requestOptions,  // Include headers in the post request
     });
 };
 
 export const updateEvent = async (eventId: number, event: SaveEventRequest): Promise<AxiosResponse<EventResponse>> => {
-    return axios.put(`${API_URL}/event/update`, { eventId, ...event }, {
+    return axios.put(`${API_URL}/event/update`, {...event }, {
         ...requestOptions,  // Include headers in the put request
+        params: {eventId}
     });
 };
 

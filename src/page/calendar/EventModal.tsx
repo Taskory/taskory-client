@@ -7,17 +7,17 @@ import { SaveEventRequest, EventResponse } from "../../api/event/EventsTypes";
 import { TagResponse } from "../../api/tag/TagTypes";
 
 interface EventModalProps {
-    isOpen: boolean; // Controls modal visibility
-    onClose: () => void; // Closes the modal
-    id?: number; // Optional: If provided, fetch an existing event
+    isOpen: boolean;
+    onClose: () => void;
+    id?: number;
+    refetchEvents: () => void; // New prop to trigger refetching events
 }
-
 interface HashtagResponse {
     id: number;
     name: string;
 }
 
-const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id }) => {
+const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEvents }) => {
     const [title, setTitle] = useState('');
     const [tagId, setTagId] = useState<number | undefined>(undefined);
     const [tags, setTags] = useState<TagResponse[]>([]);
@@ -140,7 +140,7 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id }) => {
         setHashtagIds((prev) => [...prev, hashtag.id]);
     };
 
-    // Saves new or edited event to the server
+    // Modify the handleSave function to call refetchEvents after saving/updating the event
     const handleSave = async () => {
         if (title && startDateTime && dueDateTime) {
             const formattedStartDateTime = new Date(startDateTime).toISOString();
@@ -158,19 +158,19 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id }) => {
 
             try {
                 if (id) {
-                    // Update existing event
                     const response = await updateEvent(id, eventPayload);
                     if (response.status === 200) {
                         console.log('Event successfully updated');
-                        onClose(); // Close the modal on successful update
+                        refetchEvents(); // Call refetchEvents
+                        onClose();
                     } else {
                         console.error('Failed to update event');
                     }
                 } else {
-                    // Create new event
-                    const response = await createEvent(eventPayload); // Save the event
+                    const response = await createEvent(eventPayload);
                     if (response.status === 200) {
-                        onClose(); // Close the modal on successful save
+                        refetchEvents(); // Call refetchEvents
+                        onClose();
                     } else {
                         console.error('Failed to create event');
                     }
@@ -181,6 +181,12 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id }) => {
         } else {
             console.error('Missing required fields: title, startDateTime, or dueDateTime');
         }
+    };
+
+    // Modify onClose to call refetchEvents after closing
+    const handleClose = () => {
+        refetchEvents(); // Call refetchEvents when modal is closed
+        onClose(); // Call onClose prop to close the modal
     };
 
     // Return null if modal is closed
@@ -290,7 +296,7 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id }) => {
                         </div>
                         <div className="modal-action">
                             <button className="btn" onClick={handleSave}>{id ? 'Update' : 'Save'}</button> {/* Button label changes */}
-                            <button className="btn btn-error" onClick={onClose}>Cancel</button>
+                            <button className="btn btn-error" onClick={handleClose}>Cancel</button>
                         </div>
                     </>
                 )}

@@ -9,7 +9,7 @@ import EventModal from './EventModal'; // Import the EventModal
 
 export const CalendarHeader: React.FC = React.memo(() => {
   const { view, setView } = useCalendarView();
-  const { currentDate, setCurrentDate, goToNext, goToPrev, goToToday } = useCalendar();
+  const { currentDate, setCurrentDate, goToNext, goToPrev, goToToday, refetchEvents } = useCalendar();
   const [currentMonthName, setCurrentMonthName] = useState(monthNames.monthNames[currentDate.getMonth()]);
   const [inputYear, setInputYear] = useState(currentDate.getFullYear().toString());
   const [selectedMonth, setSelectedMonth] = useState(currentDate.getMonth().toString());
@@ -144,7 +144,7 @@ export const CalendarHeader: React.FC = React.memo(() => {
         </div>
 
         {/* EventModal integration */}
-        <EventModal isOpen={isEventModalOpen} onClose={handleCloseEventModal} />
+        <EventModal isOpen={isEventModalOpen} onClose={handleCloseEventModal} refetchEvents={refetchEvents}/>
       </div>
   );
 });

@@ -12,6 +12,7 @@ interface CalendarContextType {
     goToToday: () => void;
     originEvents: EventSummary[];
     splitEvents: SplitEventsInterface;
+    refetchEvents: () => void
 }
 
 const CalendarContext = createContext<CalendarContextType | undefined>(undefined);
@@ -46,6 +47,7 @@ const calendarReducer = (state: { currentDate: Date; sumOfMonthAndYear: number; 
     }
 };
 
+// Modify CalendarProvider to include refetchEvents
 export const CalendarProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [state, dispatch] = useReducer(calendarReducer, {
         currentDate: getInitialDate(),
@@ -54,32 +56,31 @@ export const CalendarProvider: React.FC<{ children: ReactNode }> = ({ children }
     const [originEvents, setOriginEvents] = useState<EventSummary[]>([]);
     const [splitEvents, setSplitEvents] = useState<SplitEventsInterface>({ eventsUnder24: [], eventsOver24: [] });
 
+    // Function to refetch events
+    const fetchEvents: () => Promise<void> = useCallback(async () => {
+        try {
+            const isoDate = state.currentDate.toISOString();
+            const response = await getMonthlyEvents(isoDate);
+            setOriginEvents(response.data);
+        } catch (error) {
+            console.error('Error fetching events:', error);
+        }
+    }, [state.currentDate]);
+
     useEffect(() => {
         // Save the current date and timestamp in local storage
         localStorage.setItem('currentDate', state.currentDate.toISOString());
         localStorage.setItem('currentDateTimestamp', new Date().toISOString());
 
-        // Fetch events for the current month whenever the sumOfMonthAndYear or date changes
-        const fetchEvents = async () => {
-            try {
-                const isoDate = state.currentDate.toISOString();
-                const response = await getMonthlyEvents(isoDate);
-                setOriginEvents(response.data);
-            } catch (error) {
-                console.error('Error fetching events:', error);
-            }
-        };
-
-
+        // Fetch events whenever sumOfMonthAndYear or currentDate changes
         fetchEvents();
-    }, [state.sumOfMonthAndYear, state.currentDate]);
+    }, [state.sumOfMonthAndYear, fetchEvents, state.currentDate]);
 
     useEffect(() => {
         // Split events based on the current month
         setSplitEvents(getSplitEvents(originEvents, new Date(state.currentDate.getFullYear(), state.currentDate.getMonth(), 1)));
     }, [originEvents, state.currentDate]);
 
-    // Move forward based on the current view (year, month, week, day)
     const goToNext = useCallback((view: string) => {
         const newDate = new Date(state.currentDate);
         switch (view) {
@@ -101,7 +102,6 @@ export const CalendarProvider: React.FC<{ children: ReactNode }> = ({ children }
         dispatch({ type: 'SET_DATE', payload: newDate });
     }, [state.currentDate]);
 
-    // Move backward based on the current view (year, month, week, day)
     const goToPrev = useCallback((view: string) => {
         const newDate = new Date(state.currentDate);
         switch (view) {
@@ -123,21 +123,20 @@ export const CalendarProvider: React.FC<{ children: ReactNode }> = ({ children }
         dispatch({ type: 'SET_DATE', payload: newDate });
     }, [state.currentDate]);
 
-    // Set current date to today
     const goToToday = useCallback(() => {
         dispatch({ type: 'SET_DATE', payload: new Date() });
     }, []);
 
-    // Memoize context value to avoid unnecessary re-renders
-    const contextValue = useMemo(() => ({
+    const contextValue: CalendarContextType = useMemo(() => ({
         currentDate: state.currentDate,
         setCurrentDate: (date: Date) => dispatch({ type: 'SET_DATE', payload: date }),
         goToNext,
         goToPrev,
         goToToday,
         originEvents,
-        splitEvents
-    }), [state.currentDate, goToNext, goToPrev, goToToday, originEvents, splitEvents]);
+        splitEvents,
+        refetchEvents: fetchEvents // <-- Pass refetchEvents
+    }), [state.currentDate, goToNext, goToPrev, goToToday, originEvents, splitEvents, fetchEvents]);
 
     return (
         <CalendarContext.Provider value={contextValue}>

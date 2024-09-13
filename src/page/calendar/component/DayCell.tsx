@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Cell } from './Cell';
 import { EventSummary } from "../../../api/event/EventsTypes";
-import EventModal from "../EventModal"; // Adjust the import path as necessary
+import EventModal from "../EventModal";
+import {useCalendar} from "../context/CalendarContext"; // Adjust the import path as necessary
 
 interface DayProps {
     day: number;
@@ -11,6 +12,7 @@ interface DayProps {
 export const DayCell: React.FC<DayProps> = ({ day, events }) => {
     const [selectedEventId, setSelectedEventId] = useState<number | null>(null); // State to track selected event ID
     const [isModalOpen, setIsModalOpen] = useState(false); // State to track modal visibility
+    const {refetchEvents} = useCalendar();
 
     // Opens the modal and sets the selected event ID
     const handleEventClick = (eventId: number) => {
@@ -53,6 +55,7 @@ export const DayCell: React.FC<DayProps> = ({ day, events }) => {
                     isOpen={isModalOpen}
                     onClose={handleCloseModal}
                     id={selectedEventId} // Pass the selected event ID to the modal
+                    refetchEvents={refetchEvents}
                 />
             )}
         </>
