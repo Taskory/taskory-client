@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { MonthCalendarHeader } from "./component/MonthCalendarHeader";
 import { DayCell } from "./component/DayCell";
 import { useCalendar } from "./context/CalendarContext";
@@ -7,7 +7,7 @@ import { MonthInfoInterface } from "./interface/MonthCalendarInterfaces";
 import { getMonthlyEvents } from "./util/MonthCalendarUtils";
 
 export const MonthCalendar: React.FC = () => {
-    const { currentDate, setCurrentDate, originEvents } = useCalendar();
+    const { currentDate, originEvents } = useCalendar();
     const [monthlyEvents, setMonthlyEvents] = useState(getMonthlyEvents(originEvents, currentDate));
     const [monthInfo, setMonthInfo] = useState<MonthInfoInterface>({
         daysInMonth: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate(),
@@ -16,33 +16,10 @@ export const MonthCalendar: React.FC = () => {
     });
 
     const containerRef = useRef<HTMLDivElement>(null);
-    const [enableDateUpdate, setEnableDateUpdate] = useState<boolean>(true);
-    const [scrollDirection, setScrollDirection] = useState<number>(0);  // 1 for down, -1 for up, and 0 for fixed
-    const [scrollAmount, setScrollAmount] = useState<number>(0);
-    const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
-
-    const handleWheel: (event: WheelEvent) => void = useCallback((event: WheelEvent) => {
-        event.preventDefault();
-        setScrollDirection(event.deltaY > 0 ? 1 : -1);
-        setScrollAmount(event.deltaY);
-
-        if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
-        scrollTimeout.current = setTimeout(() => {
-            setEnableDateUpdate(true);
-        }, 100);
-    }, []);
 
     /*
     * UseEffects
     * */
-    useEffect(() => {
-        const container = containerRef.current;
-        if (container) {
-            container.addEventListener("wheel", handleWheel, { passive: false });
-            return () => container.removeEventListener("wheel", handleWheel);
-        }
-    }, [handleWheel]);
-
     useEffect(() => {
         setMonthInfo({
             daysInMonth: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate(),
@@ -52,20 +29,9 @@ export const MonthCalendar: React.FC = () => {
     }, [currentDate]);
 
     useEffect(() => {
-        if (enableDateUpdate) {
-            const newDate: Date = new Date(currentDate.getFullYear(), currentDate.getMonth() + scrollDirection, 1);
-            setCurrentDate(newDate);
-            setEnableDateUpdate(false);
-        }
-    }, [currentDate, enableDateUpdate, scrollDirection, setCurrentDate, scrollAmount]);
-
-    useEffect(() => {
-        if (!enableDateUpdate) setScrollAmount(0);
-    }, [enableDateUpdate]);
-
-    useEffect(() => {
         setMonthlyEvents(getMonthlyEvents(originEvents, currentDate));
     }, [originEvents, currentDate]);
+
     /**/
 
     const weeksOfCurrentMonth = (): number => {
