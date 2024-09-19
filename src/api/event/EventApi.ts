@@ -1,51 +1,93 @@
+// EventApi.ts
 import axios, { AxiosResponse } from 'axios';
 import { EventResponse, EventSummary, SaveEventRequest } from './EventsTypes';
 import { API_URL } from "../../constants";
-import {getAuthCookie} from "../../util/CookieUtil";
-
-// Common requestOptions with Authorization header
-const requestOptions = {
-    headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + getAuthCookie(),
-    },
-};
+import { getAuthCookie } from "../../util/CookieUtil";
 
 // API 요청 함수들 정의
 export const getMonthlyEvents = async (date: string): Promise<AxiosResponse<EventSummary[]>> => {
+    const authToken = getAuthCookie();  // Fetch the latest cookie value here
+    const requestOptions = {
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${authToken}`,
+        },
+    };
+
     return axios.get(`${API_URL}/event/month`, {
-        ...requestOptions,   // Spread the requestOptions to include the headers
+        ...requestOptions,
         params: { date }
     });
 };
 
 export const createEvent = async (event: SaveEventRequest): Promise<AxiosResponse<EventResponse>> => {
+    const authToken = getAuthCookie();  // Fetch the latest cookie value here
+    const requestOptions = {
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${authToken}`,
+        },
+    };
+
     return axios.post(`${API_URL}/event/create`, event, {
-        ...requestOptions,  // Include headers in the post request
+        ...requestOptions,
     });
 };
 
 export const updateEvent = async (eventId: number, event: SaveEventRequest): Promise<AxiosResponse<EventResponse>> => {
+    const authToken = getAuthCookie();  // Fetch the latest cookie value here
+    const requestOptions = {
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${authToken}`,
+        },
+    };
+
     return axios.put(`${API_URL}/event/update`, {...event }, {
-        ...requestOptions,  // Include headers in the put request
-        params: {eventId}
+        ...requestOptions,
+        params: { eventId }
     });
 };
 
 export const deleteEvent = async (eventId: number): Promise<AxiosResponse<{ status: number; message: string }>> => {
+    const authToken = getAuthCookie();  // Fetch the latest cookie value here
+    const requestOptions = {
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${authToken}`,
+        },
+    };
+
     return axios.delete(`${API_URL}/event/delete`, {
-        ...requestOptions,   // Include headers for the delete request
+        ...requestOptions,
         params: { eventId }
     });
 };
 
 export const getEventById = async (eventId: number): Promise<AxiosResponse<EventResponse>> => {
+    const authToken = getAuthCookie();  // Fetch the latest cookie value here
+    const requestOptions = {
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${authToken}`,
+        },
+    };
+
     return axios.get(`${API_URL}/event/${eventId}`, {
-        ...requestOptions,   // Include headers for the get request
+        ...requestOptions,
     });
 };
+
 export const getAllEvents = async (): Promise<AxiosResponse<EventResponse[]>> => {
+    const authToken = getAuthCookie();  // Fetch the latest cookie value here
+    const requestOptions = {
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${authToken}`,
+        },
+    };
+
     return axios.get(`${API_URL}/event/all`, {
-        ...requestOptions,   // Include headers for the get request
+        ...requestOptions,
     });
 };
