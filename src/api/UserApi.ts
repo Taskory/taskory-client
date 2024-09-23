@@ -27,7 +27,6 @@ export async function requestUsernameCheck(username: string) {
 }
 
 export async function requestProfile() {
-    console.log(getAuthCookie());
     const requestOptions = {
         method: "GET",
         headers: {
@@ -65,5 +64,29 @@ export async function requestProfileUpdate(data: ProfileUpdateRequestInterface) 
         }
     } catch (error) {
         console.error(error);
+    }
+}
+
+export async function requestZoneid() {
+    const requestOptions = {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + getAuthCookie(),
+        },
+    };
+
+    try {
+        const response = await fetch(API_URL + "/user/zoneid", requestOptions);
+
+        // Check if the response is ok
+        if (response.ok) {
+            // Since the server is returning a plain text response, use response.text()
+            return await response.text();
+        } else {
+            console.error('Failed to fetch zone ID:', response.statusText);
+        }
+    } catch (error) {
+        console.error('Error fetching zone ID:', error);
     }
 }

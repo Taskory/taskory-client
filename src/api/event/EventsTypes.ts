@@ -7,6 +7,7 @@ export interface EventResponse {
     startDateTime: string;
     dueDateTime: string;
     location: string;
+    timezone: string;
 }
 
 export interface EventSummary {
@@ -26,4 +27,5 @@ export interface SaveEventRequest {
     startDateTime?: string;
     dueDateTime?: string;
     location?: string;
+    timezone: string;
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { CommonLayout } from "../../layout/CommonLayout";
 import { useNavigate } from "react-router-dom";
-import timezone from "../../constants/timezone.json";
+import timezone from "../../constants/timezones.json";
 import {requestProfile, requestProfileUpdate, requestUsernameCheck} from "../../api/UserApi";
 import {existAuthCookie} from "../../util/CookieUtil";
 import {UserInfoInterface} from "../../api/interface/UserInfoInterface";

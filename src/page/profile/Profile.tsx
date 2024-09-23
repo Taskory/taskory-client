@@ -4,7 +4,7 @@ import {existAuthCookie} from "../../util/CookieUtil";
 import {useNavigate} from "react-router-dom";
 import {UserInfoInterface} from "../../api/interface/UserInfoInterface";
 import {requestProfile} from "../../api/UserApi";
-import timezone from "../../constants/timezone.json";
+import timezone from "../../constants/timezones.json";
 
 export const Profile: React.FC = () => {
     const [userInfo, setUserInfo] = useState<UserInfoInterface>({id: null, username: null, zoneId: null});

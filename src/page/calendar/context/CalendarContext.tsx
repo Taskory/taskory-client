@@ -12,7 +12,7 @@ interface CalendarContextType {
     goToToday: () => void;
     originEvents: EventSummary[];
     splitEvents: SplitEventsInterface;
-    refetchEvents: () => void
+    refetchEvents: () => void;
 }
 
 const CalendarContext = createContext<CalendarContextType | undefined>(undefined);
@@ -135,7 +135,7 @@ export const CalendarProvider: React.FC<{ children: ReactNode }> = ({ children }
         goToToday,
         originEvents,
         splitEvents,
-        refetchEvents: fetchEvents // <-- Pass refetchEvents
+        refetchEvents: fetchEvents,
     }), [state.currentDate, goToNext, goToPrev, goToToday, originEvents, splitEvents, fetchEvents]);
 
     return (

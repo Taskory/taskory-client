@@ -2,22 +2,26 @@ import React, { useState, useEffect, KeyboardEvent } from 'react';
 import { API_URL } from "../../constants";
 import { format, addHours } from 'date-fns';
 import { getAllTags } from "../../api/tag/TagApi";
-import { createEvent, getEventById, updateEvent } from "../../api/event/EventApi"; // Added updateEvent function
+import { createEvent, getEventById, updateEvent } from "../../api/event/EventApi";
 import { SaveEventRequest, EventResponse } from "../../api/event/EventsTypes";
 import { TagResponse } from "../../api/tag/TagTypes";
+import timezones from '../../constants/timezones.json';
+import {requestZoneid} from "../../api/UserApi"; // Import the timezones from JSON
 
 interface EventModalProps {
     isOpen: boolean;
     onClose: () => void;
     id?: number;
-    refetchEvents: () => void; // New prop to trigger refetching events
+    refetchEvents: () => void;
 }
+
 interface HashtagResponse {
     id: number;
     name: string;
 }
 
 const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEvents }) => {
+    // State management for the form fields
     const [title, setTitle] = useState('');
     const [tagId, setTagId] = useState<number | undefined>(undefined);
     const [tags, setTags] = useState<TagResponse[]>([]);
@@ -28,14 +32,15 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
     const [startDateTime, setStartDateTime] = useState('');
     const [dueDateTime, setDueDateTime] = useState('');
     const [location, setLocation] = useState('');
-    const [loading, setLoading] = useState(false); // Tracks if event data is loading
+    const [timezone, setTimezone] = useState('UTC'); // Default timezone state
+    const [loading, setLoading] = useState(false);
 
-    const fetchTags = async () => {
+    // Fetches the available tags for the tag dropdown
+    const fetchTags = async (): Promise<void> => {
         try {
             const response = await getAllTags();
             if (response.status === 200) {
-                const data: TagResponse[] = response.data;
-                setTags(data);
+                setTags(response.data);
             } else {
                 console.error('Failed to fetch tags');
             }
@@ -44,37 +49,56 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
         }
     };
 
-    const fetchEvent = async (eventId: number) => {
-        setLoading(true); // Show loading state
+    const fetchTimezone = async (): Promise<void> => {
         try {
-            const response = await getEventById(eventId); // Fetch event by ID
+            // Call the requestZoneid function, which returns a plain string
+            const timezone = await requestZoneid();
+
+            if (timezone) {
+                // Set the fetched timezone
+                setTimezone(timezone);
+            } else {
+                console.error('Failed to fetch timezone');
+            }
+        } catch (error) {
+            console.error("Error fetching timezone:", error);
+        }
+    };
+
+
+    // Fetches the event details if the modal is opened for editing
+    const fetchEvent = async (eventId: number): Promise<void> => {
+        setLoading(true);
+        try {
+            const response = await getEventById(eventId);
             if (response.status === 200) {
                 const data: EventResponse = response.data;
-
-                setTitle(data.title ?? ""); // Default to empty string if null
-                setTagId(data.tag?.id ?? undefined); // Default to undefined if tag or tag.id is null
-                setHashtags(data.hashtags ?? []); // Default to empty array if hashtags is null
-                setHashtagIds(data.hashtags ? data.hashtags.map((hashtag) => hashtag.id) : []); // Map hashtag IDs if present, else empty array
-                setDescription(data.description ?? ""); // Default to empty string if null
-                setStartDateTime(data.startDateTime ?? ""); // Default to empty string if null
-                setDueDateTime(data.dueDateTime ?? ""); // Default to empty string if null
-                setLocation(data.location ?? ""); // Default to empty string if null
+                // Populate the state with the fetched event data
+                setTitle(data.title ?? "");
+                setTagId(data.tag?.id ?? undefined);
+                setHashtags(data.hashtags ?? []);
+                setHashtagIds(data.hashtags ? data.hashtags.map((hashtag) => hashtag.id) : []);
+                setDescription(data.description ?? "");
+                setStartDateTime(data.startDateTime ?? "");
+                setDueDateTime(data.dueDateTime ?? "");
+                setLocation(data.location ?? "");
+                setTimezone(data.timezone ?? 'UTC'); // Default to UTC if no timezone is set
             } else {
                 console.error('Failed to fetch event');
             }
         } catch (error) {
             console.error('Error fetching event:', error);
         } finally {
-            setLoading(false); // Hide loading state
+            setLoading(false);
         }
     };
 
+    // Hook to fetch initial data when the modal is opened
     useEffect(() => {
         if (isOpen) {
             fetchTags();
-
             if (id) {
-                fetchEvent(id); // Fetch event data if id is provided (edit mode)
+                fetchEvent(id); // Fetch event if editing an existing one
             } else {
                 const now = new Date();
                 const oneHourLater = addHours(now, 1);
@@ -84,32 +108,36 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                 const twoHoursLater = addHours(now, 2);
                 const formattedDueDateTime = format(twoHoursLater, 'yyyy-MM-dd\'T\'HH:00');
                 setDueDateTime(formattedDueDateTime);
+
+                fetchTimezone();
             }
         }
     }, [isOpen, id]);
 
-    const handleStartDateTimeChange = (value: string) => {
+    // Handles the start date change and auto-calculates the due date
+    const handleStartDateTimeChange = (value: string): void => {
         setStartDateTime(value);
-
         const start = new Date(value);
-        const due = addHours(start, 1); // Set due date 1 hour after start date
+        const due = addHours(start, 1);
         const formattedDueDateTime = format(due, 'yyyy-MM-dd\'T\'HH:00');
         setDueDateTime(formattedDueDateTime);
     };
 
-    const handleDueDateTimeChange = (value: string) => {
+    const handleDueDateTimeChange = (value: string): void => {
         setDueDateTime(value);
     };
 
-    const handleHashtagKeyPress = async (event: KeyboardEvent<HTMLInputElement>) => {
+    // Handles adding a hashtag when the "Enter" key is pressed
+    const handleHashtagKeyPress = async (event: KeyboardEvent<HTMLInputElement>): Promise<void> => {
         if (event.key === 'Enter' && hashtagTitle.trim() !== '') {
             event.preventDefault();
             try {
                 const response = await fetch(`${API_URL}/hashtags?title=${hashtagTitle}`);
                 if (response.ok) {
                     const hashtagData: HashtagResponse = await response.json();
-                    addHashtagToList(hashtagData); // Add fetched hashtag
+                    addHashtagToList(hashtagData);
                 } else if (response.status === 404) {
+                    // Create new hashtag if it doesn't exist
                     const createResponse = await fetch(`${API_URL}/hashtags`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -117,7 +145,7 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                     });
                     if (createResponse.ok) {
                         const createdHashtag: HashtagResponse = await createResponse.json();
-                        addHashtagToList(createdHashtag); // Add created hashtag
+                        addHashtagToList(createdHashtag);
                     } else {
                         console.error('Failed to create hashtag');
                     }
@@ -125,17 +153,19 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
             } catch (error) {
                 console.error('Error handling hashtag:', error);
             } finally {
-                setHashtagTitle(''); // Reset input field
+                setHashtagTitle(''); // Clear the input field
             }
         }
     };
 
-    const addHashtagToList = (hashtag: HashtagResponse) => {
+    // Adds a hashtag to the current list of hashtags
+    const addHashtagToList = (hashtag: HashtagResponse): void => {
         setHashtags((prev) => [...prev, hashtag]);
         setHashtagIds((prev) => [...prev, hashtag.id]);
     };
 
-    const handleSave = async () => {
+    // Handles the save button functionality for creating/updating events
+    const handleSave = async (): Promise<void> => {
         if (title && startDateTime && dueDateTime) {
             const formattedStartDateTime = new Date(startDateTime).toISOString();
             const formattedDueDateTime = new Date(dueDateTime).toISOString();
@@ -148,6 +178,7 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                 startDateTime: formattedStartDateTime,
                 dueDateTime: formattedDueDateTime,
                 location,
+                timezone, // Include timezone in the event payload
             };
 
             try {
@@ -155,7 +186,7 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                     const response = await updateEvent(id, eventPayload);
                     if (response.status === 200) {
                         console.log('Event successfully updated');
-                        refetchEvents(); // Call refetchEvents
+                        refetchEvents();
                         onClose();
                     } else {
                         console.error('Failed to update event');
@@ -163,7 +194,7 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                 } else {
                     const response = await createEvent(eventPayload);
                     if (response.status === 200) {
-                        refetchEvents(); // Call refetchEvents
+                        refetchEvents();
                         onClose();
                     } else {
                         console.error('Failed to create event');
@@ -177,9 +208,10 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
         }
     };
 
-    const handleClose = () => {
-        refetchEvents(); // Call refetchEvents when modal is closed
-        onClose(); // Call onClose prop to close the modal
+    // Handles closing the modal and triggers refetching events
+    const handleClose = (): void => {
+        refetchEvents();
+        onClose();
     };
 
     if (!isOpen) return null;
@@ -188,11 +220,12 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
         <dialog open={isOpen} className="modal">
             <div className="modal-box">
                 {loading ? (
-                    <div>Loading...</div> // Show loading indicator while fetching event data
+                    <div>Loading...</div>
                 ) : (
                     <>
                         <h3 className="font-bold text-lg">{id ? 'Edit Event' : 'Create New Event'}</h3>
                         <div className="py-4 space-y-4">
+                            {/* Event title input */}
                             <div className="flex items-center">
                                 <label className="w-1/3">Event Title:</label>
                                 <input
@@ -203,6 +236,7 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                                 />
                             </div>
 
+                            {/* Tag dropdown */}
                             <div className="flex items-center">
                                 <label className="w-1/3">Tag:</label>
                                 <select
@@ -219,6 +253,23 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                                 </select>
                             </div>
 
+                            {/* Timezone dropdown */}
+                            <div className="flex items-center">
+                                <label className="w-1/3">Timezone:</label>
+                                <select
+                                    className="select select-bordered w-full"
+                                    value={timezone}
+                                    onChange={(e) => setTimezone(e.target.value)}
+                                >
+                                    {Object.entries(timezones.timezone).map(([label, tz]) => (
+                                        <option key={tz} value={tz}>
+                                            {label} ({tz})
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            {/* Hashtags input */}
                             <div className="flex items-center">
                                 <label className="w-1/3">Hashtags:</label>
                                 <input
@@ -231,6 +282,7 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                                 />
                             </div>
 
+                            {/* List of selected hashtags */}
                             <div className="mt-2">
                                 {hashtags.map(hashtag => (
                                     <span key={hashtag.id} className="badge badge-secondary m-1">
@@ -239,6 +291,7 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                                 ))}
                             </div>
 
+                            {/* Description input */}
                             <div className="flex items-center">
                                 <label className="w-1/3">Description:</label>
                                 <textarea
@@ -248,6 +301,7 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                                 />
                             </div>
 
+                            {/* Start date input */}
                             <div className="flex items-center">
                                 <label className="w-1/3">Start Date:</label>
                                 <input
@@ -258,6 +312,7 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                                 />
                             </div>
 
+                            {/* Due date input */}
                             <div className="flex items-center">
                                 <label className="w-1/3">Due Date:</label>
                                 <input
@@ -268,6 +323,7 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                                 />
                             </div>
 
+                            {/* Location input */}
                             <div className="flex items-center">
                                 <label className="w-1/3">Location:</label>
                                 <input
@@ -278,6 +334,8 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                                 />
                             </div>
                         </div>
+
+                        {/* Save and Cancel buttons */}
                         <div className="modal-action">
                             <button className="btn" onClick={handleSave}>{id ? 'Update' : 'Save'}</button>
                             <button className="btn btn-error" onClick={handleClose}>Cancel</button>
