@@ -1,11 +1,11 @@
 import React, { useState, useEffect, KeyboardEvent } from 'react';
 import { API_URL } from "../../constants";
-import { format, addHours } from 'date-fns';
+import { format, addHours, isBefore } from 'date-fns'; // added isBefore for date comparison
 import { getAllTags } from "../../api/tag/TagApi";
-import { createEvent, getEventById, updateEvent } from "../../api/event/EventApi";
+import {createEvent, deleteEvent, getEventById, updateEvent} from "../../api/event/EventApi";
 import { SaveEventRequest, EventResponse } from "../../api/event/EventsTypes";
 import { TagResponse } from "../../api/tag/TagTypes";
-import {TimeUtil} from "../../util/TimeUtil"; // Import the timezones from JSON
+import { TimeUtil } from "../../util/TimeUtil"; // Import the timezones from JSON
 
 interface EventModalProps {
     isOpen: boolean;
@@ -20,7 +20,6 @@ interface HashtagResponse {
 }
 
 const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEvents }) => {
-    // State management for the form fields
     const [title, setTitle] = useState('');
     const [tagId, setTagId] = useState<number | undefined>(undefined);
     const [tags, setTags] = useState<TagResponse[]>([]);
@@ -32,8 +31,8 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
     const [dueDateTime, setDueDateTime] = useState('');
     const [location, setLocation] = useState('');
     const [loading, setLoading] = useState(false);
+    const [dateError, setDateError] = useState(''); // State for error message
 
-    // Fetches the available tags for the tag dropdown
     const fetchTags = async (): Promise<void> => {
         try {
             const response = await getAllTags();
@@ -47,15 +46,12 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
         }
     };
 
-
-    // Fetches the event details if the modal is opened for editing
     const fetchEvent = async (eventId: number): Promise<void> => {
         setLoading(true);
         try {
             const response = await getEventById(eventId);
             if (response.status === 200) {
                 const data: EventResponse = response.data;
-                // Populate the state with the fetched event data
                 setTitle(data.title ?? "");
                 setTagId(data.tag?.id ?? undefined);
                 setHashtags(data.hashtags ?? []);
@@ -74,12 +70,11 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
         }
     };
 
-    // Hook to fetch initial data when the modal is opened
     useEffect(() => {
         if (isOpen) {
             fetchTags();
             if (id) {
-                fetchEvent(id); // Fetch event if editing an existing one
+                fetchEvent(id);
             } else {
                 const now = new Date();
                 const oneHourLater = addHours(now, 1);
@@ -89,25 +84,30 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                 const twoHoursLater = addHours(now, 2);
                 const formattedDueDateTime = format(twoHoursLater, 'yyyy-MM-dd\'T\'HH:00');
                 setDueDateTime(formattedDueDateTime);
-
             }
         }
     }, [isOpen, id]);
 
-    // Handles the start date change and auto-calculates the due date
     const handleStartDateTimeChange = (value: string): void => {
         setStartDateTime(value);
         const start = new Date(value);
         const due = addHours(start, 1);
         const formattedDueDateTime = format(due, 'yyyy-MM-dd\'T\'HH:00');
         setDueDateTime(formattedDueDateTime);
+        setDateError(''); // Clear error when start date changes
     };
 
     const handleDueDateTimeChange = (value: string): void => {
-        setDueDateTime(value);
+        const dueDate = new Date(value);
+        const startDate = new Date(startDateTime);
+        if (isBefore(dueDate, startDate)) {
+            setDateError('Due date cannot be before start date.');
+        } else {
+            setDueDateTime(value);
+            setDateError(''); // Clear error if the due date is valid
+        }
     };
 
-    // Handles adding a hashtag when the "Enter" key is pressed
     const handleHashtagKeyPress = async (event: KeyboardEvent<HTMLInputElement>): Promise<void> => {
         if (event.key === 'Enter' && hashtagTitle.trim() !== '') {
             event.preventDefault();
@@ -117,7 +117,6 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                     const hashtagData: HashtagResponse = await response.json();
                     addHashtagToList(hashtagData);
                 } else if (response.status === 404) {
-                    // Create new hashtag if it doesn't exist
                     const createResponse = await fetch(`${API_URL}/hashtags`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -133,20 +132,18 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
             } catch (error) {
                 console.error('Error handling hashtag:', error);
             } finally {
-                setHashtagTitle(''); // Clear the input field
+                setHashtagTitle('');
             }
         }
     };
 
-    // Adds a hashtag to the current list of hashtags
     const addHashtagToList = (hashtag: HashtagResponse): void => {
         setHashtags((prev) => [...prev, hashtag]);
         setHashtagIds((prev) => [...prev, hashtag.id]);
     };
 
-    // Handles the save button functionality for creating/updating events
     const handleSave = async (): Promise<void> => {
-        if (title && startDateTime && dueDateTime) {
+        if (title && startDateTime && dueDateTime && !dateError) {
             const formattedStartDateTime = TimeUtil.dateToString(new Date(startDateTime));
             const formattedDueDateTime = TimeUtil.dateToString(new Date(dueDateTime));
 
@@ -183,11 +180,10 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                 console.error('Error saving event:', error);
             }
         } else {
-            console.error('Missing required fields: title, startDateTime, or dueDateTime');
+            console.error('Missing required fields or invalid dates');
         }
     };
 
-    // Handles closing the modal and triggers refetching events
     const handleClose = (): void => {
         refetchEvents();
         onClose();
@@ -195,6 +191,23 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
 
     if (!isOpen) return null;
 
+    const handleDelete = async (): Promise<void> => {
+        if (id) {
+            try {
+                const response = await deleteEvent(id);
+                if (response.status === 200) {
+                    refetchEvents();
+                    onClose();
+                } else {
+                    console.error('Failed to delete event');
+                }
+            } catch (error) {
+                console.error('Error deleting event:', error);
+            }
+        } else {
+            console.error('Missing required id');
+        }
+    };
     return (
         <dialog open={isOpen} className="modal">
             <div className="modal-box">
@@ -204,7 +217,6 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                     <>
                         <h3 className="font-bold text-lg">{id ? 'Edit Event' : 'Create New Event'}</h3>
                         <div className="py-4 space-y-4">
-                            {/* Event title input */}
                             <div className="flex items-center">
                                 <label className="w-1/3">Event Title:</label>
                                 <input
@@ -215,7 +227,6 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                                 />
                             </div>
 
-                            {/* Tag dropdown */}
                             <div className="flex items-center">
                                 <label className="w-1/3">Tag:</label>
                                 <select
@@ -232,7 +243,6 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                                 </select>
                             </div>
 
-                            {/* Hashtags input */}
                             <div className="flex items-center">
                                 <label className="w-1/3">Hashtags:</label>
                                 <input
@@ -245,7 +255,6 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                                 />
                             </div>
 
-                            {/* List of selected hashtags */}
                             <div className="mt-2">
                                 {hashtags.map(hashtag => (
                                     <span key={hashtag.id} className="badge badge-secondary m-1">
@@ -254,7 +263,6 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                                 ))}
                             </div>
 
-                            {/* Description input */}
                             <div className="flex items-center">
                                 <label className="w-1/3">Description:</label>
                                 <textarea
@@ -264,7 +272,6 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                                 />
                             </div>
 
-                            {/* Start date input */}
                             <div className="flex items-center">
                                 <label className="w-1/3">Start Date:</label>
                                 <input
@@ -275,7 +282,6 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                                 />
                             </div>
 
-                            {/* Due date input */}
                             <div className="flex items-center">
                                 <label className="w-1/3">Due Date:</label>
                                 <input
@@ -286,7 +292,9 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                                 />
                             </div>
 
-                            {/* Location input */}
+                            {/* Display error message if dates are invalid */}
+                            {dateError && <div className="text-red-500 text-sm">{dateError}</div>}
+
                             <div className="flex items-center">
                                 <label className="w-1/3">Location:</label>
                                 <input
@@ -298,10 +306,10 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                             </div>
                         </div>
 
-                        {/* Save and Cancel buttons */}
                         <div className="modal-action">
                             <button className="btn" onClick={handleSave}>{id ? 'Update' : 'Save'}</button>
                             <button className="btn btn-error" onClick={handleClose}>Cancel</button>
+                            <button className="btn btn-error" onClick={handleDelete}>Delete</button>
                         </div>
                     </>
                 )}

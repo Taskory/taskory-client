@@ -8,8 +8,6 @@ import {TimeUtil} from "../../util/TimeUtil";
 // API 요청 함수들 정의
 export const getMonthlyEvents = async (date: string): Promise<AxiosResponse<EventSummary[]>> => {
     const {start, end} = TimeUtil.getFirstSundayAndLastSaturday(date);
-    console.log("start", start);
-    console.log("end", end);
 
     const authToken = getAuthCookie();  // Fetch the latest cookie value here
     const requestOptions = {
