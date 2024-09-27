@@ -14,7 +14,7 @@ export const Register: React.FC = () => {
         // email: null,
         // phone: null,
         // address: null,
-        zoneId: null,
+        timezone: null,
     });
     const [isUsernameAvailable, setIsUsernameAvailable] = useState<boolean | null>(null);
     const navigate = useNavigate();
@@ -36,7 +36,7 @@ export const Register: React.FC = () => {
             setUserInfo({
                 id: result.id,
                 username: getEmailLocalPart(result.username),
-                zoneId: result.zoneId
+                timezone: result.timezone
             })
         })
 
@@ -60,14 +60,14 @@ export const Register: React.FC = () => {
         if (isUsernameAvailable) {
             const updateProfileData: ProfileUpdateRequestInterface = {
                 username: userInfo.username,
-                zoneId: userInfo.zoneId,
+                timezone: userInfo.timezone,
             };
             requestProfileUpdate(updateProfileData).then((result) => {
                 alert("success profile update");
                 setUserInfo({
                     id: result.id,
                     username: getEmailLocalPart(result.username),
-                    zoneId: result.zoneId
+                    timezone: result.timezone
                 });
                 navigate("/dashboard");
             });
@@ -150,16 +150,16 @@ export const Register: React.FC = () => {
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">Zone ID</label>
+                            <label className="block text-sm font-medium text-gray-700">Timezone</label>
                             <select
-                                name="zoneId"
+                                name="timezone"
                                 className="mt-1 p-2 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                value={userInfo.zoneId || ""}
+                                value={userInfo.timezone || ""}
                                 onChange={handleSelectChange}
                             >
                                 <option value="" disabled>Select Zone ID</option>
-                                {Object.entries(timezone.timezone).map(([city, zoneId]) => (
-                                    <option key={zoneId} value={zoneId}>{city}</option>
+                                {Object.entries(timezone.timezone).map(([city, timezone]) => (
+                                    <option key={timezone} value={timezone}>{city}</option>
                                 ))}
                             </select>
                         </div>

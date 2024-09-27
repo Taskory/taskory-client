@@ -7,7 +7,7 @@ import {requestProfile} from "../../api/UserApi";
 import timezone from "../../constants/timezones.json";
 
 export const Profile: React.FC = () => {
-    const [userInfo, setUserInfo] = useState<UserInfoInterface>({id: null, username: null, zoneId: null});
+    const [userInfo, setUserInfo] = useState<UserInfoInterface>({id: null, username: null, timezone: null});
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -19,7 +19,7 @@ export const Profile: React.FC = () => {
             setUserInfo({
                 id: result.id,
                 username: result.username,
-                zoneId: result.zoneId
+                timezone: result.timezone
             })
         })
 
@@ -81,7 +81,7 @@ export const Profile: React.FC = () => {
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700">Timezone</label>
-                            <p className="mt-1 p-2 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">{findCityByZoneId(userInfo.zoneId)}</p>
+                            <p className="mt-1 p-2 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">{findCityByZoneId(userInfo.timezone)}</p>
                         </div>
                     </div>
                 </div>

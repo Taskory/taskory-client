@@ -6,7 +6,8 @@ import { createEvent, getEventById, updateEvent } from "../../api/event/EventApi
 import { SaveEventRequest, EventResponse } from "../../api/event/EventsTypes";
 import { TagResponse } from "../../api/tag/TagTypes";
 import timezones from '../../constants/timezones.json';
-import {requestZoneid} from "../../api/UserApi"; // Import the timezones from JSON
+import {requestZoneid} from "../../api/UserApi";
+import {TimeUtil} from "../../util/TimeUtil"; // Import the timezones from JSON
 
 interface EventModalProps {
     isOpen: boolean;
@@ -53,7 +54,6 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
         try {
             // Call the requestZoneid function, which returns a plain string
             const timezone = await requestZoneid();
-
             if (timezone) {
                 // Set the fetched timezone
                 setTimezone(timezone);
@@ -167,8 +167,8 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
     // Handles the save button functionality for creating/updating events
     const handleSave = async (): Promise<void> => {
         if (title && startDateTime && dueDateTime) {
-            const formattedStartDateTime = new Date(startDateTime).toISOString();
-            const formattedDueDateTime = new Date(dueDateTime).toISOString();
+            const formattedStartDateTime = TimeUtil.DateToUtcString(new Date(startDateTime));
+            const formattedDueDateTime = TimeUtil.DateToUtcString(new Date(dueDateTime));
 
             const eventPayload: SaveEventRequest = {
                 title,

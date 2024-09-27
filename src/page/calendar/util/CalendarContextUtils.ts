@@ -1,15 +1,16 @@
 import {set} from "date-fns";
 import {SplitEventsInterface} from "../interface/CalendarContextInterface";
 import {EventSummary} from "../../../api/event/EventsTypes";
+import {TimeUtil} from "../../../util/TimeUtil";
 
-export function getSplitEvents(events: EventSummary[], firstDate: Date): SplitEventsInterface {
+export function getProcessedEvents(events: EventSummary[], firstDate: Date): SplitEventsInterface {
     let under24hours: EventSummary[] = [];
     let over24hours: EventSummary[] = [];
     const oneDayMilliSeconds = (24 * 60 * 60 * 1000);
 
     events.forEach((event: EventSummary) => {
-        const eventStart: Date = new Date(event.startDateTime);
-        const eventEnd: Date = new Date(event.dueDateTime);
+        const eventStart: Date = TimeUtil.UtcStringToDate(event.startDateTime);
+        const eventEnd: Date = TimeUtil.UtcStringToDate(event.dueDateTime);
 
         // events over 24 hours
         if (eventEnd.getTime() - eventStart.getTime() >=  oneDayMilliSeconds) {
@@ -24,8 +25,8 @@ export function getSplitEvents(events: EventSummary[], firstDate: Date): SplitEv
         }
         // events under 24hours
         else {
-            const dueDate: Date = new Date(event.dueDateTime);
-            const startDate: Date = new Date(event.startDateTime);
+            const dueDate: Date = TimeUtil.UtcStringToDate(event.dueDateTime);
+            const startDate: Date = TimeUtil.UtcStringToDate(event.startDateTime);
 
             // under 24 hours and cross 2 days
             if (new Date(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate()).getTime() - new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate()).getTime() >= oneDayMilliSeconds) {

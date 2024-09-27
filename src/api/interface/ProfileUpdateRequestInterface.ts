@@ -3,5 +3,5 @@ export interface ProfileUpdateRequestInterface {
     // email: string | null;
     // phone: string | null;
     // address: string | null;
-    zoneId: string | null;
+    timezone: string | null;
 }

@@ -4,5 +4,5 @@ export interface UserInfoInterface {
     // email: string | null;
     // phone: string | null;
     // address: string | null;
-    zoneId: string | null;
+    timezone: string | null;
 }

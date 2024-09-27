@@ -46,6 +46,7 @@ export async function requestProfile() {
 }
 
 export async function requestProfileUpdate(data: ProfileUpdateRequestInterface) {
+    console.log(data);
     const requestOptions = {
         method: "PUT",
         headers: {
