@@ -9,6 +9,7 @@ interface DayProps {
     events: EventSummary[];
 }
 
+// @Deprecated
 export const DayCell: React.FC<DayProps> = ({ day, events }) => {
     const [selectedEventId, setSelectedEventId] = useState<number | null>(null); // State to track selected event ID
     const [isModalOpen, setIsModalOpen] = useState(false); // State to track modal visibility
@@ -29,25 +30,25 @@ export const DayCell: React.FC<DayProps> = ({ day, events }) => {
     return (
         <>
             {/* DayCell content */}
-            <Cell className={`h-full grid`}>
-                <div className="text-left ml-2 mt-1 h-full row-span-1">{day}</div>
-                <div className={`overflow-hidden h-full flex flex-col-reverse mb-1`}>
-                    {events.map((event, idx) => {
-                        const textColor = `text-${event.tagColor.toLowerCase()}-500`;
-                        return (
-                            <button
-                                key={idx}
-                                onClick={() => handleEventClick(event.id)} // Open the modal when event is clicked
-                                className="flex justify-between whitespace-nowrap overflow-hidden text-ellipsis"
-                            >
-                                <span className={`text-sm px-1 font-semibold ${textColor}`}>
-                                    ●{event.title}
-                                </span>
-                            </button>
-                        );
-                    })}
-                </div>
-            </Cell>
+            {/*<Cell className={`h-full grid`}>*/}
+            {/*    <div className="text-left ml-2 mt-1 h-full row-span-1">{day}</div>*/}
+            {/*    <div className={`overflow-hidden h-full flex flex-col-reverse mb-1`}>*/}
+            {/*        {events.map((event, idx) => {*/}
+            {/*            const textColor = `text-${event.tagColor.toLowerCase()}-500`;*/}
+            {/*            return (*/}
+            {/*                <button*/}
+            {/*                    key={idx}*/}
+            {/*                    onClick={() => handleEventClick(event.id)} // Open the modal when event is clicked*/}
+            {/*                    className="flex justify-between whitespace-nowrap overflow-hidden text-ellipsis"*/}
+            {/*                >*/}
+            {/*                    <span className={`text-sm px-1 font-semibold ${textColor}`}>*/}
+            {/*                        ●{event.title}*/}
+            {/*                    </span>*/}
+            {/*                </button>*/}
+            {/*            );*/}
+            {/*        })}*/}
+            {/*    </div>*/}
+            {/*</Cell>*/}
 
             {/* EventModal Component */}
             {isModalOpen && selectedEventId && (
