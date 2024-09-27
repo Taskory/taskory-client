@@ -5,8 +5,6 @@ import { getAllTags } from "../../api/tag/TagApi";
 import { createEvent, getEventById, updateEvent } from "../../api/event/EventApi";
 import { SaveEventRequest, EventResponse } from "../../api/event/EventsTypes";
 import { TagResponse } from "../../api/tag/TagTypes";
-import timezones from '../../constants/timezones.json';
-import {requestZoneid} from "../../api/UserApi";
 import {TimeUtil} from "../../util/TimeUtil"; // Import the timezones from JSON
 
 interface EventModalProps {
@@ -33,7 +31,6 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
     const [startDateTime, setStartDateTime] = useState('');
     const [dueDateTime, setDueDateTime] = useState('');
     const [location, setLocation] = useState('');
-    const [timezone, setTimezone] = useState('UTC'); // Default timezone state
     const [loading, setLoading] = useState(false);
 
     // Fetches the available tags for the tag dropdown
@@ -47,21 +44,6 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
             }
         } catch (error) {
             console.error('Error fetching tags:', error);
-        }
-    };
-
-    const fetchTimezone = async (): Promise<void> => {
-        try {
-            // Call the requestZoneid function, which returns a plain string
-            const timezone = await requestZoneid();
-            if (timezone) {
-                // Set the fetched timezone
-                setTimezone(timezone);
-            } else {
-                console.error('Failed to fetch timezone');
-            }
-        } catch (error) {
-            console.error("Error fetching timezone:", error);
         }
     };
 
@@ -82,7 +64,6 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                 setStartDateTime(data.startDateTime ?? "");
                 setDueDateTime(data.dueDateTime ?? "");
                 setLocation(data.location ?? "");
-                setTimezone(data.timezone ?? 'UTC'); // Default to UTC if no timezone is set
             } else {
                 console.error('Failed to fetch event');
             }
@@ -109,7 +90,6 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                 const formattedDueDateTime = format(twoHoursLater, 'yyyy-MM-dd\'T\'HH:00');
                 setDueDateTime(formattedDueDateTime);
 
-                fetchTimezone();
             }
         }
     }, [isOpen, id]);
@@ -167,8 +147,8 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
     // Handles the save button functionality for creating/updating events
     const handleSave = async (): Promise<void> => {
         if (title && startDateTime && dueDateTime) {
-            const formattedStartDateTime = TimeUtil.DateToUtcString(new Date(startDateTime));
-            const formattedDueDateTime = TimeUtil.DateToUtcString(new Date(dueDateTime));
+            const formattedStartDateTime = TimeUtil.dateToString(new Date(startDateTime));
+            const formattedDueDateTime = TimeUtil.dateToString(new Date(dueDateTime));
 
             const eventPayload: SaveEventRequest = {
                 title,
@@ -178,7 +158,6 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                 startDateTime: formattedStartDateTime,
                 dueDateTime: formattedDueDateTime,
                 location,
-                timezone, // Include timezone in the event payload
             };
 
             try {
@@ -248,22 +227,6 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                                     {tags.map(tag => (
                                         <option key={tag.id} value={tag.id}>
                                             {tag.title} ({tag.color})
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            {/* Timezone dropdown */}
-                            <div className="flex items-center">
-                                <label className="w-1/3">Timezone:</label>
-                                <select
-                                    className="select select-bordered w-full"
-                                    value={timezone}
-                                    onChange={(e) => setTimezone(e.target.value)}
-                                >
-                                    {Object.entries(timezones.timezone).map(([label, tz]) => (
-                                        <option key={tz} value={tz}>
-                                            {label} ({tz})
                                         </option>
                                     ))}
                                 </select>

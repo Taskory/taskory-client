@@ -3,9 +3,14 @@ import axios, { AxiosResponse } from 'axios';
 import { EventResponse, EventSummary, SaveEventRequest } from './EventsTypes';
 import { API_URL } from "../../constants";
 import { getAuthCookie } from "../../util/CookieUtil";
+import {TimeUtil} from "../../util/TimeUtil";
 
 // API 요청 함수들 정의
 export const getMonthlyEvents = async (date: string): Promise<AxiosResponse<EventSummary[]>> => {
+    const {start, end} = TimeUtil.getFirstSundayAndLastSaturday(date);
+    console.log("start", start);
+    console.log("end", end);
+
     const authToken = getAuthCookie();  // Fetch the latest cookie value here
     const requestOptions = {
         headers: {
@@ -14,9 +19,9 @@ export const getMonthlyEvents = async (date: string): Promise<AxiosResponse<Even
         },
     };
 
-    return axios.get(`${API_URL}/event/month`, {
+    return axios.get(`${API_URL}/event/period`, {
         ...requestOptions,
-        params: { date }
+        params: { startDate: start, endDate: end }
     });
 };
 

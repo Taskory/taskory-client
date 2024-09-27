@@ -4,10 +4,9 @@ import {existAuthCookie} from "../../util/CookieUtil";
 import {useNavigate} from "react-router-dom";
 import {UserInfoInterface} from "../../api/interface/UserInfoInterface";
 import {requestProfile} from "../../api/UserApi";
-import timezone from "../../constants/timezones.json";
 
 export const Profile: React.FC = () => {
-    const [userInfo, setUserInfo] = useState<UserInfoInterface>({id: null, username: null, timezone: null});
+    const [userInfo, setUserInfo] = useState<UserInfoInterface>({id: null, username: null});
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -19,7 +18,6 @@ export const Profile: React.FC = () => {
             setUserInfo({
                 id: result.id,
                 username: result.username,
-                timezone: result.timezone
             })
         })
 
@@ -29,18 +27,6 @@ export const Profile: React.FC = () => {
         navigate("/profile/update");
     };
 
-    const findCityByZoneId = (zoneId: string | null) => {
-        if (zoneId) {
-            const timezones = timezone.timezone;
-            // Iterate over the keys in the timezone object
-            for (const [city, zone] of Object.entries(timezones)) {
-                if (zone === zoneId) {
-                    return city; // Return the key if the value matches
-                }
-            }
-        }
-        return null; // Return null if no matching value is found
-    };
     return (
         <CommonLayout>
             <div className="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8 bg-white shadow-md rounded-lg">
@@ -78,10 +64,6 @@ export const Profile: React.FC = () => {
                         <div>
                             <label className="block text-sm font-medium text-gray-700">Address</label>
                             <p className="mt-1 p-2 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">"123 Main St, Anytown, USA"</p>
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700">Timezone</label>
-                            <p className="mt-1 p-2 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">{findCityByZoneId(userInfo.timezone)}</p>
                         </div>
                     </div>
                 </div>

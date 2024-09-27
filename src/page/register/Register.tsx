@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { CommonLayout } from "../../layout/CommonLayout";
 import { useNavigate } from "react-router-dom";
-import timezone from "../../constants/timezones.json";
 import {requestProfile, requestProfileUpdate, requestUsernameCheck} from "../../api/UserApi";
 import {existAuthCookie} from "../../util/CookieUtil";
 import {UserInfoInterface} from "../../api/interface/UserInfoInterface";
@@ -11,10 +10,6 @@ export const Register: React.FC = () => {
     const [userInfo, setUserInfo] = useState<UserInfoInterface>({
         id: null,
         username: null,
-        // email: null,
-        // phone: null,
-        // address: null,
-        timezone: null,
     });
     const [isUsernameAvailable, setIsUsernameAvailable] = useState<boolean | null>(null);
     const navigate = useNavigate();
@@ -36,7 +31,6 @@ export const Register: React.FC = () => {
             setUserInfo({
                 id: result.id,
                 username: getEmailLocalPart(result.username),
-                timezone: result.timezone
             })
         })
 
@@ -60,14 +54,12 @@ export const Register: React.FC = () => {
         if (isUsernameAvailable) {
             const updateProfileData: ProfileUpdateRequestInterface = {
                 username: userInfo.username,
-                timezone: userInfo.timezone,
             };
             requestProfileUpdate(updateProfileData).then((result) => {
                 alert("success profile update");
                 setUserInfo({
                     id: result.id,
                     username: getEmailLocalPart(result.username),
-                    timezone: result.timezone
                 });
                 navigate("/dashboard");
             });
@@ -75,14 +67,6 @@ export const Register: React.FC = () => {
             alert("Please check username.");
         }
 
-    };
-
-    const handleSelectChange = (e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
-        const { name, value } = e.target;
-        setUserInfo((prevState: UserInfoInterface) => ({
-            ...prevState,
-            [name]: value
-        }));
     };
 
     return (
@@ -148,20 +132,6 @@ export const Register: React.FC = () => {
                                 // value={userInfo.address || ""}
                                 onChange={handleInputChange}
                             />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700">Timezone</label>
-                            <select
-                                name="timezone"
-                                className="mt-1 p-2 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                value={userInfo.timezone || ""}
-                                onChange={handleSelectChange}
-                            >
-                                <option value="" disabled>Select Zone ID</option>
-                                {Object.entries(timezone.timezone).map(([city, timezone]) => (
-                                    <option key={timezone} value={timezone}>{city}</option>
-                                ))}
-                            </select>
                         </div>
                     </div>
                     <div className="mt-6">

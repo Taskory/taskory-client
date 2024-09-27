@@ -60,7 +60,7 @@ export const CalendarProvider: React.FC<{ children: ReactNode }> = ({ children }
     // Function to refetch events
     const fetchEvents: () => Promise<void> = useCallback(async () => {
         try {
-            const utcString: string = TimeUtil.DateToUtcString(state.currentDate);
+            const utcString: string = TimeUtil.dateToString(state.currentDate);
             const response = await getMonthlyEvents(utcString);
             setOriginEvents(response.data);
         } catch (error) {
@@ -77,9 +77,6 @@ export const CalendarProvider: React.FC<{ children: ReactNode }> = ({ children }
         fetchEvents();
     }, [state.sumOfMonthAndYear, fetchEvents, state.currentDate]);
 
-    console.log(new Date());
-    console.log(TimeUtil.DateToUtcString(new Date()));
-    console.log(TimeUtil.UtcStringToDate(TimeUtil.DateToUtcString(new Date())));
     useEffect(() => {
         // Split events based on the current month
         setProcessedEvents(getProcessedEvents(originEvents, new Date(state.currentDate.getFullYear(), state.currentDate.getMonth(), 1)));
