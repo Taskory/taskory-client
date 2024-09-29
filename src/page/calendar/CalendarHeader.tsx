@@ -4,8 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useCalendar } from './context/CalendarContext';
 import { useCalendarView } from './context/CalendarViewContext';
 import monthNames from '../../constants/calendar.json';
-import { debounce } from 'lodash';
-import EventModal from './EventModal'; // Import the EventModal
+import EventModal from './EventModal';
 
 export const CalendarHeader: React.FC = React.memo(() => {
   const { view, setView } = useCalendarView();
@@ -14,19 +13,14 @@ export const CalendarHeader: React.FC = React.memo(() => {
   const [inputYear, setInputYear] = useState(currentDate.getFullYear().toString());
   const [selectedMonth, setSelectedMonth] = useState(currentDate.getMonth().toString());
   const [selectedDay, setSelectedDay] = useState(currentDate.getDate().toString());
-  const [isEventModalOpen, setIsEventModalOpen] = useState(false); // State for opening modal
-
-  const debouncedHandleYearChange = debounce((year: string) => {
-    setInputYear(year);
-    handleDateChange();
-  }, 300);
+  const [isEventModalOpen, setIsEventModalOpen] = useState(false);
 
   const handleAddEvent = () => {
-    setIsEventModalOpen(true); // Open modal
+    setIsEventModalOpen(true);
   };
 
   const handleCloseEventModal = () => {
-    setIsEventModalOpen(false); // Close modal
+    setIsEventModalOpen(false);
   };
 
   useEffect(() => {
@@ -53,7 +47,7 @@ export const CalendarHeader: React.FC = React.memo(() => {
         endOfWeek.setDate(currentDate.getDate() + (6 - currentDate.getDay()));
         const startMonth = monthNames.monthNames[startOfWeek.getMonth()];
         const endMonth = monthNames.monthNames[endOfWeek.getMonth()];
-        return `${year} ${startMonth} ${startOfWeek.getDate()} - ${endMonth} ${endOfWeek.getDate()}`;
+        return `${year} ${startMonth} ${startOfWeek.getDate()} ~ ${endMonth} ${endOfWeek.getDate()}`;
       }
       case 'day':
       default:
@@ -61,20 +55,46 @@ export const CalendarHeader: React.FC = React.memo(() => {
     }
   };
 
-  const handleDateChange = () => {
-    const year = parseInt(inputYear);
-    const month = parseInt(selectedMonth);
-    const day = parseInt(selectedDay);
-    const newDate = new Date(year, month, day);
-    if (!isNaN(newDate.getTime())) {
+  const handleDateChange = (newYear: string, newMonth: string, newDay: string) => {
+    const year = parseInt(newYear);
+    const month = parseInt(newMonth);
+    const day = parseInt(newDay);
+
+    if (!isNaN(year) && !isNaN(month) && !isNaN(day)) {
+      let newDate;
+      switch (view) {
+        case 'year':
+          newDate = new Date(year, 0, 1); // Set to January 1st for the year view
+          break;
+        case 'month':
+          newDate = new Date(year, month, 1); // Set to the 1st of the selected month
+          break;
+        case 'week':
+        case 'day':
+        default:
+          newDate = new Date(year, month, day); // Use selected year, month, and day
+          break;
+      }
       setCurrentDate(newDate);
     }
   };
 
-  const handleYearKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      handleDateChange();
-    }
+  const handleYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newYear = e.target.value;
+    setInputYear(newYear);
+    handleDateChange(newYear, selectedMonth, selectedDay); // Immediately update date
+  };
+
+  const handleMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newMonth = e.target.value;
+    setSelectedMonth(newMonth);
+    handleDateChange(inputYear, newMonth, selectedDay); // Immediately update date
+  };
+
+  const handleDayChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newDay = e.target.value;
+    setSelectedDay(newDay);
+    handleDateChange(inputYear, selectedMonth, newDay); // Immediately update date
   };
 
   const daysInMonth = (year: number, month: number) => {
@@ -82,66 +102,78 @@ export const CalendarHeader: React.FC = React.memo(() => {
   };
 
   return (
-      <div className="flex justify-between items-center p-4 min-h-headerHeight h-full bg-white shadow-md">
-        <h1 className="text-2xl font-bold">{formatDate()}</h1>
-        <div className="flex space-x-2">
-          <button className="btn btn-sm bg-blue-500 text-white hover:bg-blue-600 transition-all" onClick={() => goToPrev(view)}>Previous</button>
-          <button className="btn btn-sm bg-blue-500 text-white hover:bg-blue-600 transition-all" onClick={() => goToNext(view)}>Next</button>
-          <button className="btn btn-sm bg-green-500 text-white hover:bg-green-600 transition-all" onClick={goToToday}>Today</button>
+      <div className="flex justify-between items-center p-4 bg-white shadow-md">
+        {/* Navigation Controls */}
+        <div className="flex space-x-2 items-center">
+          <button className="btn btn-sm" onClick={() => goToPrev(view)}>{'<'}</button>
+          <button className="btn btn-sm" onClick={goToToday}>Today</button>
+          <button className="btn btn-sm" onClick={() => goToNext(view)}>{'>'}</button>
+
+
+          {/* View and Event Controls */}
+          <div className="flex space-x-2 items-center">
+            <select
+                className="select select-sm"
+                onChange={(e) => setView(e.target.value)}
+                value={view}
+            >
+              <option value="year">Year</option>
+              <option value="month">Month</option>
+              <option value="week">Week</option>
+              <option value="day">Day</option>
+            </select>
+          </div>
         </div>
 
-        <div className="flex items-center space-x-4">
+
+
+        {/* Date Display */}
+        <h1 className="font-semibold">{formatDate()}</h1>
+
+        {/* Date Input Controls */}
+        <div className="flex space-x-1">
+          {/* Year Input */}
           <input
               type="number"
               value={inputYear}
-              onChange={(e) => debouncedHandleYearChange(e.target.value)}
-              onKeyDown={handleYearKeyDown}
-              className="btn btn-sm border border-gray-300 rounded-md p-2"
+              onChange={handleYearChange} // Immediately update date on change
+              className="w-20 text-center"
               placeholder="Year"
           />
-          <select
-              value={selectedMonth}
-              onChange={(e) => {
-                setSelectedMonth(e.target.value);
-                setSelectedDay('1');
-              }}
-              onBlur={handleDateChange}
-              className="btn btn-sm border border-gray-300 rounded-md p-2"
-          >
-            {monthNames.monthNames.map((month, index) => (
-                <option key={index} value={index}>{month}</option>
-            ))}
-          </select>
-          <select
-              value={selectedDay}
-              onChange={(e) => setSelectedDay(e.target.value)}
-              onBlur={handleDateChange}
-              className="btn btn-sm border border-gray-300 rounded-md p-2"
-          >
-            {Array.from(
-                { length: daysInMonth(parseInt(inputYear), parseInt(selectedMonth)) },
-                (_, i) => i + 1,
-            ).map((day) => (
-                <option key={day} value={day}>{day}</option>
-            ))}
-          </select>
+
+          {/* Conditionally show month select if view is 'month', 'week', or 'day' */}
+          {view !== 'year' && (
+              <select
+                  value={selectedMonth}
+                  onChange={handleMonthChange} // Immediately update date on change
+                  className="select select-sm"
+              >
+                {monthNames.monthNames.map((month, index) => (
+                    <option key={index} value={index}>{month}</option>
+                ))}
+              </select>
+          )}
+
+          {/* Conditionally show day select if view is 'day' or 'week' */}
+          {(view === 'day' || view === 'week') && (
+              <select
+                  value={selectedDay}
+                  onChange={handleDayChange} // Immediately update date on change
+                  className="select select-sm"
+              >
+                {Array.from(
+                    {length: daysInMonth(parseInt(inputYear), parseInt(selectedMonth))},
+                    (_, i) => i + 1,
+                ).map((day) => (
+                    <option key={day} value={day}>{day}</option>
+                ))}
+              </select>
+          )}
         </div>
 
-        <div className="flex items-center space-x-4">
-          <select
-              className="btn btn-sm border border-gray-300 rounded-md p-2"
-              onChange={(e) => setView(e.target.value)}
-              value={view}
-          >
-            <option value="year">Year</option>
-            <option value="month">Month</option>
-            <option value="week">Week</option>
-            <option value="day">Day</option>
-          </select>
-          <button className="btn btn-sm bg-purple-500 text-white hover:bg-purple-600 transition-all" onClick={handleAddEvent}>
-            Create Event
-          </button>
-        </div>
+        <button className="btn bg-purple-500 text-white hover:bg-purple-600" onClick={handleAddEvent}>
+          Create Event
+        </button>
 
         {/* EventModal integration */}
         <EventModal isOpen={isEventModalOpen} onClose={handleCloseEventModal} refetchEvents={refetchEvents}/>
