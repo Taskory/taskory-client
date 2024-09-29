@@ -5,7 +5,8 @@ import { getAllTags } from "../../api/tag/TagApi";
 import {createEvent, deleteEvent, getEventById, updateEvent} from "../../api/event/EventApi";
 import { SaveEventRequest, EventResponse } from "../../api/event/EventsTypes";
 import { TagResponse } from "../../api/tag/TagTypes";
-import { TimeUtil } from "../../util/TimeUtil"; // Import the timezones from JSON
+import { TimeUtil } from "../../util/TimeUtil";
+import {HashtagResponse} from "../../api/hashtag/HashtagTypes"; // Import the timezones from JSON
 
 interface EventModalProps {
     isOpen: boolean;
@@ -14,10 +15,6 @@ interface EventModalProps {
     refetchEvents: () => void;
 }
 
-interface HashtagResponse {
-    id: number;
-    name: string;
-}
 
 const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEvents }) => {
     const [title, setTitle] = useState('');
