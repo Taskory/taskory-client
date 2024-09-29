@@ -171,7 +171,7 @@ export const CalendarHeader: React.FC = React.memo(() => {
           )}
         </div>
 
-        <button className="btn bg-purple-500 text-white hover:bg-purple-600" onClick={handleAddEvent}>
+        <button className="btn btn-sm" onClick={handleAddEvent}>
           Create Event
         </button>
 
