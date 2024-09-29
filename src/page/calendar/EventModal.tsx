@@ -219,7 +219,7 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                                 <input
                                     type="text"
                                     className="input input-ghost w-full font-bold"
-                                    value={id ? title : ''}
+                                    value={title}
                                     placeholder={"Type a title"}
                                     onChange={(e) => setTitle(e.target.value)}
                                 />
