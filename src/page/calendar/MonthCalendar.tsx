@@ -46,7 +46,7 @@ export const MonthCalendar: React.FC = () => {
     };
 
     return (
-        <div className="border h-full overflow-hidden">
+        <div className="border overflow-hidden">
             <MonthCalendarHeader />
             <div
                 className={`grid grid-cols-7 grid-rows-${weeksOfCurrentMonth} h-full w-full`}

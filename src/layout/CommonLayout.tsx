@@ -1,31 +1,30 @@
-import React, { ReactNode } from 'react';
-import { LeftBar } from '../component/LeftBar';
+import React, {  ReactNode } from 'react';
 import { Header } from '../component/Header';
-import { RightBar } from '../component/RightBar';
-import { useSidebarStateContext } from "../context/SidebarStateContext";
+import { Leftbar } from '../component/Leftbar';
+import { Rightbar } from '../component/Rightbar';
+
 
 interface CommonLayoutProps {
     children: ReactNode;
 }
 
 export const CommonLayout: React.FC<CommonLayoutProps> = ({ children }) => {
-    const { isLeftbarOpened } = useSidebarStateContext();
-
     return (
-        <div className="w-screen h-screen overflow-x-hidden">
-            <div className="flex h-full w-full">
-                <LeftBar />
-                <div className={`w-full h-full flex flex-col flex-grow transition-all duration-300 ${isLeftbarOpened ? 'ml-leftbarOpened' : 'ml-leftbarClosed'}`}>
-                    <Header />
-                    <div className="w-full h-full">
-                        <div className="flex w-full h-full pt-headerHeight">
-                            <main className="flex-grow w-0 h-full">
-                                {children}
-                            </main>
-                            <RightBar />
-                        </div>
-                    </div>
+        <div className="h-screen flex flex-col overflow-hidden">
+            {/* Header */}
+            <Header />
+            {/* Main Content with Leftbar and Rightbar */}
+            <div className="flex flex-1 overflow-hidden">
+                {/* Leftbar */}
+                <Leftbar />
+
+                {/* Main Content */}
+                <div className="flex-1 flex flex-col overflow-auto p-4">
+                    {children}
                 </div>
+
+                {/* Rightbar */}
+                <Rightbar />
             </div>
         </div>
     );
