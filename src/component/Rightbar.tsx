@@ -7,7 +7,7 @@ export const Rightbar = () => {
     return (
         <>
             <div
-                className={`border-l transition-all duration-300 flex flex-col items-center ${
+                className={`transition-all duration-300 flex flex-col items-center ${
                     isRightbarOpened ? 'w-64' : 'w-16'
                 }`}
             >

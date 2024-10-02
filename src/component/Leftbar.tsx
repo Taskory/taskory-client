@@ -26,7 +26,7 @@ export const Leftbar: React.FC = () => {
                 />
                 <SelectItem
                     src={"/asset/img/leftbar/calendar.svg"}
-                    label="Calendar"
+                    label="CalendarPage"
                     path="/calendar"
                     isOpen={isLeftbarOpened}
                 />

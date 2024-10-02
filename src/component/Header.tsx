@@ -29,14 +29,14 @@ export const Header: React.FC = () => {
                     {/* Leftbar toggle button */}
                     <div
                         onClick={toggleLeftbar}
-                        className="flex items-center p-2 cursor-pointer hover:bg-gray-200"
+                        className="ml-4 flex items-center cursor-pointer hover:bg-gray-200"
                     >
-                        <img src={"/asset/img/header/menu.svg"} alt={"Menu"} />
+                        <img className="h-8 w-auto" src={"/asset/img/header/menu.svg"} alt={"Menu"} />
                     </div>
                 </div>
                 <div className="flex items-center">
-                    <img className="mr-2 h-10 w-auto" src={"/asset/img/logo.png"} alt={"Logo"} />
-                    <span>Taskflower</span>
+                    <img className="mr-2 h-8 w-auto" src={"/asset/img/logo.png"} alt={"Logo"} />
+                    <span className="font-semibold">Taskflower</span>
                 </div>
                 <div className="flex items-center">
                     {/* Profile img */}

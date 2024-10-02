@@ -2,7 +2,7 @@ import React from 'react';
 import { useCalendar } from './context/CalendarContext';
 import { useCalendarView } from './context/CalendarViewContext';
 
-export const YearCalendar: React.FC = () => {
+export const YearlyCalendar: React.FC = () => {
   const { currentDate, setCurrentDate } = useCalendar();
   const { setView } = useCalendarView();
   const months = [

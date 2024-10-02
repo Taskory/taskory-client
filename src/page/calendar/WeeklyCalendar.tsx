@@ -1,17 +1,23 @@
-import React, { useEffect, useState } from "react";
-import { useCalendar } from "./context/CalendarContext";
-import { WeekCalendarHeader } from "./component/WeekCalendarHeader";
-import { WeekInfoInterface } from "./interface/WeekCalendarInterfaces";
-import {getEventDayIndex, getWeeklyEvents, initializeWeekInfo} from "./util/WeekCalendarUtils";
-import { DayLine } from "./component/DayLine";
-import { TimeLine } from "./component/TimeLine";
-import {EventSummary} from "../../api/event/EventsTypes";
+// src/components/TempWeekCalendar.tsx
 
-export const WeekCalendar: React.FC = () => {
+import React, { useRef, useEffect, useState } from 'react';
+import {WeekInfoInterface} from "./interface/WeekCalendarInterfaces";
+import {useCalendar} from "./context/CalendarContext";
+import {getEventDayIndex, getWeeklyEvents, initializeWeekInfo } from "./util/WeekCalendarUtils";
+import {EventSummary} from "../../api/event/EventsTypes";
+import { WeekCalendarHeader } from './component/WeekCalendarHeader';
+import { AllDayRow } from './component/AllDayRow';
+import { TimeColumn } from './component/TimeColumn';
+import { WeekdayColumns } from './component/WeekdayColumns';
+
+// Main TempWeekCalendar component
+export const WeeklyCalendar: React.FC = () => {
     const { currentDate, splitEvents } = useCalendar();
     const [weekInfo, setWeekInfo] = useState<WeekInfoInterface>(initializeWeekInfo(currentDate));
     const [under24hoursEvents, setUnder24hoursEvents] = useState<EventSummary[][]>([[], [], [], [], [], [], []]);
     const [over24hoursEvents, setOver24hoursEvents] = useState<EventSummary[][]>([[], [], [], [], [], [], []]);
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const [scrollBarWidth, setScrollBarWidth] = useState(0);
 
     useEffect(() => {
         setWeekInfo(initializeWeekInfo(currentDate));
@@ -56,21 +62,29 @@ export const WeekCalendar: React.FC = () => {
 
     }, [splitEvents, weekInfo.startSunday]);
 
-    const renderDayLines = () =>
-        Array.from({length: 7}, (_, index) => (
-            <DayLine key={index} under24hoursEvents={under24hoursEvents[index]} over24hoursEvents={over24hoursEvents[index]}/>
-        ));
+
+    useEffect(() => {
+        if (scrollContainerRef.current) {
+            const scrollbarWidth = scrollContainerRef.current.offsetWidth - scrollContainerRef.current.clientWidth;
+            setScrollBarWidth(scrollbarWidth);
+        }
+    }, []);
 
     return (
-        <div className="w-full h-full flex flex-col">
-            <WeekCalendarHeader startDate={weekInfo.startSunday} />
-            <div className="flex flex-grow h-full overflow-y-scroll">
-                <div className="w-[10%]">
-                    <TimeLine />
-                </div>
-                <div className="w-[90%] grid grid-cols-7 border-l border-gray-200">
-                    {renderDayLines()}
-                </div>
+        <div className="w-full flex-grow flex flex-col">
+            {/* Header Section */}
+            <WeekCalendarHeader scrollBarWidth={scrollBarWidth} startDate={weekInfo.startSunday}/>
+
+            {/* All day events row */}
+            <AllDayRow scrollBarWidth={scrollBarWidth} allDayEvents={over24hoursEvents} />
+
+            {/* Main Content: Time Slots */}
+            <div ref={scrollContainerRef} className="flex-grow grid grid-cols-[0.5fr,1fr,1fr,1fr,1fr,1fr,1fr,1fr] overflow-y-auto">
+                {/* Time column */}
+                <TimeColumn />
+
+                {/* Weekday columns */}
+                <WeekdayColumns under24hoursEvents={under24hoursEvents} />
             </div>
         </div>
     );

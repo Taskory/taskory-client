@@ -1,11 +1,11 @@
-// MonthCalendar.tsx
+// MonthlyCalendar.tsx
 import React, { useEffect, useState } from "react";
 import { MonthCalendarCell } from "./component/MonthCalendarCell";
 import { MonthCalendarHeader } from "./component/MonthCalendarHeader";
 import { useCalendar } from "./context/CalendarContext";
 import { getMonthlyEvents } from "./util/MonthCalendarUtils";
 
-export const MonthCalendar: React.FC = () => {
+export const MonthlyCalendar: React.FC = () => {
     const { currentDate, originEvents } = useCalendar();
     const [monthlyEvents, setMonthlyEvents] = useState(getMonthlyEvents(originEvents, currentDate));
     const [monthInfo, setMonthInfo] = useState({
@@ -46,7 +46,7 @@ export const MonthCalendar: React.FC = () => {
     };
 
     return (
-        <div className="border overflow-hidden">
+        <div className="overflow-hidden h-full">
             <MonthCalendarHeader />
             <div
                 className={`grid grid-cols-7 grid-rows-${weeksOfCurrentMonth} h-full w-full`}

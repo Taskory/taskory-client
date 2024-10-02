@@ -3,7 +3,7 @@ import {Home} from "../page/home/Home";
 import {Login} from "../page/auth/Login";
 import {Signup} from "../page/auth/Signup";
 import {Dashboard} from "../page/dashboard/Dashboard";
-import {Calendar} from "../page/calendar/Calendar";
+import {CalendarPage} from "../page/calendar/CalendarPage";
 import {Routine} from "../page/routine/Routine";
 import {Task} from "../page/task/Task";
 import React from "react";
@@ -22,7 +22,7 @@ export const AppRouter = (): React.JSX.Element => {
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/signup" element={<Signup/>}/>
                 <Route path="/dashboard" element={<Dashboard/>}/>
-                <Route path="/calendar" element={<Calendar/>}/>
+                <Route path="/calendar" element={<CalendarPage/>}/>
                 <Route path="/routine" element={<Routine/>}/>
                 <Route path="/task" element={<Task/>}/>
                 <Route path="/report" element={<Report/>}/>

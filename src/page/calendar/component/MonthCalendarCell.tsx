@@ -27,7 +27,7 @@ export const MonthCalendarCell: React.FC<MonthCalendarCellProps> = ({ day, event
 
     return (
         <>
-            <div className={`border h-full overflow-hidden relative flex flex-col ${isCurrentMonth ? 'bg-white' : 'bg-gray-50'}`}>
+            <div className={`border-b border-r h-full overflow-hidden relative flex flex-col ${isCurrentMonth ? 'bg-white' : 'bg-gray-50'}`}>
                 <div className="text-left ml-2 mt-1">{day}</div>
                 <div className={`overflow-hidden flex flex-col-reverse mb-1 h-full`}>
                     {events.map((event, idx) => {

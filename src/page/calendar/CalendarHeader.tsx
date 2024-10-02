@@ -102,81 +102,80 @@ export const CalendarHeader: React.FC = React.memo(() => {
   };
 
   return (
-      <div className="flex justify-between items-center p-4 bg-white shadow-md">
-        {/* Navigation Controls */}
-        <div className="flex space-x-2 items-center">
-          <button className="btn btn-sm" onClick={() => goToPrev(view)}>{'<'}</button>
-          <button className="btn btn-sm" onClick={goToToday}>Today</button>
-          <button className="btn btn-sm" onClick={() => goToNext(view)}>{'>'}</button>
-
-
-          {/* View and Event Controls */}
+        <div className="w-full flex justify-between items-center border-r p-4 sticky top-0 z-20 bg-white border-b">
+          {/* Navigation Controls */}
           <div className="flex space-x-2 items-center">
-            <select
-                className="select select-sm"
-                onChange={(e) => setView(e.target.value)}
-                value={view}
-            >
-              <option value="year">Year</option>
-              <option value="month">Month</option>
-              <option value="week">Week</option>
-              <option value="day">Day</option>
-            </select>
+            <button className="btn btn-sm" onClick={() => goToPrev(view)}>{'<'}</button>
+            <button className="btn btn-sm" onClick={goToToday}>Today</button>
+            <button className="btn btn-sm" onClick={() => goToNext(view)}>{'>'}</button>
+
+
+            {/* View and Event Controls */}
+            <div className="flex space-x-2 items-center">
+              <select
+                  className="select select-sm"
+                  onChange={(e) => setView(e.target.value)}
+                  value={view}
+              >
+                <option value="year">Year</option>
+                <option value="month">Month</option>
+                <option value="week">Week</option>
+                <option value="day">Day</option>
+              </select>
+            </div>
           </div>
+
+
+          {/* Date Display */}
+          <h1 className="font-semibold">{formatDate()}</h1>
+
+          {/* Date Input Controls */}
+          <div className="flex space-x-1">
+            {/* Year Input */}
+            <input
+                type="number"
+                value={inputYear}
+                onChange={handleYearChange} // Immediately update date on change
+                className="w-20 text-center"
+                placeholder="Year"
+            />
+
+            {/* Conditionally show month select if view is 'month', 'week', or 'day' */}
+            {view !== 'year' && (
+                <select
+                    value={selectedMonth}
+                    onChange={handleMonthChange} // Immediately update date on change
+                    className="select select-sm"
+                >
+                  {monthNames.monthNames.map((month, index) => (
+                      <option key={index} value={index}>{month}</option>
+                  ))}
+                </select>
+            )}
+
+            {/* Conditionally show day select if view is 'day' or 'week' */}
+            {(view === 'day' || view === 'week') && (
+                <select
+                    value={selectedDay}
+                    onChange={handleDayChange} // Immediately update date on change
+                    className="select select-sm"
+                >
+                  {Array.from(
+                      {length: daysInMonth(parseInt(inputYear), parseInt(selectedMonth))},
+                      (_, i) => i + 1,
+                  ).map((day) => (
+                      <option key={day} value={day}>{day}</option>
+                  ))}
+                </select>
+            )}
+          </div>
+
+          <button className="btn btn-sm" onClick={handleAddEvent}>
+            Create Event
+          </button>
+
+          {/* EventModal integration */}
+          <EventModal isOpen={isEventModalOpen} onClose={handleCloseEventModal} refetchEvents={refetchEvents}/>
         </div>
-
-
-
-        {/* Date Display */}
-        <h1 className="font-semibold">{formatDate()}</h1>
-
-        {/* Date Input Controls */}
-        <div className="flex space-x-1">
-          {/* Year Input */}
-          <input
-              type="number"
-              value={inputYear}
-              onChange={handleYearChange} // Immediately update date on change
-              className="w-20 text-center"
-              placeholder="Year"
-          />
-
-          {/* Conditionally show month select if view is 'month', 'week', or 'day' */}
-          {view !== 'year' && (
-              <select
-                  value={selectedMonth}
-                  onChange={handleMonthChange} // Immediately update date on change
-                  className="select select-sm"
-              >
-                {monthNames.monthNames.map((month, index) => (
-                    <option key={index} value={index}>{month}</option>
-                ))}
-              </select>
-          )}
-
-          {/* Conditionally show day select if view is 'day' or 'week' */}
-          {(view === 'day' || view === 'week') && (
-              <select
-                  value={selectedDay}
-                  onChange={handleDayChange} // Immediately update date on change
-                  className="select select-sm"
-              >
-                {Array.from(
-                    {length: daysInMonth(parseInt(inputYear), parseInt(selectedMonth))},
-                    (_, i) => i + 1,
-                ).map((day) => (
-                    <option key={day} value={day}>{day}</option>
-                ))}
-              </select>
-          )}
-        </div>
-
-        <button className="btn btn-sm" onClick={handleAddEvent}>
-          Create Event
-        </button>
-
-        {/* EventModal integration */}
-        <EventModal isOpen={isEventModalOpen} onClose={handleCloseEventModal} refetchEvents={refetchEvents}/>
-      </div>
-  );
-});
+        );
+        });

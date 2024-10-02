@@ -8,23 +8,23 @@ interface CommonLayoutProps {
     children: ReactNode;
 }
 
-export const CommonLayout: React.FC<CommonLayoutProps> = ({ children }) => {
+export const CommonLayout: React.FC<CommonLayoutProps> = ({children}) => {
     return (
         <div className="h-screen flex flex-col overflow-hidden">
             {/* Header */}
-            <Header />
+            <Header/>
             {/* Main Content with Leftbar and Rightbar */}
             <div className="flex flex-1 overflow-hidden">
                 {/* Leftbar */}
-                <Leftbar />
+                <Leftbar/>
 
                 {/* Main Content */}
-                <div className="flex-1 flex flex-col overflow-auto p-4">
+                <div className="flex-1 flex flex-col overflow-auto ">
                     {children}
                 </div>
 
                 {/* Rightbar */}
-                <Rightbar />
+                <Rightbar/>
             </div>
         </div>
     );
