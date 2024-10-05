@@ -44,6 +44,7 @@ export const DayLine: React.FC<DayColumnProps> = ({under24hoursEvents, over24hou
                                 title={event.title}
                                 left={event.left}
                                 color={event.color}
+                                id={event.id}
                             />
                         )
                     })}

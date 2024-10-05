@@ -34,6 +34,7 @@ export const DayColumn: React.FC<DayColumnProps> = ({ events }) => {
                     left={event.left}
                     color={event.color}
                     title={event.title}
+                    id={event.id}
                 />
             ))}
         </div>

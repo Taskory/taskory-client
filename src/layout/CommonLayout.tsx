@@ -10,7 +10,7 @@ interface CommonLayoutProps {
 
 export const CommonLayout: React.FC<CommonLayoutProps> = ({children}) => {
     return (
-        <div className="h-screen flex flex-col overflow-hidden">
+        <div className="h-screen w-screen flex flex-col overflow-hidden">
             {/* Header */}
             <Header/>
             {/* Main Content with Leftbar and Rightbar */}

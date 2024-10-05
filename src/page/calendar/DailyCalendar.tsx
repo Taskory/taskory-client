@@ -93,6 +93,7 @@ export const DailyCalendar: React.FC = () => {
                                             title={event.title}
                                             left={event.left}
                                             color={event.color}
+                                            id={event.id}
                                         />
                                     )
                                 })}

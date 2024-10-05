@@ -7,15 +7,11 @@ import { SaveEventRequest, EventResponse } from "../../api/event/EventsTypes";
 import { TagResponse } from "../../api/tag/TagTypes";
 import { TimeUtil } from "../../util/TimeUtil";
 import { HashtagResponse } from "../../api/hashtag/HashtagTypes";
+import {useCalendar} from "./context/CalendarContext";
+import {useEventModal} from "./context/EventModalContext";
 
-interface EventModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    id?: number;
-    refetchEvents: () => void;
-}
-
-const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEvents }) => {
+const EventModal: React.FC = () => {
+    const {isModalOpen, closeEventModal, selectedEventId} = useEventModal();
     const [title, setTitle] = useState('');
     const [tagId, setTagId] = useState<number | undefined>(undefined);
     const [tags, setTags] = useState<TagResponse[]>([]);
@@ -28,12 +24,13 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
     const [location, setLocation] = useState('');
     const [loading, setLoading] = useState(false);
     const [dateError, setDateError] = useState('');
+    const {refetchEvents} = useCalendar();
 
     useEffect(() => {
-        if (isOpen) {
+        if (isModalOpen) {
             fetchTags();
-            if (id) {
-                fetchEvent(id);
+            if (selectedEventId) {
+                fetchEvent(selectedEventId);
             } else {
                 const now = new Date();
                 const oneHourLater = addHours(now, 1);
@@ -45,7 +42,7 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                 setDueDateTime(formattedDueDateTime);
             }
         }
-    }, [isOpen, id]);
+    }, [isModalOpen, selectedEventId]);
 
     const fetchTags = async (): Promise<void> => {
         try {
@@ -154,12 +151,12 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
             };
 
             try {
-                if (id) {
-                    const response = await updateEvent(id, eventPayload);
+                if (selectedEventId) {
+                    const response = await updateEvent(selectedEventId, eventPayload);
                     if (response.status === 200) {
                         console.log('Event successfully updated');
                         refetchEvents();
-                        onClose();
+                        closeEventModal();
                     } else {
                         console.error('Failed to update event');
                     }
@@ -167,7 +164,7 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                     const response = await createEvent(eventPayload);
                     if (response.status === 200) {
                         refetchEvents();
-                        onClose();
+                        closeEventModal();
                     } else {
                         console.error('Failed to create event');
                     }
@@ -182,16 +179,16 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
 
     const handleClose = (): void => {
         refetchEvents();
-        onClose();
+        closeEventModal();
     };
 
     const handleDelete = async (): Promise<void> => {
-        if (id) {
+        if (selectedEventId) {
             try {
-                const response = await deleteEvent(id);
+                const response = await deleteEvent(selectedEventId);
                 if (response.status === 200) {
                     refetchEvents();
-                    onClose();
+                    closeEventModal();
                 } else {
                     console.error('Failed to delete event');
                 }
@@ -203,10 +200,10 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
         }
     };
 
-    if (!isOpen) return null;
+    if (!isModalOpen) return null;
 
     return (
-        <dialog open={isOpen} className="modal">
+        <dialog open={isModalOpen} className="modal max-h-screen max-w-screen">
             <div className="modal-box max-w-md p-2">
                 {loading ? (
                     <div className="flex justify-center items-center h-32">
@@ -318,9 +315,9 @@ const EventModal: React.FC<EventModalProps> = ({ isOpen, onClose, id, refetchEve
                         </div>
                         <div className="flex gap-2 justify-end">
                             <button className="btn btn-primary btn-sm" onClick={handleSave}>
-                                {id ? 'Update' : 'Save'}
+                                {selectedEventId ? 'Update' : 'Save'}
                             </button>
-                            {id && (
+                            {selectedEventId && (
                                 <button className="btn btn-error btn-sm" onClick={handleDelete}>Delete</button>
                             )}
                             <button className="btn btn-outline btn-sm" onClick={handleClose}>Cancel</button>

@@ -1,8 +1,6 @@
-// CalendarCell.tsx
-import React, { useState } from 'react';
+import React from 'react';
 import { EventSummary } from "../../../api/event/EventsTypes";
-import EventModal from "../EventModal";
-import { useCalendar } from "../context/CalendarContext";
+import {useEventModal} from "../context/EventModalContext";
 
 interface MonthCalendarCellProps {
     day: number;
@@ -11,19 +9,13 @@ interface MonthCalendarCellProps {
 }
 
 export const MonthCalendarCell: React.FC<MonthCalendarCellProps> = ({ day, events = [], isCurrentMonth }) => {
-    const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const { refetchEvents } = useCalendar();
+    const {openEventModal} = useEventModal();
 
-    const handleEventClick = (eventId: number) => {
-        setSelectedEventId(eventId);
-        setIsModalOpen(true);
-    };
-
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
-        setSelectedEventId(null);
-    };
+    const handleOpenModal= (id: number) => {
+        if (id) {
+            openEventModal(id);
+        }
+    }
 
     return (
         <>
@@ -35,7 +27,7 @@ export const MonthCalendarCell: React.FC<MonthCalendarCellProps> = ({ day, event
                         return (
                             <button
                                 key={idx}
-                                onClick={() => handleEventClick(event.id)}
+                                onClick={() => handleOpenModal(event.id)}
                                 className="flex justify-between whitespace-nowrap overflow-hidden text-ellipsis"
                             >
                                 <span className={`text-sm px-1 font-semibold ${textColor}`}>
@@ -46,15 +38,6 @@ export const MonthCalendarCell: React.FC<MonthCalendarCellProps> = ({ day, event
                     })}
                 </div>
             </div>
-
-            {isModalOpen && selectedEventId && (
-                <EventModal
-                    isOpen={isModalOpen}
-                    onClose={handleCloseModal}
-                    id={selectedEventId}
-                    refetchEvents={refetchEvents}
-                />
-            )}
         </>
     );
 };

@@ -70,7 +70,8 @@ export function processEventPosition(events: EventSummary[]): StylesForEachEvent
             top: topHeight,
             bottom: bottomHeight,
             left: "0", // initial value
-            color: event.tagColor.toLowerCase()
+            color: event.tagColor.toLowerCase(),
+            id: event.id,
         })
     });
 

@@ -38,7 +38,7 @@ export const Header: React.FC = () => {
                     <img className="mr-2 h-8 w-auto" src={"/asset/img/logo.png"} alt={"Logo"} />
                     <span className="font-semibold">Taskflower</span>
                 </div>
-                <div className="flex items-center">
+                <div className="flex items-center justify-start">
                     {/* Profile img */}
                     {existAuthCookie() && (
                         <div
@@ -54,7 +54,7 @@ export const Header: React.FC = () => {
                     )}
 
                     {/* Login/Logout button */}
-                    <div className="ml-4">
+                    <div className="ml-4 mr-4">
                         {existAuthCookie() ? (
                             <button
                                 onClick={handleLogout}
