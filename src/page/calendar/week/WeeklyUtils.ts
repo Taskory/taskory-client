@@ -1,4 +1,4 @@
-import {StylesForEachEventInterface, WeekInfoInterface} from "../interface/WeekCalendarInterfaces";
+import {StylesForEachEventInterface, WeekInfoInterface} from "./WeeklyInterface";
 import {EventSummary} from "../../../api/event/EventsTypes";
 
 function calculateHeightRange(event: EventSummary) {

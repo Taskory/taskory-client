@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from "react";
-import {useCalendar} from "./context/CalendarContext";
-import {EventSummary} from "../../api/event/EventsTypes";
-import {StylesForEachEventInterface} from "./interface/WeekCalendarInterfaces";
-import {EventCell} from "./component/EventCell";
-import {processEventPosition} from "./util/WeekCalendarUtils";
+import {useCalendar} from "../context/CalendarContext";
+import {EventSummary} from "../../../api/event/EventsTypes";
+import {StylesForEachEventInterface} from "../week/WeeklyInterface";
+import {EventBlock} from "../common/EventBlock";
+import {processEventPosition} from "../week/WeeklyUtils";
 
-export const DailyCalendar: React.FC = () => {
+export const DailyPage: React.FC = () => {
     const { currentDate, splitEvents } = useCalendar();
     const [eventsUnder24, setEventsUnder24] = useState<EventSummary[]>(getEventsForDate(splitEvents.eventsUnder24, currentDate));
     const [eventsOver24, setEventsOver24] = useState<EventSummary[]>(getEventsForDate(splitEvents.eventsOver24, currentDate));
@@ -86,7 +86,7 @@ export const DailyCalendar: React.FC = () => {
                             <div className="absolute w-full h-[1200px]">
                                 {styledEvents.map((event: StylesForEachEventInterface, idx: number) => {
                                     return (
-                                        <EventCell
+                                        <EventBlock
                                             key={idx}
                                             top={event.top}
                                             bottom={event.bottom}

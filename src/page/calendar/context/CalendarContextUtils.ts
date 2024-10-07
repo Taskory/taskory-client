@@ -1,5 +1,5 @@
 import {set} from "date-fns";
-import {SplitEventsInterface} from "../interface/CalendarContextInterface";
+import {SplitEventsInterface} from "./CalendarContextInterface";
 import {EventSummary} from "../../../api/event/EventsTypes";
 import {TimeUtil} from "../../../util/TimeUtil";
 

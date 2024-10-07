@@ -1,5 +1,5 @@
 import React, {createContext, useContext, useMemo, ReactNode, useState} from 'react';
-import EventModal from "../EventModal";
+import EventModal from "../common/EventModal";
 
 interface EventModalContextType {
     openEventModal: (eventId?: number) => void;

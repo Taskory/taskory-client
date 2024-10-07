@@ -8,7 +8,7 @@ interface MonthCalendarCellProps {
     isCurrentMonth: boolean;
 }
 
-export const MonthCalendarCell: React.FC<MonthCalendarCellProps> = ({ day, events = [], isCurrentMonth }) => {
+export const MonthlyCalendarCell: React.FC<MonthCalendarCellProps> = ({ day, events = [], isCurrentMonth }) => {
     const {openEventModal} = useEventModal();
 
     const handleOpenModal= (id: number) => {

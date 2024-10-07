@@ -1,7 +1,7 @@
 import React from "react";
 import calendar from "../../../constants/calendar.json";
 
-export const MonthCalendarHeader: React.FC = () => {
+export const MonthlyHeader: React.FC = () => {
     const daysOfWeek = calendar.daysOfWeek;
     return (
         <div className="grid grid-cols-7 bg-gray-100 border-r">

@@ -1,17 +1,17 @@
 // src/components/TempWeekCalendar.tsx
 
 import React, { useRef, useEffect, useState } from 'react';
-import {WeekInfoInterface} from "./interface/WeekCalendarInterfaces";
-import {useCalendar} from "./context/CalendarContext";
-import {getEventDayIndex, getWeeklyEvents, initializeWeekInfo } from "./util/WeekCalendarUtils";
-import {EventSummary} from "../../api/event/EventsTypes";
-import { WeeklyCalendarHeader } from './component/WeeklyCalendarHeader';
-import { AllDayRow } from './component/AllDayRow';
-import { TimeColumn } from './component/TimeColumn';
-import { WeekdayColumns } from './component/WeekdayColumns';
+import {WeekInfoInterface} from "./WeeklyInterface";
+import {useCalendar} from "../context/CalendarContext";
+import {getEventDayIndex, getWeeklyEvents, initializeWeekInfo } from "./WeeklyUtils";
+import {EventSummary} from "../../../api/event/EventsTypes";
+import { WeeklyHeader } from './WeeklyHeader';
+import { WeeklyAllDayRow } from './WeeklyAllDayRow';
+import { TimeColumn } from '../common/TimeColumn';
+import { WeeklyColumns } from './WeeklyColumns';
 
-// Main TempWeekCalendar component
-export const WeeklyCalendar: React.FC = () => {
+// Main TempWeekCalendar common
+export const WeeklyPage: React.FC = () => {
     const { currentDate, splitEvents } = useCalendar();
     const [weekInfo, setWeekInfo] = useState<WeekInfoInterface>(initializeWeekInfo(currentDate));
     const [under24hoursEvents, setUnder24hoursEvents] = useState<EventSummary[][]>([[], [], [], [], [], [], []]);
@@ -73,10 +73,10 @@ export const WeeklyCalendar: React.FC = () => {
     return (
         <div className="w-full flex-grow flex flex-col">
             {/* Header Section */}
-            <WeeklyCalendarHeader scrollBarWidth={scrollBarWidth} startDate={weekInfo.startSunday}/>
+            <WeeklyHeader scrollBarWidth={scrollBarWidth} startDate={weekInfo.startSunday}/>
 
             {/* All day events row */}
-            <AllDayRow scrollBarWidth={scrollBarWidth} allDayEvents={over24hoursEvents} />
+            <WeeklyAllDayRow scrollBarWidth={scrollBarWidth} allDayEvents={over24hoursEvents} />
 
             {/* Main Content: Time Slots */}
             <div ref={scrollContainerRef} className="flex-grow grid grid-cols-[0.5fr,1fr,1fr,1fr,1fr,1fr,1fr,1fr] overflow-y-auto">
@@ -84,7 +84,7 @@ export const WeeklyCalendar: React.FC = () => {
                 <TimeColumn />
 
                 {/* Weekday columns */}
-                <WeekdayColumns under24hoursEvents={under24hoursEvents} />
+                <WeeklyColumns under24hoursEvents={under24hoursEvents} />
             </div>
         </div>
     );

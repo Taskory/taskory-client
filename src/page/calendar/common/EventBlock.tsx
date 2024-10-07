@@ -1,8 +1,8 @@
 import React from "react";
-import { StylesForEachEventInterface } from "../interface/WeekCalendarInterfaces";
+import { StylesForEachEventInterface } from "../week/WeeklyInterface";
 import { useEventModal } from "../context/EventModalContext";
 
-export const EventCell: React.FC<StylesForEachEventInterface> = ({ top, bottom, left, color, title, id }) => {
+export const EventBlock: React.FC<StylesForEachEventInterface> = ({ top, bottom, left, color, title, id }) => {
     const { openEventModal } = useEventModal();
     const height = `${(+bottom) - (+top)}`;
     const width = `${100 - (+left)}`;

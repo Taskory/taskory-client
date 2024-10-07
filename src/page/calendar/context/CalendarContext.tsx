@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback, ReactNode, useReducer } from 'react';
-import { SplitEventsInterface } from "../interface/CalendarContextInterface";
-import { getProcessedEvents } from "../util/CalendarContextUtils";
+import { SplitEventsInterface } from "./CalendarContextInterface";
+import { getProcessedEvents } from "./CalendarContextUtils";
 import { getMonthlyEvents } from "../../../api/event/EventApi";
 import { EventSummary } from "../../../api/event/EventsTypes";
 import {TimeUtil} from "../../../util/TimeUtil";

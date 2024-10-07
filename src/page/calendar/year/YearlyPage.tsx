@@ -1,8 +1,8 @@
 import React from 'react';
-import { useCalendar } from './context/CalendarContext';
-import { useCalendarView } from './context/CalendarViewContext';
+import { useCalendar } from '../context/CalendarContext';
+import { useCalendarView } from '../context/CalendarViewContext';
 
-export const YearlyCalendar: React.FC = () => {
+export const YearlyPage: React.FC = () => {
   const { currentDate, setCurrentDate } = useCalendar();
   const { setView } = useCalendarView();
   const months = [

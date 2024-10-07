@@ -2,10 +2,10 @@ import {CommonLayout} from "../../layout/CommonLayout";
 import React from "react";
 import {CalendarProvider} from "./context/CalendarContext";
 import { CalendarHeader } from "./CalendarHeader";
-import { WeeklyCalendar } from "./WeeklyCalendar";
-import { YearlyCalendar } from "./YearlyCalendar";
-import { MonthlyCalendar } from "./MonthlyCalendar";
-import { DailyCalendar } from "./DailyCalendar";
+import { WeeklyPage } from "./week/WeeklyPage";
+import { YearlyPage } from "./year/YearlyPage";
+import { MonthlyPage } from "./month/MonthlyPage";
+import { DailyPage } from "./day/DailyPage";
 import { useCalendarView } from "./context/CalendarViewContext";
 import {EventModalProvider} from "./context/EventModalContext";
 
@@ -15,15 +15,15 @@ export const CalendarPage = () => {
     const renderCalendarView = () => {
         switch(view) {
             case 'year':
-                return <YearlyCalendar />;
+                return <YearlyPage />;
             case 'month':
-                return <MonthlyCalendar />;
+                return <MonthlyPage />;
             case 'week':
-                return <WeeklyCalendar />;
+                return <WeeklyPage />;
             case 'day':
-                return <DailyCalendar />;
+                return <DailyPage />;
             default:
-                return <MonthlyCalendar />;
+                return <MonthlyPage />;
         }
     };
     return (

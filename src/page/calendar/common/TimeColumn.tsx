@@ -1,4 +1,4 @@
-// TimeColumn component for rendering time slots
+// TimeColumn common for rendering time slots
 import React from "react";
 
 export const TimeColumn: React.FC = () => {

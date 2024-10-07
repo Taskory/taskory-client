@@ -1,11 +1,11 @@
-// MonthlyCalendar.tsx
+// MonthlyPage.tsx
 import React, { useEffect, useState } from "react";
-import { MonthCalendarCell } from "./component/MonthCalendarCell";
-import { MonthCalendarHeader } from "./component/MonthCalendarHeader";
-import { useCalendar } from "./context/CalendarContext";
-import { getMonthlyEvents } from "./util/MonthCalendarUtils";
+import { MonthlyCalendarCell } from "./MonthlyCalendarCell";
+import { MonthlyHeader } from "./MonthlyHeader";
+import { useCalendar } from "../context/CalendarContext";
+import { getMonthlyEvents } from "./MonthlyUtils";
 
-export const MonthlyCalendar: React.FC = () => {
+export const MonthlyPage: React.FC = () => {
     const { currentDate, originEvents } = useCalendar();
     const [monthlyEvents, setMonthlyEvents] = useState(getMonthlyEvents(originEvents, currentDate));
     const [monthInfo, setMonthInfo] = useState({
@@ -32,13 +32,13 @@ export const MonthlyCalendar: React.FC = () => {
             const dayOfMonth = i - monthInfo.firstDayOfWeek + 1;
             if (i < monthInfo.firstDayOfWeek) {
                 // Previous month's days
-                cells.push(<MonthCalendarCell key={i} day={previousMonthDays - monthInfo.firstDayOfWeek + i + 1} isCurrentMonth={false} />);
+                cells.push(<MonthlyCalendarCell key={i} day={previousMonthDays - monthInfo.firstDayOfWeek + i + 1} isCurrentMonth={false} />);
             } else if (dayOfMonth > monthInfo.daysInMonth) {
                 // Next month's days
-                cells.push(<MonthCalendarCell key={i} day={dayOfMonth - monthInfo.daysInMonth} isCurrentMonth={false} />);
+                cells.push(<MonthlyCalendarCell key={i} day={dayOfMonth - monthInfo.daysInMonth} isCurrentMonth={false} />);
             } else {
                 // Current month's days with events
-                cells.push(<MonthCalendarCell key={i} day={dayOfMonth} events={monthlyEvents[dayOfMonth - 1]} isCurrentMonth={true} />);
+                cells.push(<MonthlyCalendarCell key={i} day={dayOfMonth} events={monthlyEvents[dayOfMonth - 1]} isCurrentMonth={true} />);
             }
         }
 
@@ -47,7 +47,7 @@ export const MonthlyCalendar: React.FC = () => {
 
     return (
         <div className="overflow-hidden h-full">
-            <MonthCalendarHeader />
+            <MonthlyHeader />
             <div
                 className={`grid grid-cols-7 grid-rows-${weeksOfCurrentMonth} h-full w-full`}
                 style={{

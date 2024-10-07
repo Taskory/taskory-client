@@ -1,14 +1,14 @@
 import React, { useState, useEffect, KeyboardEvent } from 'react';
-import { API_URL } from "../../constants";
+import { API_URL } from "../../../constants";
 import { format, addHours, isBefore } from 'date-fns';
-import { getAllTags } from "../../api/tag/TagApi";
-import { createEvent, deleteEvent, getEventById, updateEvent } from "../../api/event/EventApi";
-import { SaveEventRequest, EventResponse } from "../../api/event/EventsTypes";
-import { TagResponse } from "../../api/tag/TagTypes";
-import { TimeUtil } from "../../util/TimeUtil";
-import { HashtagResponse } from "../../api/hashtag/HashtagTypes";
-import {useCalendar} from "./context/CalendarContext";
-import {useEventModal} from "./context/EventModalContext";
+import { getAllTags } from "../../../api/tag/TagApi";
+import { createEvent, deleteEvent, getEventById, updateEvent } from "../../../api/event/EventApi";
+import { SaveEventRequest, EventResponse } from "../../../api/event/EventsTypes";
+import { TagResponse } from "../../../api/tag/TagTypes";
+import { TimeUtil } from "../../../util/TimeUtil";
+import { HashtagResponse } from "../../../api/hashtag/HashtagTypes";
+import {useCalendar} from "../context/CalendarContext";
+import {useEventModal} from "../context/EventModalContext";
 
 const EventModal: React.FC = () => {
     const {isModalOpen, closeEventModal, selectedEventId} = useEventModal();
