@@ -23,7 +23,7 @@ export const DayColumn: React.FC<DayColumnProps> = ({ events }) => {
     return (
         <div className="relative border-r">
             {hours.map((_, i) => (
-                <div key={i} className="h-16 border-b hover:bg-gray-100 cursor-pointer"></div>
+                <div key={i} className="h-cellHeight border-b hover:bg-gray-100 cursor-pointer"></div>
             ))}
             {/* Render each EventBlock for the day */}
             {styledEvents.map((event, index) => (

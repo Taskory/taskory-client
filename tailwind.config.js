@@ -13,6 +13,7 @@ module.exports = {
         '24': 'repeat(24, minmax(0, 1fr))',
       },
       spacing: {
+        'cellHeight': '3rem',
         // 'leftbarClosed': '6rem',
         // 'leftbarOpened': '18rem',
         // 'headerHeight': '4rem',

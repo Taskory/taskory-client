@@ -6,7 +6,7 @@ export const TimeColumn: React.FC = () => {
     return (
         <div className="border-r">
             {hours.map((hour) => (
-                <div key={hour} className="h-16 border-b flex justify-end items-start">
+                <div key={hour} className="h-cellHeight border-b flex justify-end items-start">
                     {hour}
                 </div>
             ))}
