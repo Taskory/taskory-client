@@ -10,7 +10,7 @@ export const TimeTableLayout: React.FC<TimeTableLayoutProps> = ({containerRef, c
     return (
         <>
             <div ref={containerRef}  // Directly use the RefObject here
-                 className="flex-grow grid grid-cols-[0.5fr,1fr,1fr,1fr,1fr,1fr,1fr,1fr] overflow-y-auto">
+                 className="flex-grow grid grid-cols-timetable overflow-y-auto">
                 {/* Time column */}
                 <TimeColumn/>
 

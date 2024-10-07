@@ -5,6 +5,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      gridTemplateColumns: {
+        // Define a custom grid template named 'custom-cols'
+        'timetable': '0.5fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr',
+      },
       gridTemplateRows: {
         '24': 'repeat(24, minmax(0, 1fr))',
       },

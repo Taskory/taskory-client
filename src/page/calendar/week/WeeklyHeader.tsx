@@ -9,7 +9,7 @@ interface WeeklyHeaderProps {
 // Header common for weekday names
 export const WeeklyHeader: React.FC<WeeklyHeaderProps> = ({ scrollBarWidth, startDate }) => {
     return (
-        <div className="sticky top-[4rem] z-10 bg-white grid grid-cols-[0.5fr,1fr,1fr,1fr,1fr,1fr,1fr,1fr] border-b" style={{ paddingRight: scrollBarWidth }}>
+        <div className="sticky top-[4rem] z-10 bg-white grid grid-cols-timetable border-b" style={{ paddingRight: scrollBarWidth }}>
             <div className="border-r" />
             {calendar.daysOfWeek.map((weekdayString, idx) => {
                 let textColor = "";

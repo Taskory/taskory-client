@@ -20,7 +20,7 @@ export const DailyHeader: React.FC<DailyHeaderProps> = ({ scrollBarWidth }) => {
     const textColor = dayString === "Sat" ? "text-blue-500" : dayString === "Sun" ? "text-red-500" : "";
 
     return (
-        <div className="sticky top-[4rem] z-10 bg-white border-b grid-cols-[0.5fr,1fr,1fr,1fr,1fr,1fr,1fr,1fr] "
+        <div className="sticky top-[4rem] z-10 bg-white border-b grid grid-cols-timetable "
              style={{ paddingRight: scrollBarWidth }}>
             <div className="border-r" />
             <div className="border-r h-8 flex justify-center items-center font-bold col-span-7">

@@ -11,7 +11,7 @@ export const DailyAllDayRow: React.FC<DailyAllDayRowProps> = ({scrollBarWidth, e
     return (
         <>
             <div
-                className="sticky top-[6rem] z-10 bg-gray-200 border-b grid-cols-[0.5fr,1fr,1fr,1fr,1fr,1fr,1fr,1fr] "
+                className="sticky top-[6rem] z-10 bg-gray-200 border-b grid grid-cols-timetable"
                 style={{paddingRight: scrollBarWidth}}>
                 <div className="border-r"/>
                 <div className="col-span-7">
