@@ -5,7 +5,7 @@ import {WeekInfoInterface} from "./interface/WeekCalendarInterfaces";
 import {useCalendar} from "./context/CalendarContext";
 import {getEventDayIndex, getWeeklyEvents, initializeWeekInfo } from "./util/WeekCalendarUtils";
 import {EventSummary} from "../../api/event/EventsTypes";
-import { WeekCalendarHeader } from './component/WeekCalendarHeader';
+import { WeeklyCalendarHeader } from './component/WeeklyCalendarHeader';
 import { AllDayRow } from './component/AllDayRow';
 import { TimeColumn } from './component/TimeColumn';
 import { WeekdayColumns } from './component/WeekdayColumns';
@@ -73,7 +73,7 @@ export const WeeklyCalendar: React.FC = () => {
     return (
         <div className="w-full flex-grow flex flex-col">
             {/* Header Section */}
-            <WeekCalendarHeader scrollBarWidth={scrollBarWidth} startDate={weekInfo.startSunday}/>
+            <WeeklyCalendarHeader scrollBarWidth={scrollBarWidth} startDate={weekInfo.startSunday}/>
 
             {/* All day events row */}
             <AllDayRow scrollBarWidth={scrollBarWidth} allDayEvents={over24hoursEvents} />

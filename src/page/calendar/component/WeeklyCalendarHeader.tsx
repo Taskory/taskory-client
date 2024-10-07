@@ -7,7 +7,7 @@ interface WeekCalendarHeaderProps {
 }
 
 // Header component for weekday names
-export const WeekCalendarHeader: React.FC<WeekCalendarHeaderProps> = ({ scrollBarWidth, startDate }) => {
+export const WeeklyCalendarHeader: React.FC<WeekCalendarHeaderProps> = ({ scrollBarWidth, startDate }) => {
     return (
         <div className="sticky top-[4rem] z-10 bg-white grid grid-cols-[0.5fr,1fr,1fr,1fr,1fr,1fr,1fr,1fr] border-b" style={{ paddingRight: scrollBarWidth }}>
             <div className="border-r" />
