@@ -7,7 +7,7 @@ export const Leftbar: React.FC = () => {
     return (
         <div
             className={`border-r transition-all duration-300 ${
-                isLeftbarOpened ? "w-64" : "w-16"
+                isLeftbarOpened ? "w-sidebarOpened" : "w-sidebarClosed"
             } flex flex-col`}
         >
             {/* 상단 아이템들 */}

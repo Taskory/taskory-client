@@ -14,11 +14,16 @@ module.exports = {
       },
       spacing: {
         'cellHeight': '3rem',
+        'sidebarClosed': '4rem',
+        'sidebarOpened': '16rem'
         // 'leftbarClosed': '6rem',
         // 'leftbarOpened': '18rem',
         // 'headerHeight': '4rem',
         // 'weekCalendarCellHeight': '50px'
       },
+      fontSize: {
+        'xxs': '0.5rem'
+      }
     },
   },
   plugins: [
