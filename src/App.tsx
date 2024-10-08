@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import {AppRouter} from "./router/AppRouter";
 import {SidebarStateProvider} from "./context/SidebarStateContext";
 import {CalendarViewProvider} from "./page/calendar/context/CalendarViewContext";
+import {EventContextProvider} from "./context/EventContext";
 
 const App = () => {
     useEffect(() => {
@@ -23,9 +24,11 @@ const App = () => {
 
     return (
         <SidebarStateProvider>
-            <CalendarViewProvider>
-                <AppRouter/>
-            </CalendarViewProvider>
+            <EventContextProvider>
+                <CalendarViewProvider>
+                    <AppRouter/>
+                </CalendarViewProvider>
+            </EventContextProvider>
         </SidebarStateProvider>
     );
 }

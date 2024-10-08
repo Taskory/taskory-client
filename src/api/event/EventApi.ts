@@ -81,7 +81,7 @@ export const getEventById = async (eventId: number): Promise<AxiosResponse<Event
     });
 };
 
-export const getAllEvents = async (): Promise<AxiosResponse<EventResponse[]>> => {
+export const getAllEvents = async (): Promise<AxiosResponse<EventSummary[]>> => {
     const authToken = getAuthCookie();  // Fetch the latest cookie value here
     const requestOptions = {
         headers: {
