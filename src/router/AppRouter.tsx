@@ -5,7 +5,7 @@ import {Signup} from "../page/auth/Signup";
 import {Dashboard} from "../page/dashboard/Dashboard";
 import {CalendarPage} from "../page/calendar/CalendarPage";
 import {Routine} from "../page/routine/Routine";
-import {Task} from "../page/task/Task";
+import {TaskPage} from "../page/task/TaskPage";
 import React from "react";
 import {Report} from "../page/report/Report";
 import {Setting} from "../page/setting/Setting";
@@ -24,7 +24,7 @@ export const AppRouter = (): React.JSX.Element => {
                 <Route path="/dashboard" element={<Dashboard/>}/>
                 <Route path="/calendar" element={<CalendarPage/>}/>
                 <Route path="/routine" element={<Routine/>}/>
-                <Route path="/task" element={<Task/>}/>
+                <Route path="/task" element={<TaskPage/>}/>
                 <Route path="/report" element={<Report/>}/>
                 <Route path="/setting" element={<Setting/>}/>
                 <Route path="/profile" element={<Profile/>}/>
