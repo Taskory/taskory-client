@@ -1,5 +1,5 @@
-import { TaskResponse, SaveTaskRequest, SaveTaskItemRequest, TaskItemResponse } from './TaskTypes';
-import axios from 'axios';
+import {TaskResponse, SaveTaskRequest, SaveTaskItemRequest, TaskItemResponse, TaskSummary} from './TaskTypes';
+import axios, {AxiosResponse} from 'axios';
 import {getAuthCookie} from "../../util/CookieUtil";
 import {API_URL} from "../../constants";
 
@@ -32,8 +32,9 @@ export const getTaskById = async (taskId: number): Promise<TaskResponse> => {
 };
 
 // Retrieves all tasks for the current user
-export const getAllTasks = async (): Promise<TaskResponse[]> => {
-    const authToken = getAuthCookie();  // Fetch the latest cookie value here
+export const getAllTasks = async (): Promise<TaskSummary[]> => {
+    const authToken = getAuthCookie();  // Fetch the latest cookie value
+
     const requestOptions = {
         headers: {
             "Content-Type": "application/json",
@@ -41,9 +42,14 @@ export const getAllTasks = async (): Promise<TaskResponse[]> => {
         },
     };
 
-    const response = await axios.get<TaskResponse[]>('${API_URL}/task', requestOptions);
-    return response.data;
-};
+    try {
+        const response: AxiosResponse<TaskSummary[]> = await axios.get('/api/tasks', requestOptions);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching tasks:', error);
+        throw error;
+    }
+}
 
 // Updates an existing task by ID
 export const updateTask = async (taskId: number, saveTaskRequest: SaveTaskRequest): Promise<TaskResponse> => {
