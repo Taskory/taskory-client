@@ -13,8 +13,13 @@ export interface TaskResponse {
 // Interface for SaveTaskRequest
 export interface SaveTaskRequest {
     title: string;
-    description?: string;  // Optional field
+    eventId: number;
+    tagId: number;
+    hashtagIds: number[];
+    description: string;
+    status: string;
 }
+
 
 // Interface for TaskItemResponse
 export interface TaskItemResponse {

@@ -4,6 +4,7 @@ import { TaskBoard } from './TaskBoard';
 import { TaskHeader } from './TaskHeader';
 import {TaskSummary} from "../../api/task/TaskTypes";
 import {getAllTasks} from "../../api/task/TaskApi";
+import {TaskModalProvider} from "./TaskModalContext";
 
 export const TaskPage: React.FC = () => {
     const [tasks, setTasks] = useState<TaskSummary[]>([]);  // State to store the fetched tasks
@@ -26,24 +27,27 @@ export const TaskPage: React.FC = () => {
 
     return (
         <CommonLayout>
-            <div className="flex flex-col h-full">
-                {/* TaskHeader Component */}
-                <TaskHeader />
+            <TaskModalProvider>
+                <div className="flex flex-col h-full">
+                    {/* TaskHeader Component */}
+                    <TaskHeader/>
 
-                {/* Boards Section */}
-                <div className="flex gap-2 p-2">
-                    {loading ? (
-                        <p>Loading tasks...</p>
-                    ) : (
-                        <>
-                            {/* Filter tasks into boards based on their status */}
-                            <TaskBoard title="ToDo" tasks={tasks.filter(task => task.status === 'ToDo')} />
-                            <TaskBoard title="In Progress" tasks={tasks.filter(task => task.status === 'In Progress')} />
-                            <TaskBoard title="Done" tasks={tasks.filter(task => task.status === 'Done')} />
-                        </>
-                    )}
+                    {/* Boards Section */}
+                    <div className="flex gap-2 p-2">
+                        {loading ? (
+                            <p>Loading tasks...</p>
+                        ) : (
+                            <>
+                                {/* Filter tasks into boards based on their status */}
+                                <TaskBoard title="ToDo" tasks={tasks.filter(task => task.status === 'ToDo')}/>
+                                <TaskBoard title="In Progress"
+                                           tasks={tasks.filter(task => task.status === 'In Progress')}/>
+                                <TaskBoard title="Done" tasks={tasks.filter(task => task.status === 'Done')}/>
+                            </>
+                        )}
+                    </div>
                 </div>
-            </div>
+            </TaskModalProvider>
         </CommonLayout>
     );
 };
