@@ -5,7 +5,8 @@ import {getAllTasks} from "../api/task/TaskApi";
 interface TaskContextProps {
     TO_DO: TaskSummary[],
     IN_PROGRESS: TaskSummary[],
-    DONE: TaskSummary[]
+    DONE: TaskSummary[],
+    refetchTasks: () => Promise<void>;
 }
 
 const TaskContext = createContext<TaskContextProps | undefined>(undefined);
@@ -59,8 +60,9 @@ export const TaskContextProvider: React.FC<TaskContextProviderProps> = ({ childr
     const contextValue: TaskContextProps = useMemo(() => ({
         TO_DO,
         IN_PROGRESS,
-        DONE
-    }), [TO_DO, IN_PROGRESS, DONE]);
+        DONE,
+        refetchTasks: fetchTasks
+    }), [TO_DO, IN_PROGRESS, DONE, fetchTasks]);
 
     return (
         <TaskContext.Provider value={contextValue}>
