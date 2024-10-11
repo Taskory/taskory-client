@@ -1,66 +1,97 @@
 // TaskModal.tsx
 import React, { useState, useEffect } from 'react';
 import { useTaskModal } from "./TaskModalContext";
-import {getAllTags} from "../../api/tag/TagApi";
-import {createTask, updateTask} from "../../api/task/TaskApi";
-import {SaveTaskRequest, TaskResponse} from "../../api/task/TaskTypes";
+import { getAllTags } from "../../api/tag/TagApi";
+import {createTask, getTaskById, updateTask} from "../../api/task/TaskApi";
+import { SaveTaskRequest, TaskResponse } from "../../api/task/TaskTypes";
+import {TagResponse} from "../../api/tag/TagTypes";
 
 interface TaskModalProps {
     loading: boolean;
-    tags: { id: number; title: string; color: string }[];
-    hashtags: { id: number; name: string }[];
 }
 
-const TaskModal: React.FC<TaskModalProps> = ({ loading, tags, hashtags }) => {
+// Task type for internal state management
+interface Task {
+    id?: number;
+    title: string;
+    eventId?: number | undefined;
+    tagId?: number | undefined;
+    hashtagIds: number[];
+    description: string;
+    status: 'TO_DO' | 'IN_PROGRESS' | 'DONE';
+}
+
+export const TaskModal: React.FC<TaskModalProps> = ({ loading }) => {
     const { isModalOpen, selectedTaskId, closeTaskModal } = useTaskModal();
-    const [title, setTitle] = useState('');
-    const [tagId, setTagId] = useState<number | undefined>(undefined);
-    const [status, setStatus] = useState<'TO_DO' | 'IN_PROGRESS' | 'DONE'>('TO_DO');
-    const [description, setDescription] = useState('');
-    const [hashtagTitle, setHashtagTitle] = useState('');
-    const [currentHashtags, setCurrentHashtags] = useState(hashtags);
-    const [tagsState, setTags] = useState(tags);
-    const [eventId, setEventId] = useState<number | undefined>(undefined);
+
+    const [task, setTask] = useState<Task>({
+        title: '',
+        eventId: undefined,
+        tagId: undefined,
+        hashtagIds: [],
+        description: '',
+        status: 'TO_DO',
+    });
+    const [tagsState, setTagsState] = useState<TagResponse[]>([]);
+    const [hashtagTitle, setHashtagTitle] = useState<string>('');
 
     useEffect(() => {
         if (isModalOpen) {
             fetchTags();
             if (selectedTaskId) {
-                fetchTask();
+                fetchTask(selectedTaskId);
             } else {
-                setTitle('');
-                setTagId(undefined);
-                setStatus('TO_DO');
-                setDescription('');
-                setHashtagTitle('');
-                setCurrentHashtags(hashtags);
-                setEventId(undefined);
+                resetForm();
             }
         }
     }, [isModalOpen, selectedTaskId]);
 
-    const fetchTask = async (): Promise<void> => {
-
+    const fetchTask = async (taskId: number): Promise<void> => {
+        try {
+            const response: TaskResponse = await getTaskById(taskId);
+            console.log(response);
+            setTask({
+                id: response.id,
+                title: response.title,
+                eventId: response.event ? response.event.id : undefined,
+                tagId: response.tag ? response.tag.id : undefined,
+                hashtagIds: response.hashtags.map(hashtag => hashtag.id),
+                description: response.description,
+                status: response.status as 'TO_DO' | 'IN_PROGRESS' | 'DONE',
+            });
+        } catch (e) {
+            console.error('Failed to fetch task:', e);
+        }
     }
 
     const fetchTags = async (): Promise<void> => {
         try {
             const response = await getAllTags();
-            if (response.status === 200) {
-                setTags(response.data);
-            } else {
-                console.error('Failed to fetch tags');
-            }
+            setTagsState(response.data);
         } catch (error) {
             console.error('Error fetching tags:', error);
         }
     };
 
+    const resetForm = (): void => {
+        setTask({
+            title: '',
+            eventId: undefined,
+            tagId: undefined,
+            hashtagIds: [],
+            description: '',
+            status: 'TO_DO',
+        });
+        setHashtagTitle('');
+    };
 
     const handleHashtagKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter' && hashtagTitle.trim() !== '') {
-            if (!currentHashtags.some(hashtag => hashtag.name === hashtagTitle.trim())) {
-                setCurrentHashtags([...currentHashtags, { id: Date.now(), name: hashtagTitle.trim() }]);
+            if (!task.hashtagIds.includes(Date.now())) {
+                setTask({
+                    ...task,
+                    hashtagIds: [...task.hashtagIds, Date.now()]
+                });
             }
             setHashtagTitle('');
         }
@@ -68,22 +99,21 @@ const TaskModal: React.FC<TaskModalProps> = ({ loading, tags, hashtags }) => {
 
     const handleSave = async () => {
         const saveTaskRequest: SaveTaskRequest = {
-            title,
-            eventId: eventId ?? undefined, // Default to 0 if eventId is undefined
-            tagId: tagId ?? undefined, // Default to 0 if tagId is undefined
-            hashtagIds: currentHashtags.map(hashtag => hashtag.id),
-            description,
-            status,
+            title: task.title,
+            eventId: task.eventId ?? undefined,
+            tagId: task.tagId ?? undefined,
+            hashtagIds: task.hashtagIds,
+            description: task.description,
+            status: task.status,
         };
 
         try {
+            let response: TaskResponse;
             if (selectedTaskId) {
-                // Update existing task
-                const response: TaskResponse = await updateTask(selectedTaskId, saveTaskRequest);
+                response = await updateTask(selectedTaskId, saveTaskRequest);
                 console.log('Task updated:', response);
             } else {
-                // Create new task
-                const response: TaskResponse = await createTask(saveTaskRequest);
+                response = await createTask(saveTaskRequest);
                 console.log('Task created:', response);
             }
             closeTaskModal();
@@ -106,17 +136,17 @@ const TaskModal: React.FC<TaskModalProps> = ({ loading, tags, hashtags }) => {
                                 <input
                                     type="text"
                                     className="input input-ghost w-full font-bold"
-                                    value={title}
+                                    value={task.title}
                                     placeholder="Task title"
-                                    onChange={(e) => setTitle(e.target.value)}
+                                    onChange={(e) => setTask({ ...task, title: e.target.value })}
                                 />
                             </div>
                             <div className="col-span-1 flex items-center">
                                 <p className="text-red-600">●</p>
                                 <select
                                     className="select select-sm w-full ml-1"
-                                    value={tagId ?? ''}
-                                    onChange={(e) => setTagId(Number(e.target.value) || undefined)}
+                                    value={task.tagId ?? ''}
+                                    onChange={(e) => setTask({ ...task, tagId: Number(e.target.value) || undefined })}
                                 >
                                     <option value="">none</option>
                                     {tagsState.map(tag => (
@@ -129,8 +159,8 @@ const TaskModal: React.FC<TaskModalProps> = ({ loading, tags, hashtags }) => {
                             <label className="col-span-1 text-sm text-right mr-1">Status</label>
                             <select
                                 className="col-span-3 select select-sm w-full"
-                                value={status}
-                                onChange={(e) => setStatus(e.target.value as 'TO_DO' | 'IN_PROGRESS' | 'DONE')}
+                                value={task.status}
+                                onChange={(e) => setTask({ ...task, status: e.target.value as 'TO_DO' | 'IN_PROGRESS' | 'DONE' })}
                             >
                                 <option value="TO_DO">To Do</option>
                                 <option value="IN_PROGRESS">In Progress</option>
@@ -147,9 +177,9 @@ const TaskModal: React.FC<TaskModalProps> = ({ loading, tags, hashtags }) => {
                                     onKeyDown={handleHashtagKeyPress}
                                 />
                                 <div className="mt-1 flex flex-wrap">
-                                    {currentHashtags.map(hashtag => (
-                                        <span key={hashtag.id} className="badge badge-secondary m-1">
-                                            #{hashtag.name}
+                                    {task.hashtagIds.map(hashtagId => (
+                                        <span key={hashtagId} className="badge badge-secondary m-1">
+                                            #{hashtagId}
                                         </span>
                                     ))}
                                 </div>
@@ -157,8 +187,8 @@ const TaskModal: React.FC<TaskModalProps> = ({ loading, tags, hashtags }) => {
                             <label className="col-span-1 text-sm text-right mr-1">Description</label>
                             <textarea
                                 className="col-span-3 textarea textarea-bordered textarea-sm w-full"
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
+                                value={task.description}
+                                onChange={(e) => setTask({ ...task, description: e.target.value })}
                                 rows={2}
                             />
                         </div>
@@ -174,5 +204,3 @@ const TaskModal: React.FC<TaskModalProps> = ({ loading, tags, hashtags }) => {
         </dialog>
     );
 };
-
-export default TaskModal;

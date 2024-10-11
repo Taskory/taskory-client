@@ -6,8 +6,8 @@ import {TagResponse} from "../tag/TagTypes";
 export interface TaskResponse {
     id: number;
     title: string;
-    event: EventSummary;
-    tag: TagResponse;
+    event: EventSummary | undefined;
+    tag: TagResponse | undefined;
     hashtags: HashtagResponse[];
     description: string;
     status: string;

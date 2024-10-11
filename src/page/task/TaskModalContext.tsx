@@ -1,6 +1,6 @@
 // TaskModalContext.tsx
 import React, { createContext, useContext, useMemo, ReactNode, useState } from 'react';
-import TaskModal from './TaskModal';
+import { TaskModal } from './TaskModal';
 
 interface TaskModalContextType {
     openTaskModal: (taskId?: number) => void;
@@ -40,8 +40,6 @@ export const TaskModalProvider: React.FC<{ children: ReactNode }> = ({ children 
             {isModalOpen && (
                 <TaskModal
                     loading={false}
-                    tags={[]}
-                    hashtags={[]}
                 />
             )}
         </TaskModalContext.Provider>
