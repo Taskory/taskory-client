@@ -1,13 +1,17 @@
 // Interface for TaskResponse
 import {EventSummary} from "../event/EventsTypes";
 import {HashtagResponse} from "../hashtag/HashtagTypes";
+import {TagResponse} from "../tag/TagTypes";
 
 export interface TaskResponse {
     id: number;
     title: string;
+    event: EventSummary;
+    tag: TagResponse;
+    hashtags: HashtagResponse[];
     description: string;
-    createdAt: string;
-    updatedAt: string;
+    status: string;
+    items: TaskItemResponse[];
 }
 
 // Interface for SaveTaskRequest
