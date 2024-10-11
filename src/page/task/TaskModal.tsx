@@ -1,6 +1,9 @@
 // TaskModal.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTaskModal } from "./TaskModalContext";
+import {getAllTags} from "../../api/tag/TagApi";
+import {createTask, updateTask} from "../../api/task/TaskApi";
+import {SaveTaskRequest, TaskResponse} from "../../api/task/TaskTypes";
 
 interface TaskModalProps {
     loading: boolean;
@@ -8,29 +11,85 @@ interface TaskModalProps {
     hashtags: { id: number; name: string }[];
 }
 
-const TaskModal: React.FC<TaskModalProps> = ({
-                                                 loading,
-                                                 tags,
-                                                 hashtags,
-                                             }) => {
+const TaskModal: React.FC<TaskModalProps> = ({ loading, tags, hashtags }) => {
     const { isModalOpen, selectedTaskId, closeTaskModal } = useTaskModal();
     const [title, setTitle] = useState('');
     const [tagId, setTagId] = useState<number | undefined>(undefined);
-    const [status, setStatus] = useState('');
+    const [status, setStatus] = useState<'TO_DO' | 'IN_PROGRESS' | 'DONE'>('TO_DO');
     const [description, setDescription] = useState('');
     const [hashtagTitle, setHashtagTitle] = useState('');
     const [currentHashtags, setCurrentHashtags] = useState(hashtags);
+    const [tagsState, setTags] = useState(tags);
+    const [eventId, setEventId] = useState<number | undefined>(undefined);
+
+    useEffect(() => {
+        if (isModalOpen) {
+            fetchTags();
+            if (selectedTaskId) {
+                fetchTask();
+            } else {
+                setTitle('');
+                setTagId(undefined);
+                setStatus('TO_DO');
+                setDescription('');
+                setHashtagTitle('');
+                setCurrentHashtags(hashtags);
+                setEventId(undefined);
+            }
+        }
+    }, [isModalOpen, selectedTaskId]);
+
+    const fetchTask = async (): Promise<void> => {
+
+    }
+
+    const fetchTags = async (): Promise<void> => {
+        try {
+            const response = await getAllTags();
+            if (response.status === 200) {
+                setTags(response.data);
+            } else {
+                console.error('Failed to fetch tags');
+            }
+        } catch (error) {
+            console.error('Error fetching tags:', error);
+        }
+    };
+
 
     const handleHashtagKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter' && hashtagTitle.trim() !== '') {
-            setCurrentHashtags([...currentHashtags, { id: Date.now(), name: hashtagTitle.trim() }]);
+            if (!currentHashtags.some(hashtag => hashtag.name === hashtagTitle.trim())) {
+                setCurrentHashtags([...currentHashtags, { id: Date.now(), name: hashtagTitle.trim() }]);
+            }
             setHashtagTitle('');
         }
     };
 
-    const handleSave = () => {
-        // Logic to save the task
-        console.log('Saving task with title:', title);
+    const handleSave = async () => {
+        const saveTaskRequest: SaveTaskRequest = {
+            title,
+            eventId: eventId ?? undefined, // Default to 0 if eventId is undefined
+            tagId: tagId ?? undefined, // Default to 0 if tagId is undefined
+            hashtagIds: currentHashtags.map(hashtag => hashtag.id),
+            description,
+            status,
+        };
+
+        try {
+            if (selectedTaskId) {
+                // Update existing task
+                const response: TaskResponse = await updateTask(selectedTaskId, saveTaskRequest);
+                console.log('Task updated:', response);
+            } else {
+                // Create new task
+                const response: TaskResponse = await createTask(saveTaskRequest);
+                console.log('Task created:', response);
+            }
+            closeTaskModal();
+        } catch (error) {
+            console.error('Error saving task:', error);
+        }
     };
 
     return (
@@ -41,93 +100,75 @@ const TaskModal: React.FC<TaskModalProps> = ({
                         <span className="loading loading-spinner"></span>
                     </div>
                 ) : (
-                    <>
-                        <div className="grid grid-cols-4">  {/* Create a 2-column grid layout */}
+                    <form onSubmit={(e) => { e.preventDefault(); handleSave(); }}>
+                        <div className="grid grid-cols-4 gap-2">
                             <div className="col-span-3 py-2">
                                 <input
                                     type="text"
                                     className="input input-ghost w-full font-bold"
                                     value={title}
-                                    placeholder={"Task title"}
+                                    placeholder="Task title"
                                     onChange={(e) => setTitle(e.target.value)}
                                 />
                             </div>
-                            <div className="col-span-1 content-center">
-                                <div className={"flex items-center"}>
-                                    <p className="text-red-600">●</p>
-                                    <select
-                                        className="select select-sm w-full ml-1"
-                                        value={tagId !== undefined ? tagId : ''}
-                                        onChange={(e) => setTagId(Number(e.target.value))}
-                                    >
-                                        <option value="">Tag</option>
-                                        {tags.map(tag => (
-                                            <option key={tag.id} value={tag.id}>
-                                                {tag.title} ({tag.color})
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                            </div>
-                            <div className="col-span-1">
-                                <label className="label text-sm justify-end mr-1">Status</label>
-                            </div>
-                            <div className="col-span-3 space-y-1 py-1">
+                            <div className="col-span-1 flex items-center">
+                                <p className="text-red-600">●</p>
                                 <select
-                                    className="select select-sm w-full"
-                                    value={status}
-                                    onChange={(e) => setStatus(e.target.value)}
+                                    className="select select-sm w-full ml-1"
+                                    value={tagId ?? ''}
+                                    onChange={(e) => setTagId(Number(e.target.value) || undefined)}
                                 >
-                                    <option value="">Select Status</option>
-                                    <option value="To Do">To Do</option>
-                                    <option value="In Progress">In Progress</option>
-                                    <option value="Completed">Completed</option>
+                                    <option value="">none</option>
+                                    {tagsState.map(tag => (
+                                        <option key={tag.id} value={tag.id}>
+                                            {tag.title} ({tag.color})
+                                        </option>
+                                    ))}
                                 </select>
                             </div>
-                            <div className="col-span-1">
-                                <label className="label text-sm justify-end mr-1">Hashtags</label>
-                            </div>
+                            <label className="col-span-1 text-sm text-right mr-1">Status</label>
+                            <select
+                                className="col-span-3 select select-sm w-full"
+                                value={status}
+                                onChange={(e) => setStatus(e.target.value as 'TO_DO' | 'IN_PROGRESS' | 'DONE')}
+                            >
+                                <option value="TO_DO">To Do</option>
+                                <option value="IN_PROGRESS">In Progress</option>
+                                <option value="DONE">Completed</option>
+                            </select>
+                            <label className="col-span-1 text-sm text-right mr-1">Hashtags</label>
                             <div className="col-span-3">
-                                <div>
-                                    <input
-                                        type="text"
-                                        placeholder="Type hashtag and press Enter"
-                                        className="input input-bordered input-sm w-full"
-                                        value={hashtagTitle}
-                                        onChange={(e) => setHashtagTitle(e.target.value)}
-                                        onKeyDown={handleHashtagKeyPress}
-                                    />
-                                    <div className="mt-1 flex flex-wrap">
-                                        {currentHashtags.map(hashtag => (
-                                            <span key={hashtag.id} className="badge badge-secondary m-1">
-                                                #{hashtag.name}
-                                            </span>
-                                        ))}
-                                    </div>
+                                <input
+                                    type="text"
+                                    placeholder="Type hashtag and press Enter"
+                                    className="input input-bordered input-sm w-full"
+                                    value={hashtagTitle}
+                                    onChange={(e) => setHashtagTitle(e.target.value)}
+                                    onKeyDown={handleHashtagKeyPress}
+                                />
+                                <div className="mt-1 flex flex-wrap">
+                                    {currentHashtags.map(hashtag => (
+                                        <span key={hashtag.id} className="badge badge-secondary m-1">
+                                            #{hashtag.name}
+                                        </span>
+                                    ))}
                                 </div>
                             </div>
-                            <div className="col-span-1">
-                                <label className="label text-sm justify-end mr-1">Description</label>
-                            </div>
-                            <div className="col-span-3">
-                                <textarea
-                                    className="textarea textarea-bordered textarea-sm w-full"
-                                    value={description}
-                                    onChange={(e) => setDescription(e.target.value)}
-                                    rows={2}
-                                />
-                            </div>
+                            <label className="col-span-1 text-sm text-right mr-1">Description</label>
+                            <textarea
+                                className="col-span-3 textarea textarea-bordered textarea-sm w-full"
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                rows={2}
+                            />
                         </div>
-                        <div className="flex gap-2 justify-end">
-                            <button className="btn btn-primary btn-sm" onClick={handleSave}>
+                        <div className="flex gap-2 justify-end mt-4">
+                            <button type="submit" className="btn btn-primary btn-sm">
                                 {selectedTaskId ? 'Update' : 'Save'}
                             </button>
-                            {/*{selectedTaskId && (*/}
-                            {/*    <button className="btn btn-error btn-sm" onClick={() => { if (handleDelete) handleDelete(); }}>Delete</button>*/}
-                            {/*)}*/}
-                            <button className="btn btn-outline btn-sm" onClick={closeTaskModal}>Cancel</button>
+                            <button type="button" className="btn btn-outline btn-sm" onClick={closeTaskModal}>Cancel</button>
                         </div>
-                    </>
+                    </form>
                 )}
             </div>
         </dialog>

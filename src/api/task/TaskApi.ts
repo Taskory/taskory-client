@@ -43,7 +43,7 @@ export const getAllTasks = async (): Promise<TaskSummary[]> => {
     };
 
     try {
-        const response: AxiosResponse<TaskSummary[]> = await axios.get('/api/tasks', requestOptions);
+        const response: AxiosResponse<TaskSummary[]> = await axios.get(`${API_URL}/task`, requestOptions);
         return response.data;
     } catch (error) {
         console.error('Error fetching tasks:', error);
@@ -88,7 +88,7 @@ export const createTaskItem = async (saveTaskItemRequest: SaveTaskItemRequest): 
         },
     };
 
-    const response = await axios.post<TaskItemResponse>('${API_URL}/task/items', saveTaskItemRequest, requestOptions);
+    const response = await axios.post<TaskItemResponse>(`${API_URL}/task/items`, saveTaskItemRequest, requestOptions);
     return response.data;
 };
 

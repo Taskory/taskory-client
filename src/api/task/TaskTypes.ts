@@ -13,8 +13,8 @@ export interface TaskResponse {
 // Interface for SaveTaskRequest
 export interface SaveTaskRequest {
     title: string;
-    eventId: number;
-    tagId: number;
+    eventId: number | undefined;
+    tagId: number | undefined;
     hashtagIds: number[];
     description: string;
     status: string;
