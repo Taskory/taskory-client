@@ -5,7 +5,6 @@ import {Signup} from "../page/auth/Signup";
 import {Dashboard} from "../page/dashboard/Dashboard";
 import {CalendarPage} from "../page/calendar/CalendarPage";
 import {Routine} from "../page/routine/Routine";
-import {TaskPage} from "../page/task/TaskPage";
 import React from "react";
 import {Report} from "../page/report/Report";
 import {Setting} from "../page/setting/Setting";
@@ -13,6 +12,7 @@ import {OAuth2RedirectHandler} from "../handler/OAuth2RedirectHandler";
 import {Profile} from "../page/profile/Profile";
 import {ProfileUpdate} from "../page/profile/ProfileUpdate";
 import {Register} from "../page/register/Register";
+import { TaskPage } from "../page/task/TaskPage";
 
 export const AppRouter = (): React.JSX.Element => {
     return (
