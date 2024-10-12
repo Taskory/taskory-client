@@ -1,7 +1,7 @@
 import React from 'react';
 import { TaskContextProvider } from '../../context/TaskContext';
 import { CommonLayout } from '../../layout/CommonLayout';
-import {TaskModalProvider} from "./TaskModalContext";
+import {TaskModalProvider} from "./context/TaskModalContext";
 
 interface TaskLayoutProps {
     children: React.ReactNode;

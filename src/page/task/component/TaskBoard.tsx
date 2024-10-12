@@ -1,8 +1,8 @@
 import React, {useEffect} from "react";
 import {Task} from "./Task";
 import {TaskBoardHeader} from "./TaskBoardHeader";
-import {TaskStatus, TaskSummary} from "../../api/task/TaskTypes";
-import {useTaskContext} from "../../context/TaskContext";
+import {TaskStatus, TaskSummary} from "../../../api/task/TaskTypes";
+import {useTaskContext} from "../../../context/TaskContext";
 
 interface TaskBoardProps {
     taskStatus: TaskStatus;

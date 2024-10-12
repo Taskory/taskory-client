@@ -1,5 +1,5 @@
-import {TaskHeader} from "./TaskHeader";
-import {TaskBoard} from "./TaskBoard";
+import {TaskHeader} from "./component/TaskHeader";
+import {TaskBoard} from "./component/TaskBoard";
 import {TaskStatus} from "../../api/task/TaskTypes";
 import React from "react";
 import {TaskWrapper} from "./TaskWrapper";

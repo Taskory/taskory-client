@@ -1,6 +1,6 @@
 import React from "react";
-import {TaskSummary} from "../../api/task/TaskTypes";
-import {useTaskModal} from "./TaskModalContext";
+import {TaskSummary} from "../../../api/task/TaskTypes";
+import {useTaskModal} from "../context/TaskModalContext";
 
 interface TaskProps {
     task: TaskSummary;

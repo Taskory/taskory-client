@@ -1,6 +1,6 @@
 import React from "react";
-import {useTaskModal} from "./TaskModalContext";
-import {TaskStatus} from "../../api/task/TaskTypes";
+import {useTaskModal} from "../context/TaskModalContext";
+import {TaskStatus} from "../../../api/task/TaskTypes";
 
 export const TaskBoardHeader: React.FC<{ taskStatus: TaskStatus }> = ({ taskStatus }) => {
     const {openTaskModal} = useTaskModal();

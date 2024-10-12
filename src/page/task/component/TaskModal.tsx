@@ -1,10 +1,10 @@
 // TaskModal.tsx
 import React, {useEffect, useState} from 'react';
-import {useTaskModal} from "./TaskModalContext";
-import {getAllTags} from "../../api/tag/TagApi";
-import {createTask, getTaskById, updateTask} from "../../api/task/TaskApi";
-import {SaveTaskRequest, TaskResponse, TaskStatus} from "../../api/task/TaskTypes";
-import {TagResponse} from "../../api/tag/TagTypes";
+import {useTaskModal} from "../context/TaskModalContext";
+import {getAllTags} from "../../../api/tag/TagApi";
+import {createTask, getTaskById, updateTask} from "../../../api/task/TaskApi";
+import {SaveTaskRequest, TaskResponse, TaskStatus} from "../../../api/task/TaskTypes";
+import {TagResponse} from "../../../api/tag/TagTypes";
 
 interface TaskModalProps {
     loading: boolean;
