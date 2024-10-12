@@ -32,7 +32,7 @@ export const TaskBoard: React.FC<TaskBoardProps> = ({ taskStatus }) => {
 
     return (
         <div className="w-1/3 bg-white shadow-md rounded-md p-2 border border-gray-200 flex flex-col h-[calc(100vh-10rem)]">
-            <TaskBoardHeader title={taskStatus} />
+            <TaskBoardHeader taskStatus={taskStatus} />
             <div className="flex flex-col overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 gap-2">
                 {/* Render the Task component for each task in the tasks array */}
                 {tasks.length > 0 ? (

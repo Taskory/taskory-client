@@ -1,9 +1,10 @@
 import React, { createContext, useContext, useMemo, useCallback, ReactNode, useState } from 'react';
 import { TaskModal } from './TaskModal';
 import { useTaskContext } from "../../context/TaskContext";
+import {TaskStatus} from "../../api/task/TaskTypes";
 
 interface TaskModalContextType {
-    openTaskModal: (taskId?: number) => void;
+    openTaskModal: (taskIdOrStatus?: number | TaskStatus) => void;
     closeTaskModal: () => void;
     selectedTaskId: number | null;
     isModalOpen: boolean;
@@ -15,6 +16,7 @@ export const TaskModalProvider: React.FC<{ children: ReactNode }> = ({ children 
     const { refetchTasks } = useTaskContext();
     const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedStatus, setSelectedStatus] = useState<TaskStatus | null>(null);
 
     const closeTaskModal = useCallback(() => {
         setIsModalOpen(false);
@@ -22,9 +24,18 @@ export const TaskModalProvider: React.FC<{ children: ReactNode }> = ({ children 
         refetchTasks();
     }, [refetchTasks]);
 
-    const openTaskModal = useCallback((taskId?: number) => {
-        if (taskId) {
-            setSelectedTaskId(taskId);
+    const openTaskModal = useCallback((taskIdOrStatus?: number | TaskStatus) => {
+        console.log(taskIdOrStatus);
+        if (taskIdOrStatus) {
+            if (typeof taskIdOrStatus === "number") {       // if getting task id
+                const taskId = taskIdOrStatus;
+                if (taskId) {
+                    setSelectedTaskId(taskId);
+                }
+            } else {                // if getting status
+                const taskStatus: TaskStatus = taskIdOrStatus;
+                setSelectedStatus(taskStatus)
+            }
         }
         setIsModalOpen(true);
     }, []);
@@ -42,6 +53,7 @@ export const TaskModalProvider: React.FC<{ children: ReactNode }> = ({ children 
             {isModalOpen && (
                 <TaskModal
                     loading={false}
+                    selectedStatus={selectedStatus}
                 />
             )}
         </TaskModalContext.Provider>

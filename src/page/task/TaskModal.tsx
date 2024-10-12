@@ -1,13 +1,14 @@
 // TaskModal.tsx
-import React, { useState, useEffect } from 'react';
-import { useTaskModal } from "./TaskModalContext";
-import { getAllTags } from "../../api/tag/TagApi";
+import React, {useEffect, useState} from 'react';
+import {useTaskModal} from "./TaskModalContext";
+import {getAllTags} from "../../api/tag/TagApi";
 import {createTask, getTaskById, updateTask} from "../../api/task/TaskApi";
-import { SaveTaskRequest, TaskResponse } from "../../api/task/TaskTypes";
+import {SaveTaskRequest, TaskResponse, TaskStatus} from "../../api/task/TaskTypes";
 import {TagResponse} from "../../api/tag/TagTypes";
 
 interface TaskModalProps {
     loading: boolean;
+    selectedStatus: TaskStatus | null;
 }
 
 // Task type for internal state management
@@ -18,10 +19,10 @@ interface Task {
     tagId?: number | undefined;
     hashtagIds: number[];
     description: string;
-    status: 'TO_DO' | 'IN_PROGRESS' | 'DONE';
+    status: TaskStatus;
 }
 
-export const TaskModal: React.FC<TaskModalProps> = ({ loading }) => {
+export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus }) => {
     const { isModalOpen, selectedTaskId, closeTaskModal } = useTaskModal();
 
     const [task, setTask] = useState<Task>({
@@ -30,7 +31,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading }) => {
         tagId: undefined,
         hashtagIds: [],
         description: '',
-        status: 'TO_DO',
+        status: TaskStatus.TO_DO,
     });
     const [tagsState, setTagsState] = useState<TagResponse[]>([]);
     const [hashtagTitle, setHashtagTitle] = useState<string>('');
@@ -41,10 +42,18 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading }) => {
             if (selectedTaskId) {
                 fetchTask(selectedTaskId);
             } else {
-                resetForm();
+                setTask({
+                    title: '',
+                    eventId: undefined,
+                    tagId: undefined,
+                    hashtagIds: [],
+                    description: '',
+                    status: selectedStatus ? selectedStatus : TaskStatus.TO_DO,
+                });
+                setHashtagTitle('');
             }
         }
-    }, [isModalOpen, selectedTaskId]);
+    }, [isModalOpen, selectedStatus, selectedTaskId]);
 
     const fetchTask = async (taskId: number): Promise<void> => {
         try {
@@ -57,7 +66,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading }) => {
                 tagId: response.tag ? response.tag.id : undefined,
                 hashtagIds: response.hashtags.map(hashtag => hashtag.id),
                 description: response.description,
-                status: response.status as 'TO_DO' | 'IN_PROGRESS' | 'DONE',
+                status: response.status as TaskStatus,
             });
         } catch (e) {
             console.error('Failed to fetch task:', e);
@@ -73,17 +82,6 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading }) => {
         }
     };
 
-    const resetForm = (): void => {
-        setTask({
-            title: '',
-            eventId: undefined,
-            tagId: undefined,
-            hashtagIds: [],
-            description: '',
-            status: 'TO_DO',
-        });
-        setHashtagTitle('');
-    };
 
     const handleHashtagKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter' && hashtagTitle.trim() !== '') {
@@ -160,11 +158,11 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading }) => {
                             <select
                                 className="col-span-3 select select-sm w-full"
                                 value={task.status}
-                                onChange={(e) => setTask({ ...task, status: e.target.value as 'TO_DO' | 'IN_PROGRESS' | 'DONE' })}
+                                onChange={(e) => setTask({ ...task, status: e.target.value as TaskStatus })}
                             >
-                                <option value="TO_DO">To Do</option>
-                                <option value="IN_PROGRESS">In Progress</option>
-                                <option value="DONE">Completed</option>
+                                <option value={TaskStatus.TO_DO}>To Do</option>
+                                <option value={TaskStatus.IN_PROGRESS}>In Progress</option>
+                                <option value={TaskStatus.DONE}>Done</option>
                             </select>
                             <label className="col-span-1 text-sm text-right mr-1">Hashtags</label>
                             <div className="col-span-3">
