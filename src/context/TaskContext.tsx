@@ -1,5 +1,5 @@
 import React, {createContext, useContext, ReactNode, useMemo, useCallback, useState, useEffect} from 'react';
-import {TaskSummary} from "../api/task/TaskTypes";
+import {TaskStatus, TaskSummary} from "../api/task/TaskTypes";
 import {getAllTasks} from "../api/task/TaskApi";
 
 interface TaskContextProps {
@@ -30,13 +30,13 @@ export const TaskContextProvider: React.FC<TaskContextProviderProps> = ({ childr
 
             taskData.forEach(task => {
                 switch (task.status) {
-                    case "TO_DO":
+                    case TaskStatus.TO_DO:
                         toDoTasks.push(task);
                         break;
-                    case "IN_PROGRESS":
+                    case TaskStatus.IN_PROGRESS:
                         inProgressTasks.push(task);
                         break;
-                    case "DONE":
+                    case TaskStatus.DONE:
                         doneTasks.push(task);
                         break;
                     default:
@@ -44,7 +44,6 @@ export const TaskContextProvider: React.FC<TaskContextProviderProps> = ({ childr
                 }
             });
 
-            // 상태에 따라 분류된 배열을 set 함수로 업데이트합니다.
             setTO_DO(toDoTasks);
             setIN_PROGRESS(inProgressTasks);
             setDONE(doneTasks);

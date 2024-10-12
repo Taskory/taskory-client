@@ -4,6 +4,7 @@ import { CommonLayout } from '../../layout/CommonLayout';
 import { TaskBoard } from './TaskBoard';
 import { TaskHeader } from './TaskHeader';
 import {TaskModalProvider} from "./TaskModalContext";
+import {TaskStatus} from "../../api/task/TaskTypes";
 
 export const TaskPage: React.FC = () => {
     return (
@@ -17,9 +18,9 @@ export const TaskPage: React.FC = () => {
                         {/* Boards Section */}
                         <div className="flex gap-2 p-2">
                             {/* Filter tasks into boards based on their status */}
-                            <TaskBoard data="TO_DO"/>
-                            <TaskBoard data="IN_PROGRESS"/>
-                            <TaskBoard data="Done"/>
+                            <TaskBoard taskStatus={TaskStatus.TO_DO}/>
+                            <TaskBoard taskStatus={TaskStatus.IN_PROGRESS}/>
+                            <TaskBoard taskStatus={TaskStatus.DONE}/>
                         </div>
                     </div>
                 </TaskModalProvider>
