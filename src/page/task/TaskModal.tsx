@@ -155,15 +155,63 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus })
                                 </select>
                             </div>
                             <label className="col-span-1 text-sm text-right mr-1">Status</label>
-                            <select
-                                className="col-span-3 select select-sm w-full"
-                                value={task.status}
-                                onChange={(e) => setTask({ ...task, status: e.target.value as TaskStatus })}
-                            >
-                                <option value={TaskStatus.TO_DO}>To Do</option>
-                                <option value={TaskStatus.IN_PROGRESS}>In Progress</option>
-                                <option value={TaskStatus.DONE}>Done</option>
-                            </select>
+                            <div className="col-span-3">
+                                <div className="flex space-x-1">
+                                    <label className="cursor-pointer">
+                                        <input
+                                            type="radio"
+                                            name="status"
+                                            className="hidden"
+                                            value={TaskStatus.TO_DO}
+                                            checked={task.status === TaskStatus.TO_DO}
+                                            onChange={(e) => setTask({...task, status: e.target.value as TaskStatus})}
+                                        />
+                                        <div
+                                            className={`w-24 text-center px-2 py-1 border-2 rounded-md text-sm ${
+                                                task.status === TaskStatus.TO_DO ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
+                                            }`}
+                                        >
+                                            To Do
+                                        </div>
+                                    </label>
+                                    <label className="cursor-pointer">
+                                        <input
+                                            type="radio"
+                                            name="status"
+                                            className="hidden"
+                                            value={TaskStatus.IN_PROGRESS}
+                                            checked={task.status === TaskStatus.IN_PROGRESS}
+                                            onChange={(e) => setTask({...task, status: e.target.value as TaskStatus})}
+                                        />
+                                        <div
+                                            className={`w-24 text-center px-2 py-1 border-2 rounded-md text-sm ${
+                                                task.status === TaskStatus.IN_PROGRESS ? 'bg-yellow-500 text-white' : 'bg-gray-200 text-gray-700'
+                                            }`}
+                                        >
+                                            In Progress
+                                        </div>
+                                    </label>
+                                    <label className="cursor-pointer">
+                                        <input
+                                            type="radio"
+                                            name="status"
+                                            className="hidden"
+                                            value={TaskStatus.DONE}
+                                            checked={task.status === TaskStatus.DONE}
+                                            onChange={(e) => setTask({...task, status: e.target.value as TaskStatus})}
+                                        />
+                                        <div
+                                            className={`w-24 text-center px-2 py-1 border-2 rounded-md text-sm ${
+                                                task.status === TaskStatus.DONE ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-700'
+                                            }`}
+                                        >
+                                            Done
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+
                             <label className="col-span-1 text-sm text-right mr-1">Hashtags</label>
                             <div className="col-span-3">
                                 <input
@@ -186,7 +234,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus })
                             <textarea
                                 className="col-span-3 textarea textarea-bordered textarea-sm w-full"
                                 value={task.description}
-                                onChange={(e) => setTask({ ...task, description: e.target.value })}
+                                onChange={(e) => setTask({...task, description: e.target.value})}
                                 rows={2}
                             />
                         </div>
@@ -194,7 +242,8 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus })
                             <button type="submit" className="btn btn-primary btn-sm">
                                 {selectedTaskId ? 'Update' : 'Save'}
                             </button>
-                            <button type="button" className="btn btn-outline btn-sm" onClick={closeTaskModal}>Cancel</button>
+                            <button type="button" className="btn btn-outline btn-sm" onClick={closeTaskModal}>Cancel
+                            </button>
                         </div>
                     </form>
                 )}
