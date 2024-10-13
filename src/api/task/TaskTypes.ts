@@ -46,7 +46,7 @@ export interface SaveTaskItemRequest {
 export interface TaskSummary {
     id: number;
     title: string;
-    event: EventSummary;
+    event: EventSummary | undefined;
     tagTitle: string;
     tagColor: string;
     hashtags: HashtagResponse[];

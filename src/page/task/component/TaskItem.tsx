@@ -2,11 +2,11 @@ import React from "react";
 import {TaskSummary} from "../../../api/task/TaskTypes";
 import {useTaskModal} from "../context/TaskModalContext";
 
-interface TaskProps {
+interface TaskItemProps {
     task: TaskSummary;
 }
 
-export const Task: React.FC<TaskProps> = ({ task }) => {
+export const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
     const {openTaskModal} = useTaskModal();
     return (
         <div className="bg-gray-100 p-3 rounded-md shadow-sm border border-gray-300 hover:bg-gray-200 transition"

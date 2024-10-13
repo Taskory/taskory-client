@@ -13,6 +13,7 @@ import {Profile} from "../page/profile/Profile";
 import {ProfileUpdate} from "../page/profile/ProfileUpdate";
 import {Register} from "../page/register/Register";
 import { TaskPage } from "../page/task/TaskPage";
+import {Temp} from "../page/temp/Temp";
 
 export const AppRouter = (): React.JSX.Element => {
     return (
@@ -31,6 +32,8 @@ export const AppRouter = (): React.JSX.Element => {
                 <Route path="/profile/update" element={<ProfileUpdate/>}/>
                 <Route path="/register" element={<Register/>}/>
                 <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler/>}/>
+
+                <Route path="/temp" element={<Temp/>}/>
             </Routes>
         </Router>
     );

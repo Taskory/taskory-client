@@ -32,7 +32,7 @@ export const Leftbar: React.FC = () => {
                 />
                 <SelectItem
                     src={"/asset/img/leftbar/task.svg"}
-                    label="Task"
+                    label="TaskItem"
                     path="/task"
                     isOpen={isLeftbarOpened}
                 />
