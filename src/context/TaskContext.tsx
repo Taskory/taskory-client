@@ -1,12 +1,14 @@
-import React, {createContext, useContext, ReactNode, useMemo, useCallback, useState, useEffect} from 'react';
+import React, {createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState} from 'react';
 import {TaskStatus, TaskSummary} from "../api/task/TaskTypes";
-import {getAllTasks} from "../api/task/TaskApi";
+import {getAllTasks, updateTaskStatus} from "../api/task/TaskApi";
+import {filter} from "lodash";
 
 interface TaskContextProps {
     TO_DO: TaskSummary[],
     IN_PROGRESS: TaskSummary[],
     DONE: TaskSummary[],
     refetchTasks: () => Promise<void>;
+    moveTaskItem: (taskItem: TaskSummary, toContainerId: TaskStatus) => void;
 }
 
 const TaskContext = createContext<TaskContextProps | undefined>(undefined);
@@ -52,6 +54,42 @@ export const TaskContextProvider: React.FC<TaskContextProviderProps> = ({ childr
         }
     }, []);
 
+    const moveTaskItem = async (taskItem: TaskSummary, toStatus: TaskStatus) => {
+        if (taskItem.status === toStatus) return; // if status of task item equals toStatus not request
+
+        try {
+            const result = await updateTaskStatus(taskItem.id, toStatus);
+            if (result) {
+                switch (taskItem.status) {
+                    case TaskStatus.TO_DO:
+                        setTO_DO(prevTO_DO => prevTO_DO.filter(task => task.id !== taskItem.id));
+                        break;
+                    case TaskStatus.IN_PROGRESS:
+                        setIN_PROGRESS(prevIN_PROGRESS => prevIN_PROGRESS.filter(task => task.id !== taskItem.id));
+                        break;
+                    case TaskStatus.DONE:
+                        setDONE(prevDONE => prevDONE.filter(task => task.id !== taskItem.id));
+                        break;
+                }
+
+                taskItem.status = toStatus;
+                switch (toStatus) {
+                    case TaskStatus.TO_DO:
+                        setTO_DO(prevTO_DO => [...prevTO_DO, taskItem]);
+                        break;
+                    case TaskStatus.IN_PROGRESS:
+                        setIN_PROGRESS(prevIN_PROGRESS => [...prevIN_PROGRESS, taskItem]);
+                        break;
+                    case TaskStatus.DONE:
+                        setDONE(prevDONE => [...prevDONE, taskItem]);
+                        break;
+                }
+            }
+        } catch (error) {
+            console.error('Error updating task status:', error);
+        }
+    };
+
     useEffect(() => {
         fetchTasks();
     }, [fetchTasks]);
@@ -60,7 +98,8 @@ export const TaskContextProvider: React.FC<TaskContextProviderProps> = ({ childr
         TO_DO,
         IN_PROGRESS,
         DONE,
-        refetchTasks: fetchTasks
+        refetchTasks: fetchTasks,
+        moveTaskItem
     }), [TO_DO, IN_PROGRESS, DONE, fetchTasks]);
 
     return (

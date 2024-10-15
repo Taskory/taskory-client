@@ -11,7 +11,7 @@ interface TaskModalProps {
     selectedStatus: TaskStatus | null;
 }
 
-// TaskItem type for internal state management
+// Task type for internal state management
 interface Task {
     id?: number;
     title: string;
@@ -109,10 +109,10 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus })
             let response: TaskResponse;
             if (selectedTaskId) {
                 response = await updateTask(selectedTaskId, saveTaskRequest);
-                console.log('TaskItem updated:', response);
+                console.log('Task updated:', response);
             } else {
                 response = await createTask(saveTaskRequest);
-                console.log('TaskItem created:', response);
+                console.log('Task created:', response);
             }
             closeTaskModal();
         } catch (error) {
@@ -135,7 +135,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus })
                                     type="text"
                                     className="input input-ghost w-full font-bold"
                                     value={task.title}
-                                    placeholder="TaskItem title"
+                                    placeholder="Task title"
                                     onChange={(e) => setTask({ ...task, title: e.target.value })}
                                 />
                             </div>

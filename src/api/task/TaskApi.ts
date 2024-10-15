@@ -1,4 +1,11 @@
-import {TaskResponse, SaveTaskRequest, SaveTaskItemRequest, TaskItemResponse, TaskSummary} from './TaskTypes';
+import {
+    TaskResponse,
+    SaveTaskRequest,
+    SaveTaskItemRequest,
+    TaskItemResponse,
+    TaskSummary,
+    TaskStatus
+} from './TaskTypes';
 import axios, {AxiosResponse} from 'axios';
 import {getAuthCookie} from "../../util/CookieUtil";
 import {API_URL} from "../../constants";
@@ -146,3 +153,31 @@ export const deleteTaskItem = async (taskItemId: number): Promise<void> => {
 
     await axios.delete(`${API_URL}/task/items/${taskItemId}`, requestOptions);
 };
+
+export const updateTaskStatus = async (taskId: number, taskStatus: TaskStatus): Promise<boolean> => {
+    const requestUrl = `${API_URL}/task/status/${taskId}`
+
+    const authToken = getAuthCookie();  // Fetch the latest cookie value here
+    const requestOptions = {
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${authToken}`,
+        },
+    };
+
+
+    try {
+        await axios.patch(requestUrl, null, {
+            ...requestOptions,
+            params: {
+                status: taskStatus.toString(),
+            },
+        });
+
+        return true;
+    } catch (error) {
+       return false;
+    }
+};
+
+export const ItemType = "TASK";

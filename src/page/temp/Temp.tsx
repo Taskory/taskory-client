@@ -3,9 +3,10 @@ import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { CommonLayout } from "../../layout/CommonLayout";
 import { TaskStatus, TaskSummary } from "../../api/task/TaskTypes";
+import {ItemType} from "../../api/task/TaskApi";
 
 // 단일 아이템 타입 정의
-const ItemType = "TASK";
+
 
 interface TaskItemProps {
     task: TaskSummary;
@@ -14,7 +15,7 @@ interface TaskItemProps {
 // Draggable item component
 const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
     const [, drag] = useDrag(() => ({
-        type: ItemType, // 여기서 type을 명시해야 오류가 발생하지 않음
+        type: ItemType,
         item: { id: task.id, taskStatus: task.status },
     }));
 
@@ -34,9 +35,8 @@ interface TaskBoardProps {
 // Droppable container component
 const TaskBoard: React.FC<TaskBoardProps> = ({ items, status, moveItem }) => {
     const [, drop] = useDrop({
-        accept: ItemType, // 여기서도 accept로 타입을 명시해야 함
+        accept: ItemType,
         drop: (draggedItem: { id: number; taskStatus: TaskStatus }) => {
-            // 드래그된 항목이 다른 상태의 항목이면 moveItem을 호출
             if (draggedItem.taskStatus !== status) {
                 moveItem(draggedItem.id, draggedItem.taskStatus, status);
             }
