@@ -272,7 +272,7 @@ const EventModal: React.FC = () => {
                                     <div className="mt-1 flex flex-wrap">
                                         {hashtags.map(hashtag => (
                                             <span key={hashtag.id} className="badge badge-secondary m-1">
-                                    #{hashtag.name}
+                                    #{hashtag.title}
                                 </span>
                                         ))}
                                     </div>

@@ -39,7 +39,7 @@ export const TaskCard: React.FC<TaskItemProps> = ({ task }) => {
                 <div className="flex flex-wrap gap-2 mt-2">
                     {task.hashtags.map((hashtag) => (
                         <span key={hashtag.id} className="bg-gray-200 text-gray-700 rounded px-2 py-1 text-xs">
-                            #{hashtag.name}
+                            #{hashtag.title}
                         </span>
                     ))}
                 </div>

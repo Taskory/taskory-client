@@ -1,8 +1,10 @@
+import {HashtagResponse} from "../hashtag/HashtagTypes";
+
 export interface EventResponse {
     id: number;
     title: string;
     tag: { id: number; title: string; color: string };
-    hashtags: { id: number; name: string }[];
+    hashtags: HashtagResponse[];
     description: string;
     startDateTime: string;
     dueDateTime: string;
