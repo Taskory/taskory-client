@@ -3,6 +3,7 @@ import {TaskStatus, TaskSummary} from "../../../api/task/TaskTypes";
 import { useTaskModal } from "../context/TaskModalContext";
 import { useDrag } from "react-dnd";
 import { ItemType } from "../../../api/task/TaskApi";
+import {TagColor} from "../../../api/tag/TagTypes";
 
 interface TaskItemProps {
     task: TaskSummary;
@@ -68,27 +69,27 @@ const getStatusStyle = (status: string) => {
 
 const getTagColorStyle = (tagColor: string) => {
     switch (tagColor) {
-        case 'BLACK':
+        case TagColor.BLACK:
             return 'bg-black text-white';
-        case 'RED':
+        case TagColor.RED:
             return 'bg-red-100 text-red-800';
-        case 'GREEN':
+        case TagColor.GREEN:
             return 'bg-green-100 text-green-800';
-        case 'BLUE':
+        case TagColor.BLUE:
             return 'bg-blue-100 text-blue-800';
-        case 'YELLOW':
+        case TagColor.YELLOW:
             return 'bg-yellow-100 text-yellow-800';
-        case 'ORANGE':
+        case TagColor.ORANGE:
             return 'bg-orange-100 text-orange-800';
-        case 'PURPLE':
+        case TagColor.PURPLE:
             return 'bg-purple-100 text-purple-800';
-        case 'BROWN':
+        case TagColor.BROWN:
             return 'bg-yellow-900 text-yellow-100';
-        case 'PINK':
+        case TagColor.PINK:
             return 'bg-pink-100 text-pink-800';
-        case 'CYAN':
+        case TagColor.CYAN:
             return 'bg-cyan-100 text-cyan-800';
-        case 'LINE':
+        case TagColor.LINE:
             return 'bg-gray-100 text-gray-800';
         default:
             return 'bg-gray-100 text-gray-800';

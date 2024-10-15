@@ -11,6 +11,20 @@ interface TaskModalProps {
     selectedStatus: TaskStatus | null;
 }
 
+export enum TagColor {
+    BLACK = "BLACK",
+    RED = "RED",
+    GREEN = "GREEN",
+    BLUE = "BLUE",
+    YELLOW = "YELLOW",
+    ORANGE = "ORANGE",
+    PURPLE = "PURPLE",
+    BROWN = "BROWN",
+    PINK = "PINK",
+    CYAN = "CYAN",
+    LINE = "LINE"
+}
+
 // Task type for internal state management
 interface Task {
     id?: number;
@@ -82,6 +96,32 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus })
         }
     };
 
+    const getTagColorClass = (color: string) => {
+        switch (color) {
+            case TagColor.RED:
+                return 'text-red-600';
+            case TagColor.GREEN:
+                return 'text-green-600';
+            case TagColor.BLUE:
+                return 'text-blue-600';
+            case TagColor.YELLOW:
+                return 'text-yellow-600';
+            case TagColor.ORANGE:
+                return 'text-orange-600';
+            case TagColor.PURPLE:
+                return 'text-purple-600';
+            case TagColor.BROWN:
+                return 'text-yellow-900';
+            case TagColor.PINK:
+                return 'text-pink-600';
+            case TagColor.CYAN:
+                return 'text-cyan-600';
+            case TagColor.BLACK:
+                return 'text-black';
+            default:
+                return 'text-gray-600';
+        }
+    };
 
     const handleHashtagKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter' && hashtagTitle.trim() !== '') {
@@ -140,11 +180,11 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus })
                                 />
                             </div>
                             <div className="col-span-1 flex items-center">
-                                <p className="text-red-600">●</p>
+                                <p className={getTagColorClass(tagsState.find(tag => tag.id === task.tagId)?.color || '')}>●</p>
                                 <select
                                     className="select select-sm w-full ml-1"
                                     value={task.tagId ?? ''}
-                                    onChange={(e) => setTask({ ...task, tagId: Number(e.target.value) || undefined })}
+                                    onChange={(e) => setTask({...task, tagId: Number(e.target.value) || undefined})}
                                 >
                                     <option value="">none</option>
                                     {tagsState.map(tag => (
@@ -168,7 +208,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus })
                                         />
                                         <div
                                             className={`w-24 text-center px-2 py-1 border-2 rounded-md text-sm ${
-                                                task.status === TaskStatus.TO_DO ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'
+                                                task.status === TaskStatus.TO_DO ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-700'
                                             }`}
                                         >
                                             To Do
@@ -210,7 +250,6 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus })
                                     </label>
                                 </div>
                             </div>
-
 
                             <label className="col-span-1 text-sm text-right mr-1">Hashtags</label>
                             <div className="col-span-3">
