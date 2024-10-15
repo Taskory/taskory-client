@@ -50,7 +50,7 @@ export interface TaskSummary {
     tagTitle: string;
     tagColor: string;
     hashtags: HashtagResponse[];
-    status: string;
+    status: TaskStatus;
 }
 
 export enum TaskStatus {
