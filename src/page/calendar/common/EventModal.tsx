@@ -1,20 +1,20 @@
 import React, { useState, useEffect, KeyboardEvent } from 'react';
 import { API_URL } from "../../../constants";
 import { format, addHours, isBefore } from 'date-fns';
-import { getAllTags } from "../../../api/tag/TagApi";
 import { createEvent, deleteEvent, getEventById, updateEvent } from "../../../api/event/EventApi";
 import { SaveEventRequest, EventResponse } from "../../../api/event/EventsTypes";
-import { TagResponse } from "../../../api/tag/TagTypes";
 import { TimeUtil } from "../../../util/TimeUtil";
 import { HashtagResponse } from "../../../api/hashtag/HashtagTypes";
 import {useCalendar} from "../context/CalendarContext";
 import {useEventModal} from "../context/EventModalContext";
+import {useTagContext} from "../../../context/TagContext";
+import {getTagColorClass} from "../../../util/TagUtil";
 
 const EventModal: React.FC = () => {
     const {isModalOpen, closeEventModal, selectedEventId} = useEventModal();
+    const {tags } = useTagContext();
     const [title, setTitle] = useState('');
     const [tagId, setTagId] = useState<number | undefined>(undefined);
-    const [tags, setTags] = useState<TagResponse[]>([]);
     const [hashtagTitle, setHashtagTitle] = useState('');
     const [hashtagIds, setHashtagIds] = useState<number[]>([]);
     const [hashtags, setHashtags] = useState<HashtagResponse[]>([]);
@@ -28,7 +28,6 @@ const EventModal: React.FC = () => {
 
     useEffect(() => {
         if (isModalOpen) {
-            fetchTags();
             if (selectedEventId) {
                 fetchEvent(selectedEventId);
             } else {
@@ -43,19 +42,6 @@ const EventModal: React.FC = () => {
             }
         }
     }, [isModalOpen, selectedEventId]);
-
-    const fetchTags = async (): Promise<void> => {
-        try {
-            const response = await getAllTags();
-            if (response.status === 200) {
-                setTags(response.data);
-            } else {
-                console.error('Failed to fetch tags');
-            }
-        } catch (error) {
-            console.error('Error fetching tags:', error);
-        }
-    };
 
     const fetchEvent = async (eventId: number): Promise<void> => {
         setLoading(true);
@@ -224,13 +210,13 @@ const EventModal: React.FC = () => {
                             <div className="col-span-1 content-center">
                                 <div className={"flex items-center"}>
                                     {/* apply color*/}
-                                    <p className="text-red-600">●</p>
+                                    <p className={getTagColorClass(tags.find(tag => tag.id === tagId)?.color || '')}>●</p>
                                     <select
                                         className="select select-sm w-full ml-1"
-                                        value={tagId !== undefined ? tagId : ''}
+                                        value={tagId ?? ''}
                                         onChange={(e) => setTagId(Number(e.target.value))}
                                     >
-                                        <option value="">Tag</option>
+                                        <option value="">none</option>
                                         {tags.map(tag => (
                                             <option key={tag.id} value={tag.id}>
                                                 {tag.title} ({tag.color})
