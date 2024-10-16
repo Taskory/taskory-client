@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { useSidebarStateContext } from "../context/SidebarStateContext";
-import {useEventContext} from "../context/EventContext";
-import calendarData from "../constants/calendar.json";
+import { useSidebarStateContext } from "../../context/SidebarStateContext";
+import {useEventContext} from "../../context/EventContext";
+import calendarData from "../../constants/calendar.json";
 
 const RightbarBtn: React.FC<{ onClick: () => void, isOpened: boolean; }> = ({onClick, isOpened}) => {
     return (

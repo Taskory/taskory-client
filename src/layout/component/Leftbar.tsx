@@ -1,6 +1,6 @@
 import { SelectItem } from "./SelectItem";
 import React from "react";
-import {useSidebarStateContext} from "../context/SidebarStateContext";
+import {useSidebarStateContext} from "../../context/SidebarStateContext";
 
 export const Leftbar: React.FC = () => {
     const { isLeftbarOpened } = useSidebarStateContext();

@@ -1,6 +1,6 @@
 import {Link, useNavigate} from "react-router-dom";
 import {useEffect} from "react";
-import {getAuthCookie} from "../util/CookieUtil";
+import {getAuthCookie} from "../../util/CookieUtil";
 
 export const HomeHeader = () => {
     const navigate = useNavigate();

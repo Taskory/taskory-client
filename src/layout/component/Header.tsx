@@ -1,7 +1,7 @@
 import React from "react";
-import { useSidebarStateContext } from "../context/SidebarStateContext";
+import { useSidebarStateContext } from "../../context/SidebarStateContext";
 import { useNavigate } from "react-router-dom";
-import { existAuthCookie, removeAuthCookie } from "../util/CookieUtil";
+import { existAuthCookie, removeAuthCookie } from "../../util/CookieUtil";
 
 export const Header: React.FC = () => {
     const { toggleLeftbar } = useSidebarStateContext();
