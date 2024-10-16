@@ -7,13 +7,10 @@ import { TimeUtil } from "../../../util/TimeUtil";
 import { HashtagResponse } from "../../../api/hashtag/HashtagTypes";
 import {useCalendar} from "../context/CalendarContext";
 import {useEventModal} from "../context/EventModalContext";
-import {useTagContext} from "../../../context/TagContext";
-import {getTagColorClass} from "../../../util/TagUtil";
 import {TagSelectBox} from "../../component/TagSelectBox";
 
 const EventModal: React.FC = () => {
     const {isModalOpen, closeEventModal, selectedEventId} = useEventModal();
-    const {tags } = useTagContext();
     const [title, setTitle] = useState('');
     const [tagId, setTagId] = useState<number | undefined>(undefined);
     const [hashtagTitle, setHashtagTitle] = useState('');
