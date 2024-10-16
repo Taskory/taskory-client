@@ -3,8 +3,6 @@ import React, {useEffect, useState} from 'react';
 import {useTaskModal} from "../context/TaskModalContext";
 import {createTask, getTaskById, updateTask} from "../../../api/task/TaskApi";
 import {SaveTaskRequest, TaskResponse, TaskStatus} from "../../../api/task/TaskTypes";
-import {useTagContext} from "../../../context/TagContext";
-import {getTagColorClass} from "../../../util/TagUtil";
 import {TagSelectBox} from "../../component/TagSelectBox";
 
 interface TaskModalProps {
@@ -25,7 +23,6 @@ interface Task {
 
 export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus }) => {
     const { isModalOpen, selectedTaskId, closeTaskModal } = useTaskModal();
-    const {tags} = useTagContext();
 
     const [task, setTask] = useState<Task>({
         title: '',
@@ -130,7 +127,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus })
                                     onChange={(e) => setTask({ ...task, title: e.target.value })}
                                 />
                             </div>
-                            <div className="col-span-1">
+                            <div className="col-span-1 content-center">
                                 {/*<div className="flex items-center">*/}
                                     {/*<p className={getTagColorClass(tags.find(tag => tag.id === task.tagId)?.color || '')}>●</p>*/}
                                     {/*<select*/}

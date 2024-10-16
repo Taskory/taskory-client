@@ -3,22 +3,6 @@ import { useSidebarStateContext } from "../../context/SidebarStateContext";
 import {useEventContext} from "../../context/EventContext";
 import calendarData from "../../constants/calendar.json";
 
-const RightbarBtn: React.FC<{ onClick: () => void, isOpened: boolean; }> = ({onClick, isOpened}) => {
-    return (
-        <div
-            onClick={onClick}
-            className="flex items-center p-2 cursor-pointer hover:bg-base-200 border-b w-full justify-end transition-all duration-300 bg-base-100 shadow-md rounded-lg"
-        >
-            <img
-                className={`mr-2 transition-transform duration-300 ${
-                    isOpened ? "rotate-180" : ""
-                }`}
-                src={"/asset/img/rightbar/open-close-button.svg"}
-                alt={"RightbarBtn"}
-            />
-        </div>
-    );}
-
 export const Rightbar = () => {
     const { isRightbarOpened, toggleRightbar } = useSidebarStateContext();
     // const {events} = useEventContext();
@@ -45,7 +29,6 @@ const Contents = () => {
     return (
         <>
             <div className="p-2">
-                {/* Add more rightbar content here */}
                 <MiniCalendar />
             </div>
         </>
@@ -103,3 +86,19 @@ const MiniCalendar = () => {
         </div>
     );
 };
+
+const RightbarBtn: React.FC<{ onClick: () => void, isOpened: boolean; }> = ({onClick, isOpened}) => {
+    return (
+        <div
+            onClick={onClick}
+            className="flex items-center p-2 cursor-pointer hover:bg-base-200 border-b w-full justify-end transition-all duration-300 bg-base-100 shadow-md rounded-lg"
+        >
+            <img
+                className={`mr-2 transition-transform duration-300 ${
+                    isOpened ? "rotate-180" : ""
+                }`}
+                src={"/asset/img/rightbar/open-close-button.svg"}
+                alt={"RightbarBtn"}
+            />
+        </div>
+    );}
