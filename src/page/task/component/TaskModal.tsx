@@ -4,25 +4,11 @@ import {useTaskModal} from "../context/TaskModalContext";
 import {getAllTags} from "../../../api/tag/TagApi";
 import {createTask, getTaskById, updateTask} from "../../../api/task/TaskApi";
 import {SaveTaskRequest, TaskResponse, TaskStatus} from "../../../api/task/TaskTypes";
-import {TagResponse} from "../../../api/tag/TagTypes";
+import {TagColor, TagResponse} from "../../../api/tag/TagTypes";
 
 interface TaskModalProps {
     loading: boolean;
     selectedStatus: TaskStatus | null;
-}
-
-export enum TagColor {
-    BLACK = "BLACK",
-    RED = "RED",
-    GREEN = "GREEN",
-    BLUE = "BLUE",
-    YELLOW = "YELLOW",
-    ORANGE = "ORANGE",
-    PURPLE = "PURPLE",
-    BROWN = "BROWN",
-    PINK = "PINK",
-    CYAN = "CYAN",
-    LINE = "LINE"
 }
 
 // Task type for internal state management
