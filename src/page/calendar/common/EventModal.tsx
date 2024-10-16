@@ -9,6 +9,7 @@ import {useCalendar} from "../context/CalendarContext";
 import {useEventModal} from "../context/EventModalContext";
 import {useTagContext} from "../../../context/TagContext";
 import {getTagColorClass} from "../../../util/TagUtil";
+import {TagSelectBox} from "../../component/TagSelectBox";
 
 const EventModal: React.FC = () => {
     const {isModalOpen, closeEventModal, selectedEventId} = useEventModal();
@@ -208,22 +209,23 @@ const EventModal: React.FC = () => {
                                 />
                             </div>
                             <div className="col-span-1 content-center">
-                                <div className={"flex items-center"}>
-                                    {/* apply color*/}
-                                    <p className={getTagColorClass(tags.find(tag => tag.id === tagId)?.color || '')}>●</p>
-                                    <select
-                                        className="select select-sm w-full ml-1"
-                                        value={tagId ?? ''}
-                                        onChange={(e) => setTagId(Number(e.target.value))}
-                                    >
-                                        <option value="">none</option>
-                                        {tags.map(tag => (
-                                            <option key={tag.id} value={tag.id}>
-                                                {tag.title} ({tag.color})
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
+                                {/*<div className={"flex items-center"}>*/}
+                                {/*    /!* apply color*!/*/}
+                                {/*    <p className={getTagColorClass(tags.find(tag => tag.id === tagId)?.color || '')}>●</p>*/}
+                                {/*    <select*/}
+                                {/*        className="select select-sm w-full ml-1"*/}
+                                {/*        value={tagId ?? ''}*/}
+                                {/*        onChange={(e) => setTagId(Number(e.target.value))}*/}
+                                {/*    >*/}
+                                {/*        <option value="">none</option>*/}
+                                {/*        {tags.map(tag => (*/}
+                                {/*            <option key={tag.id} value={tag.id}>*/}
+                                {/*                {tag.title} ({tag.color})*/}
+                                {/*            </option>*/}
+                                {/*        ))}*/}
+                                {/*    </select>*/}
+                                {/*</div>*/}
+                                <TagSelectBox selectedTagId={tagId} onChange={(tagId) => setTagId(tagId)} />
                             </div>
                             <div className="col-span-1">
                                 <label className="label text-sm justify-end mr-1">Date & Time</label>

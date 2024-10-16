@@ -5,6 +5,7 @@ import {createTask, getTaskById, updateTask} from "../../../api/task/TaskApi";
 import {SaveTaskRequest, TaskResponse, TaskStatus} from "../../../api/task/TaskTypes";
 import {useTagContext} from "../../../context/TagContext";
 import {getTagColorClass} from "../../../util/TagUtil";
+import {TagSelectBox} from "../../component/TagSelectBox";
 
 interface TaskModalProps {
     loading: boolean;
@@ -129,20 +130,23 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus })
                                     onChange={(e) => setTask({ ...task, title: e.target.value })}
                                 />
                             </div>
-                            <div className="col-span-1 flex items-center">
-                                <p className={getTagColorClass(tags.find(tag => tag.id === task.tagId)?.color || '')}>●</p>
-                                <select
-                                    className="select select-sm w-full ml-1"
-                                    value={task.tagId ?? ''}
-                                    onChange={(e) => setTask({...task, tagId: Number(e.target.value) || undefined})}
-                                >
-                                    <option value="">none</option>
-                                    {tags.map(tag => (
-                                        <option key={tag.id} value={tag.id}>
-                                            {tag.title} ({tag.color})
-                                        </option>
-                                    ))}
-                                </select>
+                            <div className="col-span-1">
+                                {/*<div className="flex items-center">*/}
+                                    {/*<p className={getTagColorClass(tags.find(tag => tag.id === task.tagId)?.color || '')}>●</p>*/}
+                                    {/*<select*/}
+                                    {/*    className="select select-sm w-full ml-1"*/}
+                                    {/*    value={task.tagId ?? ''}*/}
+                                    {/*    onChange={(e) => setTask({...task, tagId: Number(e.target.value) || undefined})}*/}
+                                    {/*>*/}
+                                    {/*    <option value="">none</option>*/}
+                                    {/*    {tags.map(tag => (*/}
+                                    {/*        <option key={tag.id} value={tag.id}>*/}
+                                    {/*            {tag.title} ({tag.color})*/}
+                                    {/*        </option>*/}
+                                    {/*    ))}*/}
+                                    {/*</select>*/}
+                                {/*</div>*/}
+                                <TagSelectBox selectedTagId={task.tagId} onChange={(tagId) => setTask({ ...task, tagId })} />
                             </div>
                             <label className="col-span-1 text-sm text-right mr-1">Status</label>
                             <div className="col-span-3">
