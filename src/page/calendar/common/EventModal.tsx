@@ -7,7 +7,6 @@ import { TimeUtil } from "../../../util/TimeUtil";
 import { HashtagResponse } from "../../../api/hashtag/HashtagTypes";
 import {useCalendar} from "../context/CalendarContext";
 import {useEventModal} from "../context/EventModalContext";
-import {TagSelectBox} from "../../component/TagSelectBox";
 
 const EventModal: React.FC = () => {
     const {isModalOpen, closeEventModal, selectedEventId} = useEventModal();
@@ -222,7 +221,8 @@ const EventModal: React.FC = () => {
                                 {/*        ))}*/}
                                 {/*    </select>*/}
                                 {/*</div>*/}
-                                <TagSelectBox selectedTagId={tagId} onChange={(tagId) => setTagId(tagId)} />
+                                {/* TODO: set new TagSelectBox */}
+                                {/*<TagSelectBox selectedTagId={tagId} onChange={(tagId) => setTagId(tagId)} />*/}
                             </div>
                             <div className="col-span-1">
                                 <label className="label text-sm justify-end mr-1">Date & Time</label>

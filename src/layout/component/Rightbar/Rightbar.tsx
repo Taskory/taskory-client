@@ -1,104 +1,179 @@
+// src/components/Rightbar.tsx
 import React, { useState } from "react";
-import { useSidebarStateContext } from "../../context/SidebarStateContext";
-import {useEventContext} from "../../context/EventContext";
-import calendarData from "../../constants/calendar.json";
+import { useSidebarStateContext } from "../../../context/SidebarStateContext";
+import { MiniCalendar } from "./MiniCalendar";
+import { RightbarBtn } from "./RightbarBtn";
+import { useTagContext } from "../../../context/TagContext";
+import { SaveTagRequest, TagColor, TagResponse } from "../../../api/tag/TagTypes";
+import { getTagStringColor } from "../../../util/TagUtil";
+import { request_createTag } from "../../../api/tag/TagApi";
+import { TagSelectBox } from "../../../component/TagSelectBox";
 
-export const Rightbar = () => {
-    const { isRightbarOpened, toggleRightbar } = useSidebarStateContext();
-    // const {events} = useEventContext();
+export const Rightbar: React.FC = () => {
+    const { isRightbarOpened } = useSidebarStateContext();
+    const { userTags, setUserTags, selectedTagIds, setSelectedTagIds } = useTagContext();
 
-    return (
-        <>
-            <div
-                className={`transition-all duration-300 flex flex-col items-center bg-base-100 shadow-lg rounded-lg p-1 ${
-                    isRightbarOpened ? 'w-sidebarOpened' : 'w-sidebarClosed'
-                }`}
-            >
+    const [newTagTitle, setNewTagTitle] = useState("");
+    const [newTagColor, setNewTagColor] = useState<TagColor>(TagColor.BLUE);
+    const [editIndex, setEditIndex] = useState<number | null>(null);
+    const [editedTagTitle, setEditedTagTitle] = useState("");
 
-                {/* Rightbar toggle button */}
-                <RightbarBtn onClick={toggleRightbar} isOpened={isRightbarOpened}/>
+    const TagColors: TagColor[] = Object.values(TagColor) as TagColor[];
 
-                {/* Rightbar content */}
-                {isRightbarOpened && (<Contents/>)}
-            </div>
-        </>
-    );
-};
-
-const Contents = () => {
-    return (
-        <>
-            <div className="p-2">
-                <MiniCalendar />
-            </div>
-        </>
-    );
-};
-
-const MiniCalendar = () => {
-    const [currentDate, setCurrentDate] = useState(new Date());
-
-    const daysInMonth = (year: number, month: number) => {
-        return new Date(year, month + 1, 0).getDate();
+    const handleCheckboxChange = (id: number) => {
+        setSelectedTagIds((prev) =>
+            prev.includes(id) ? prev.filter((t) => t !== id) : [...prev, id]
+        );
     };
 
-    const handlePrevMonth = () => {
-        setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
+    // SaveTag Function with Async Handling and Error Catching
+    const saveTag = async () => {
+        try {
+            if (newTagTitle.trim()) {
+                const newTag: SaveTagRequest = {
+                    title: newTagTitle.trim(),
+                    color: newTagColor,
+                };
+
+                const createdTag: TagResponse = await request_createTag(newTag); // Await async function
+
+                // Properly typed functional update to avoid TS7006 error
+                setUserTags((prevTags: TagResponse[]) => [...prevTags, createdTag]);
+
+                setNewTagTitle(""); // Clear input field
+                setNewTagColor(TagColor.BLUE); // Reset color selection
+            }
+        } catch (error) {
+            console.error(error); // Centralized error handling
+        }
     };
 
-    const handleNextMonth = () => {
-        setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
+    // TODO: implement api request
+    const deleteTag = (id: number) => {
+        const updatedTags = userTags.filter((tag) => tag.id !== id);
+        setUserTags(updatedTags);
+        setSelectedTagIds(selectedTagIds.filter((tagId) => tagId !== id));
     };
 
-    const year = currentDate.getFullYear();
-    const month = currentDate.getMonth();
-    const days = daysInMonth(year, month);
-    const firstDay = new Date(year, month, 1).getDay();
+    const startEditing = (index: number) => {
+        setEditIndex(index);
+        setEditedTagTitle(userTags[index].title);
+    };
 
-    const daysArray = Array.from({ length: days }, (_, index) => index + 1);
-    const emptyDays = Array.from({ length: firstDay }, () => null);
+    // TODO: implement api request
+    const updateTag = (index: number) => {
+        const updatedTags: TagResponse[] = [...userTags];
+        updatedTags[index].title = editedTagTitle.trim();
+        setUserTags(updatedTags);
+        setEditIndex(null);
+    };
 
-    return (
-        <div className="mt-2 p-2 rounded-lg shadow-md">
-            <div className="flex justify-between items-center mb-2">
-                <button onClick={handlePrevMonth} className="btn btn-xs btn-outline">Prev</button>
-                <span className="text-sm font-semibold">{currentDate.toLocaleString('default', { month: 'long' })} {year}</span>
-                <button onClick={handleNextMonth} className="btn btn-xs btn-outline">Next</button>
-            </div>
-            <div className="grid grid-cols-7 gap-1 text-center">
-                {calendarData.daysOfWeek.map((day, index) => (
-                    <div key={day} className={`font-bold text-xs ${index === 0 ? 'text-red-500' : index === 6 ? 'text-blue-500' : 'text-black'}`}>
-                        {day}
-                    </div>
-                ))}
-                {emptyDays.map((_, index) => (
-                    <div key={`empty-${index}`} />
-                ))}
-                {daysArray.map((day, index) => (
-                    <div key={day} className={`p-1 bg-base-100 rounded-lg shadow hover:bg-primary hover:text-white cursor-pointer text-xs ${((index + firstDay) % 7) === 0 ? 'text-red-500' : ((index + firstDay) % 7) === 6 ? 'text-blue-500' : 'text-black'}`}>
-                        <div className="grid">
-                            <div className="font-bold">{day}</div>
-                            {/*<div className="flex justify-end text-xs">2</div>*/}
-                        </div>
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
-};
+    const selectAllTags = () => setSelectedTagIds(userTags.map((tag) => tag.id));
+    const clearAllTags = () => setSelectedTagIds([]);
 
-const RightbarBtn: React.FC<{ onClick: () => void, isOpened: boolean; }> = ({onClick, isOpened}) => {
     return (
         <div
-            onClick={onClick}
-            className="flex items-center p-2 cursor-pointer hover:bg-base-200 border-b w-full justify-end transition-all duration-300 bg-base-100 shadow-md rounded-lg"
+            className={`transition-all duration-200 flex flex-col justify-between items-center bg-base-100 shadow rounded h-full p-2 ${
+                isRightbarOpened ? "w-sidebarOpened" : "w-sidebarClosed"
+            }`}
         >
-            <img
-                className={`mr-2 transition-transform duration-300 ${
-                    isOpened ? "rotate-180" : ""
-                }`}
-                src={"/asset/img/rightbar/open-close-button.svg"}
-                alt={"RightbarBtn"}
-            />
+            <div className="w-full">
+                <RightbarBtn />
+
+                {isRightbarOpened && (
+                    <div className="mt-2">
+                        <div className="flex gap-1 mb-2">
+                            <button
+                                onClick={selectAllTags}
+                                className="btn btn-xs btn-primary"
+                            >
+                                Select All
+                            </button>
+                            <button
+                                onClick={clearAllTags}
+                                className="btn btn-xs btn-secondary"
+                            >
+                                Clear All
+                            </button>
+                        </div>
+
+                        <div className="flex flex-col gap-1 mb-1">
+                            <input
+                                type="text"
+                                value={newTagTitle}
+                                onChange={(e) => setNewTagTitle(e.target.value)}
+                                onKeyDown={(e) => e.key === "Enter" && saveTag()}
+                                placeholder="Add new tag"
+                                className="input input-xs input-bordered w-full"
+                            />
+                            <TagSelectBox list={TagColors} state={newTagColor} setState={setNewTagColor} />
+                            <button onClick={saveTag} className="btn btn-xs btn-accent">Add</button>
+                        </div>
+
+                        <div className="flex flex-col gap-1">
+                            {userTags.map((tag, index) => (
+                                <div
+                                    key={tag.id}
+                                    className={`flex items-center justify-between group hover:bg-gray-100 rounded ${getTagStringColor(tag.color)}`}
+                                >
+                                    <div className="flex items-center gap-2 w-full">
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedTagIds.includes(tag.id)}
+                                            onChange={() => handleCheckboxChange(tag.id)}
+                                            className={`checkbox checkbox-xs`}
+                                        />
+
+                                        {editIndex === index ? (
+                                            <input
+                                                type="text"
+                                                value={editedTagTitle}
+                                                onChange={(e) => setEditedTagTitle(e.target.value)}
+                                                onBlur={() => updateTag(index)}
+                                                onKeyDown={(e) =>
+                                                    e.key === "Enter" && updateTag(index)
+                                                }
+                                                className="input input-xs input-bordered"
+                                                autoFocus
+                                            />
+                                        ) : (
+                                            <span
+                                                onDoubleClick={() => startEditing(index)}
+                                                className="cursor-pointer w-full text-xs"
+                                            >
+                                                {tag.title}
+                                            </span>
+                                        )}
+                                    </div>
+
+                                    <div className="flex gap-1 opacity-0 group-hover:opacity-100">
+                                        <button
+                                            onClick={() => startEditing(index)}
+                                            className="btn btn-xs btn-info"
+                                        >
+                                            edit
+                                        </button>
+                                        <button
+                                            onClick={() => deleteTag(tag.id)}
+                                            className="btn btn-xs btn-error"
+                                        >
+                                            delete
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            {isRightbarOpened && (
+                <div className="w-full mt-auto">
+                    <MiniCalendar />
+                </div>
+            )}
         </div>
-    );}
+    );
+};
+
+

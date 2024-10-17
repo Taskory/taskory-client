@@ -3,7 +3,9 @@ import React, {useEffect, useState} from 'react';
 import {useTaskModal} from "../context/TaskModalContext";
 import {createTask, getTaskById, updateTask} from "../../../api/task/TaskApi";
 import {SaveTaskRequest, TaskResponse, TaskStatus} from "../../../api/task/TaskTypes";
-import {TagSelectBox} from "../../component/TagSelectBox";
+import { TagSelectBox } from '../../../component/TagSelectBox';
+import {useTagContext} from "../../../context/TagContext";
+import {TagResponse} from "../../../api/tag/TagTypes";
 
 interface TaskModalProps {
     loading: boolean;
@@ -15,7 +17,7 @@ interface Task {
     id?: number;
     title: string;
     eventId?: number | undefined;
-    tagId?: number | undefined;
+    tag?: TagResponse | undefined;
     hashtagIds: number[];
     description: string;
     status: TaskStatus;
@@ -23,17 +25,18 @@ interface Task {
 
 export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus }) => {
     const { isModalOpen, selectedTaskId, closeTaskModal } = useTaskModal();
+    const {userTags} = useTagContext();
 
     const [task, setTask] = useState<Task>({
         title: '',
         eventId: undefined,
-        tagId: undefined,
+        tag: undefined,
         hashtagIds: [],
         description: '',
         status: TaskStatus.TO_DO,
     });
 
-    const [hashtagTitle, setHashtagTitle] = useState<string>('');
+    // const [hashtagTitle, setHashtagTitle] = useState<string>('');
 
     useEffect(() => {
         if (isModalOpen) {
@@ -43,12 +46,12 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus })
                 setTask({
                     title: '',
                     eventId: undefined,
-                    tagId: undefined,
+                    tag: undefined,
                     hashtagIds: [],
                     description: '',
                     status: selectedStatus ? selectedStatus : TaskStatus.TO_DO,
                 });
-                setHashtagTitle('');
+                // setHashtagTitle('');
             }
         }
     }, [isModalOpen, selectedStatus, selectedTaskId]);
@@ -56,12 +59,11 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus })
     const fetchTask = async (taskId: number): Promise<void> => {
         try {
             const response: TaskResponse = await getTaskById(taskId);
-            console.log(response);
             setTask({
                 id: response.id,
                 title: response.title,
                 eventId: response.event ? response.event.id : undefined,
-                tagId: response.tag ? response.tag.id : undefined,
+                tag: response.tag ?? undefined,
                 hashtagIds: response.hashtags.map(hashtag => hashtag.id),
                 description: response.description,
                 status: response.status as TaskStatus,
@@ -71,23 +73,23 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus })
         }
     }
 
-    const handleHashtagKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter' && hashtagTitle.trim() !== '') {
-            if (!task.hashtagIds.includes(Date.now())) {
-                setTask({
-                    ...task,
-                    hashtagIds: [...task.hashtagIds, Date.now()]
-                });
-            }
-            setHashtagTitle('');
-        }
-    };
+    // const handleHashtagKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    //     if (e.key === 'Enter' && hashtagTitle.trim() !== '') {
+    //         if (!task.hashtagIds.includes(Date.now())) {
+    //             setTask({
+    //                 ...task,
+    //                 hashtagIds: [...task.hashtagIds, Date.now()]
+    //             });
+    //         }
+    //         setHashtagTitle('');
+    //     }
+    // };
 
     const handleSave = async () => {
         const saveTaskRequest: SaveTaskRequest = {
             title: task.title,
             eventId: task.eventId ?? undefined,
-            tagId: task.tagId ?? undefined,
+            tagId: task.tag?.id ?? undefined,
             hashtagIds: task.hashtagIds,
             description: task.description,
             status: task.status,
@@ -128,22 +130,12 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus })
                                 />
                             </div>
                             <div className="col-span-1 content-center">
-                                {/*<div className="flex items-center">*/}
-                                    {/*<p className={getTagColorClass(tags.find(tag => tag.id === task.tagId)?.color || '')}>●</p>*/}
-                                    {/*<select*/}
-                                    {/*    className="select select-sm w-full ml-1"*/}
-                                    {/*    value={task.tagId ?? ''}*/}
-                                    {/*    onChange={(e) => setTask({...task, tagId: Number(e.target.value) || undefined})}*/}
-                                    {/*>*/}
-                                    {/*    <option value="">none</option>*/}
-                                    {/*    {tags.map(tag => (*/}
-                                    {/*        <option key={tag.id} value={tag.id}>*/}
-                                    {/*            {tag.title} ({tag.color})*/}
-                                    {/*        </option>*/}
-                                    {/*    ))}*/}
-                                    {/*</select>*/}
-                                {/*</div>*/}
-                                <TagSelectBox selectedTagId={task.tagId} onChange={(tagId) => setTask({ ...task, tagId })} />
+                                {/*<TagSelectBox*/}
+                                {/*    list={userTags}*/}
+                                {/*    state={task.tag}*/}
+                                {/*    setState={(value: TagResponse | undefined) => setTask((prevTask) => ({ ...prevTask, tag: value }))}*/}
+                                {/*/>*/}
+
                             </div>
                             <label className="col-span-1 text-sm text-right mr-1">Status</label>
                             <div className="col-span-3">
@@ -204,21 +196,22 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus })
 
                             <label className="col-span-1 text-sm text-right mr-1">Hashtags</label>
                             <div className="col-span-3">
-                                <input
-                                    type="text"
-                                    placeholder="Type hashtag and press Enter"
-                                    className="input input-bordered input-sm w-full"
-                                    value={hashtagTitle}
-                                    onChange={(e) => setHashtagTitle(e.target.value)}
-                                    onKeyDown={handleHashtagKeyPress}
-                                />
-                                <div className="mt-1 flex flex-wrap">
-                                    {task.hashtagIds.map(hashtagId => (
-                                        <span key={hashtagId} className="badge badge-secondary m-1">
-                                            #{hashtagId}
-                                        </span>
-                                    ))}
-                                </div>
+                                {/* TODO: handle hashtags*/}
+                                {/*<input*/}
+                                {/*    type="text"*/}
+                                {/*    placeholder="Type hashtag and press Enter"*/}
+                                {/*    className="input input-bordered input-sm w-full"*/}
+                                {/*    value={hashtagTitle}*/}
+                                {/*    onChange={(e) => setHashtagTitle(e.target.value)}*/}
+                                {/*    onKeyDown={handleHashtagKeyPress}*/}
+                                {/*/>*/}
+                                {/*<div className="mt-1 flex flex-wrap">*/}
+                                {/*    {task.hashtagIds.map(hashtagId => (*/}
+                                {/*        <span key={hashtagId} className="badge badge-secondary m-1">*/}
+                                {/*            #{hashtagId}*/}
+                                {/*        </span>*/}
+                                {/*    ))}*/}
+                                {/*</div>*/}
                             </div>
                             <label className="col-span-1 text-sm text-right mr-1">Description</label>
                             <textarea

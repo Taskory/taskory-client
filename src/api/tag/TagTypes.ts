@@ -1,12 +1,12 @@
 export interface TagResponse {
     id: number;
     title: string;
-    color: string;
+    color: TagColor | null;
 }
 
 export interface SaveTagRequest {
     title: string;
-    color: string;
+    color: string | null;
 }
 
 

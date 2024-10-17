@@ -1,9 +1,20 @@
-import React, {createContext, ReactNode, useContext, useMemo, useState} from 'react';
-import {getAllTags} from "../api/tag/TagApi";
-import {TagResponse} from "../api/tag/TagTypes";
+import React, {
+    createContext,
+    Dispatch,
+    ReactNode,
+    SetStateAction,
+    useContext,
+    useMemo,
+    useState
+} from 'react';
+import {request_getAllTags} from "../api/tag/TagApi";
+import {TagColor, TagResponse} from "../api/tag/TagTypes";
 
 interface TagContextProps {
-    tags: TagResponse[];
+    userTags: TagResponse[];
+    setUserTags: Dispatch<SetStateAction<TagResponse[]>>;
+    selectedTagIds: number[];
+    setSelectedTagIds: React.Dispatch<React.SetStateAction<number[]>>;
     fetchTags: () => Promise<void>;
 }
 
@@ -14,22 +25,29 @@ interface TagContextProviderProps {
 }
 
 export const TagContextProvider: React.FC<TagContextProviderProps> = ({ children }) => {
-    const [tags, setTags] = useState<TagResponse[]>([]);
-
+    const [userTags, setUserTags] = useState<TagResponse[]>([
+        { id: 1, title: "Tag1", color: TagColor.BLACK },
+        { id: 2, title: "Tag2", color: TagColor.RED },
+        { id: 3, title: "Tag3", color: TagColor.BLUE },
+    ]);
+    const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
 
     const fetchTags: () => Promise<void> = async (): Promise<void> => {
         try {
-            const response = await getAllTags();
-            setTags(response.data);
+            const response = await request_getAllTags();
+            setUserTags(response.data);
         } catch (error) {
             console.error('Error fetching tags:', error);
         }
     };
 
     const contextValue: TagContextProps = useMemo(() => ({
-        tags,
+        userTags,
+        setUserTags,
+        selectedTagIds,
+        setSelectedTagIds,
         fetchTags
-    }), [tags]);
+    }), [selectedTagIds, userTags]);
 
     return (
         <TagContext.Provider value={contextValue}>

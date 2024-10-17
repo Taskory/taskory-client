@@ -1,7 +1,7 @@
 import React, {  ReactNode } from 'react';
 import { Header } from './component/Header';
 import { Leftbar } from './component/Leftbar';
-import { Rightbar } from './component/Rightbar';
+import { Rightbar } from './component/Rightbar/Rightbar';
 import {TagContextProvider} from "../context/TagContext";
 
 
