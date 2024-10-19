@@ -2,13 +2,13 @@ import React, {
     createContext,
     Dispatch,
     ReactNode,
-    SetStateAction,
-    useContext,
+    SetStateAction, useCallback,
+    useContext, useEffect,
     useMemo,
     useState
 } from 'react';
 import {request_getAllTags} from "../api/tag/TagApi";
-import {TagColor, TagResponse} from "../api/tag/TagTypes";
+import {TagResponse} from "../api/tag/TagTypes";
 
 interface TagContextProps {
     userTags: TagResponse[];
@@ -25,21 +25,22 @@ interface TagContextProviderProps {
 }
 
 export const TagContextProvider: React.FC<TagContextProviderProps> = ({ children }) => {
-    const [userTags, setUserTags] = useState<TagResponse[]>([
-        { id: 1, title: "Tag1", color: TagColor.BLACK },
-        { id: 2, title: "Tag2", color: TagColor.RED },
-        { id: 3, title: "Tag3", color: TagColor.BLUE },
-    ]);
+    const [userTags, setUserTags] = useState<TagResponse[]>([]);
     const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
 
-    const fetchTags: () => Promise<void> = async (): Promise<void> => {
+    const fetchTags = useCallback(async () => {
         try {
             const response = await request_getAllTags();
+            console.log(response.data)
             setUserTags(response.data);
         } catch (error) {
             console.error('Error fetching tags:', error);
         }
-    };
+    }, []);
+
+    useEffect(() => {
+        fetchTags();
+    }, [fetchTags]);
 
     const contextValue: TagContextProps = useMemo(() => ({
         userTags,
@@ -47,7 +48,7 @@ export const TagContextProvider: React.FC<TagContextProviderProps> = ({ children
         selectedTagIds,
         setSelectedTagIds,
         fetchTags
-    }), [selectedTagIds, userTags]);
+    }), [fetchTags, selectedTagIds, userTags]);
 
     return (
         <TagContext.Provider value={contextValue}>

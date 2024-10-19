@@ -6,7 +6,7 @@ export interface TagResponse {
 
 export interface SaveTagRequest {
     title: string;
-    color: string | null;
+    color: TagColor;
 }
 
 
@@ -21,5 +21,6 @@ export enum TagColor {
     BROWN = "BROWN",
     PINK = "PINK",
     CYAN = "CYAN",
-    LINE = "LINE"
+    LINE = "LINE",
+    NONE = "NONE"
 }

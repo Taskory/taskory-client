@@ -1,19 +1,19 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import { getTagBGColor } from '../util/TagUtil';
-import { TagColor } from '../api/tag/TagTypes';
+import {TagResponse} from '../api/tag/TagTypes';
 
 interface TagSelectBoxProps {
-    list: TagColor[];
-    state: TagColor;
-    setState: Dispatch<SetStateAction<TagColor>>;
+    list: TagResponse[];
+    state: TagResponse | undefined;
+    setState: Dispatch<SetStateAction<TagResponse | undefined>>;
 }
 
 export const TagSelectBox: React.FC<TagSelectBoxProps> = ({list, state, setState}) => {
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-    const handleSelect = (color: TagColor) => {
-        setState(color);
+    const handleSelect = (tag: TagResponse) => {
+        setState(tag);
         setIsDropdownOpen(false);
     };
 
@@ -21,17 +21,28 @@ export const TagSelectBox: React.FC<TagSelectBoxProps> = ({list, state, setState
         setIsDropdownOpen(!isDropdownOpen);
     };
 
+
     return (
         <div className={`dropdown`}>
             <div tabIndex={0} role="button"
                  onClick={toggleDropdown}
-                 className={`badge cursor-pointer ${getTagBGColor(state?.toString() ?? '')}`}/>
+                 className="flex items-center cursor-pointer">
+                <div className={`badge cursor-pointer ${getTagBGColor(state?.toString() ?? '')}`}/>
+                <div className="px-1">{state?.title ?? "none"}</div>
+            </div>
             <ul tabIndex={0}
-                className={`dropdown-content mb-1 rounded-box flex flex-col z-[1] shadow ${isDropdownOpen ? '' : 'hidden'}`}>
+                className={`dropdown-content mb-1 bg-white rounded-b flex flex-col z-[1] ${isDropdownOpen ? '' : 'hidden'}`}>
                 {list.map((option, index) => (
-                    <li key={option ? `TagColor-${option.toString()}-${index.toString()}` : `TagColor-${index.toString()}`}
-                        className={`badge cursor-pointer ${getTagBGColor(option?.toString() ?? '')} text-center`}
-                        onClick={() => handleSelect(option)}/>
+                    (state?.title !== option.title &&
+                        (
+                            <li key={option ? `TagColor-${option.toString()}-${index.toString()}` : `TagColor-${index.toString()}`}
+                                className={`flex items-center gap-y-2 cursor-pointer text-center`}
+                                onClick={() => handleSelect(option)}>
+                                <div className={`badge cursor-pointer ${getTagBGColor(option?.toString() ?? '')}`}/>
+                                <div className="px-1">{option.title}</div>
+                            </li>
+                        ))
+
                 ))}
             </ul>
         </div>

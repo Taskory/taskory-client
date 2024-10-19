@@ -25,7 +25,6 @@ export const TaskModalProvider: React.FC<{ children: ReactNode }> = ({ children 
     }, [refetchTasks]);
 
     const openTaskModal = useCallback((taskIdOrStatus?: number | TaskStatus) => {
-        console.log(taskIdOrStatus);
         if (taskIdOrStatus) {
             if (typeof taskIdOrStatus === "number") {       // if getting task id
                 const taskId = taskIdOrStatus;

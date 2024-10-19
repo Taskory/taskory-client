@@ -130,12 +130,17 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus })
                                 />
                             </div>
                             <div className="col-span-1 content-center">
-                                {/*<TagSelectBox*/}
-                                {/*    list={userTags}*/}
-                                {/*    state={task.tag}*/}
-                                {/*    setState={(value: TagResponse | undefined) => setTask((prevTask) => ({ ...prevTask, tag: value }))}*/}
-                                {/*/>*/}
-
+                                <TagSelectBox
+                                    list={userTags}
+                                    state={task.tag}
+                                    setState={(valueOrUpdater) =>
+                                        setTask((prevTask: Task) =>
+                                            typeof valueOrUpdater === 'function'
+                                                ? { ...prevTask, tag: valueOrUpdater(prevTask.tag) }
+                                                : { ...prevTask, tag: valueOrUpdater }
+                                        )
+                                    }
+                                />
                             </div>
                             <label className="col-span-1 text-sm text-right mr-1">Status</label>
                             <div className="col-span-3">

@@ -7,14 +7,15 @@ import { useTagContext } from "../../../context/TagContext";
 import { SaveTagRequest, TagColor, TagResponse } from "../../../api/tag/TagTypes";
 import { getTagStringColor } from "../../../util/TagUtil";
 import { request_createTag } from "../../../api/tag/TagApi";
-import { TagSelectBox } from "../../../component/TagSelectBox";
+import {ColorSelectBox} from "../../../component/ColorSelectBox";
 
 export const Rightbar: React.FC = () => {
     const { isRightbarOpened } = useSidebarStateContext();
     const { userTags, setUserTags, selectedTagIds, setSelectedTagIds } = useTagContext();
-
-    const [newTagTitle, setNewTagTitle] = useState("");
-    const [newTagColor, setNewTagColor] = useState<TagColor>(TagColor.BLUE);
+    const [newTagInfo, setNewTagInfo] = useState<SaveTagRequest>({
+        title: '',
+        color: TagColor.NONE,
+    });
     const [editIndex, setEditIndex] = useState<number | null>(null);
     const [editedTagTitle, setEditedTagTitle] = useState("");
 
@@ -27,26 +28,27 @@ export const Rightbar: React.FC = () => {
     };
 
     // SaveTag Function with Async Handling and Error Catching
-    const saveTag = async () => {
+    // TODO: implement api request
+    const saveTag = async (newTagInfo: SaveTagRequest) => {
         try {
-            if (newTagTitle.trim()) {
-                const newTag: SaveTagRequest = {
-                    title: newTagTitle.trim(),
-                    color: newTagColor,
-                };
-
-                const createdTag: TagResponse = await request_createTag(newTag); // Await async function
+            if (newTagInfo.title.length > 0) {
+                const createdTag: TagResponse = await request_createTag(newTagInfo); // Await async function
 
                 // Properly typed functional update to avoid TS7006 error
                 setUserTags((prevTags: TagResponse[]) => [...prevTags, createdTag]);
-
-                setNewTagTitle(""); // Clear input field
-                setNewTagColor(TagColor.BLUE); // Reset color selection
             }
         } catch (error) {
             console.error(error); // Centralized error handling
         }
     };
+
+    // after saving a tag
+    const resetNewTagInputBox = () => {
+        setNewTagInfo({
+            'title': '',
+            'color': TagColor.NONE,
+        })
+    }
 
     // TODO: implement api request
     const deleteTag = (id: number) => {
@@ -82,6 +84,7 @@ export const Rightbar: React.FC = () => {
 
                 {isRightbarOpened && (
                     <div className="mt-2">
+                        {/* 1st space */}
                         <div className="flex gap-1 mb-2">
                             <button
                                 onClick={selectAllTags}
@@ -97,19 +100,26 @@ export const Rightbar: React.FC = () => {
                             </button>
                         </div>
 
-                        <div className="flex flex-col gap-1 mb-1">
+                        {/* 2nd space */}
+                        <div className="flex gap-1 mb-1">
                             <input
                                 type="text"
-                                value={newTagTitle}
-                                onChange={(e) => setNewTagTitle(e.target.value)}
-                                onKeyDown={(e) => e.key === "Enter" && saveTag()}
+                                value={newTagInfo.title}
+                                onChange={(e) => setNewTagInfo({ ...newTagInfo, title: e.target.value })}
+                                onKeyDown={(e) => e.key === "Enter" && saveTag(newTagInfo)}
                                 placeholder="Add new tag"
                                 className="input input-xs input-bordered w-full"
                             />
-                            <TagSelectBox list={TagColors} state={newTagColor} setState={setNewTagColor} />
-                            <button onClick={saveTag} className="btn btn-xs btn-accent">Add</button>
+                            <ColorSelectBox
+                                list={TagColors}
+                                state={newTagInfo.color}
+                                setState={(color) => setNewTagInfo({ ...newTagInfo, color })}
+                            />
+
+                            <button onClick={() => saveTag(newTagInfo)} className="btn btn-xs btn-accent">Add</button>
                         </div>
 
+                        {/* 3rd space */}
                         <div className="flex flex-col gap-1">
                             {userTags.map((tag, index) => (
                                 <div

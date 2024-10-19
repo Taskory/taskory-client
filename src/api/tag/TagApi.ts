@@ -12,7 +12,7 @@ export const request_getTagById = async (id: number): Promise<AxiosResponse<TagR
             "Authorization": `Bearer ${authToken}`,
         },
     };
-    return axios.get(`${API_URL}/tags/${id}`, requestOptions);
+    return axios.get(`${API_URL}/tag/${id}`, requestOptions);
 };
 
 export const request_getAllTags = async (): Promise<AxiosResponse<TagResponse[]>> => {
@@ -23,7 +23,7 @@ export const request_getAllTags = async (): Promise<AxiosResponse<TagResponse[]>
             "Authorization": `Bearer ${authToken}`,
         },
     };
-    return axios.get(`${API_URL}/tags`, requestOptions);
+    return axios.get(`${API_URL}/tag`, requestOptions);
 };
 
 // API Request Function with Error Handling
@@ -36,8 +36,10 @@ export const request_createTag = async (tag: SaveTagRequest): Promise<TagRespons
         },
     };
 
+    console.log("tag", tag);
+
     try {
-        const response = await axios.post<TagResponse>(`${API_URL}/tags`, tag, requestOptions);
+        const response = await axios.post<TagResponse>(`${API_URL}/tag`, tag, requestOptions);
         return response.data;
     } catch (error: unknown) {
         if (axios.isAxiosError(error)) {
@@ -59,7 +61,7 @@ export const request_updateTag = async (id: number, tag: SaveTagRequest): Promis
             "Authorization": `Bearer ${authToken}`,
         },
     };
-    return axios.put(`${API_URL}/tags/${id}`, tag, requestOptions);
+    return axios.put(`${API_URL}/tag/${id}`, tag, requestOptions);
 };
 
 export const request_deleteTag = async (id: number): Promise<AxiosResponse<void>> => {
@@ -70,5 +72,5 @@ export const request_deleteTag = async (id: number): Promise<AxiosResponse<void>
             "Authorization": `Bearer ${authToken}`,
         },
     };
-    return axios.delete(`${API_URL}/tags/${id}`, requestOptions);
+    return axios.delete(`${API_URL}/tag/${id}`, requestOptions);
 };
