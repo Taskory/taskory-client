@@ -1,68 +1,65 @@
-import {getAuthCookie} from "../util/CookieUtil";
-import {API_URL} from "../constants";
-import {ProfileUpdateRequestInterface} from "./interface/ProfileUpdateRequestInterface";
+import axios from 'axios';
+import { getAuthCookie } from '../util/CookieUtil';
+import { API_URL } from '../constants';
+import { ProfileUpdateRequestInterface } from './interface/ProfileUpdateRequestInterface';
+import { UserInfoInterface } from './interface/UserInfoInterface'; // Import interface for profile response
 
-export async function requestUsernameCheck(username: string) {
+// Helper function to generate request options with the latest token
+function getRequestOptions(): { headers: { [key: string]: string } } {
+    const authToken = getAuthCookie(); // Fetch the latest cookie value here
+    return {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`,
+        },
+    };
+}
+
+// Username check
+export async function requestUsernameCheck(username: string): Promise<boolean> {
     if (!username) {
-        throw new Error("Username is required.");
+        throw new Error('Username is required.');
     }
 
-    const requestOptions = {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + getAuthCookie(),
-        },
-    };
-
     try {
-        const params = new URLSearchParams({username: username});
-        const response = await fetch(`${API_URL}/user/check-username?${params.toString()}`, requestOptions);
-        if (response.ok) {
-            return await response.json();
-        }
+        const response = await axios.get<boolean>(`${API_URL}/user/check-username`, {
+            ...getRequestOptions(),
+            params: { username },
+        });
+        return response.data;
     } catch (error) {
-        console.error(error);
+        handleAxiosError(error);
     }
 }
 
-export async function requestProfile() {
-    const requestOptions = {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + getAuthCookie(),
-        },
-    };
-
+// Profile request
+export async function requestProfile(): Promise<UserInfoInterface> {
     try {
-        const response = await fetch(API_URL + "/user/profile", requestOptions)
-        if (response.ok) {
-            return await response.json();
-        }
+        const response = await axios.get<UserInfoInterface>(`${API_URL}/user/profile`, getRequestOptions());
+        return response.data;
     } catch (error) {
-        console.error(error);
+        handleAxiosError(error);
     }
 }
 
-export async function requestProfileUpdate(data: ProfileUpdateRequestInterface) {
-    const requestOptions = {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + getAuthCookie(),
-        },
-        body: JSON.stringify(data),
-    };
-
+// Profile update
+export async function requestProfileUpdate(
+    data: ProfileUpdateRequestInterface
+): Promise<UserInfoInterface> {
     try {
-        const response = await fetch(API_URL + "/user/profile", requestOptions);
-        if (response.ok) {
-            return await response.json();
-        } else {
-            console.error(response.json());
-        }
+        const response = await axios.put<UserInfoInterface>(`${API_URL}/user/profile`, data, getRequestOptions());
+        return response.data;
     } catch (error) {
-        console.error(error);
+        handleAxiosError(error);
     }
+}
+
+// Error handling helper function
+function handleAxiosError(error: unknown): never {
+    if (axios.isAxiosError(error)) {
+        console.error('Axios error:', error.response?.data || error.message);
+    } else {
+        console.error('Unexpected error:', error);
+    }
+    throw error;
 }
