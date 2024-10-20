@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { CommonLayout } from "../../layout/CommonLayout";
 import { useNavigate } from "react-router-dom";
 import {requestProfile, requestProfileUpdate, requestUsernameCheck} from "../../api/UserApi";
 import {existAuthCookie} from "../../util/CookieUtil";
 import {UserInfoInterface} from "../../api/interface/UserInfoInterface";
 import {ProfileUpdateRequestInterface} from "../../api/interface/ProfileUpdateRequestInterface";
+import { HomeLayout } from "../../layout/HomeLayout";
 
 export const Register: React.FC = () => {
     const [userInfo, setUserInfo] = useState<UserInfoInterface>({
@@ -70,7 +70,7 @@ export const Register: React.FC = () => {
     };
 
     return (
-        <CommonLayout>
+        <HomeLayout>
             <div className="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8 bg-white shadow-md rounded-lg">
                 <h2 className="text-2xl font-bold mb-6">Update Profile</h2>
                 <form onSubmit={handleSubmit}>
@@ -144,6 +144,6 @@ export const Register: React.FC = () => {
                     </div>
                 </form>
             </div>
-        </CommonLayout>
+        </HomeLayout>
     );
 };

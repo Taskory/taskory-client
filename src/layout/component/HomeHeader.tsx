@@ -1,15 +1,6 @@
-import {Link, useNavigate} from "react-router-dom";
-import {useEffect} from "react";
-import {getAuthCookie} from "../../util/CookieUtil";
+import {Link} from "react-router-dom";
 
 export const HomeHeader = () => {
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        if (getAuthCookie()) {
-            navigate("/dashboard");
-        }
-    }, [navigate]);
     return (
         <header className="bg-white border-b border-gray-200">
             <div className="container mx-auto py-4 flex justify-between items-center">
