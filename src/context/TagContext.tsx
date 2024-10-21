@@ -31,7 +31,6 @@ export const TagContextProvider: React.FC<TagContextProviderProps> = ({ children
     const fetchTags = useCallback(async () => {
         try {
             const response = await request_getAllTags();
-            console.log(response.data)
             setUserTags(response.data);
         } catch (error) {
             console.error('Error fetching tags:', error);

@@ -1,5 +1,4 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
-import { getTagBGColor } from '../util/TagUtil';
 import {TagResponse} from '../api/tag/TagTypes';
 import {ColorBadge} from "./ColorBadge";
 

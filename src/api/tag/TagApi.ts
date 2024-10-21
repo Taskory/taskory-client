@@ -36,8 +36,6 @@ export const request_createTag = async (tag: SaveTagRequest): Promise<TagRespons
         },
     };
 
-    console.log("tag", tag);
-
     try {
         const response = await axios.post<TagResponse>(`${API_URL}/tag`, tag, requestOptions);
         return response.data;

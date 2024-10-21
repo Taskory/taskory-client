@@ -1,10 +1,9 @@
 import {ColorSelectBox} from "../../../component/ColorSelectBox";
-import {getTagBGColor, getTagStringColor} from "../../../util/TagUtil";
+import {getTagBGColor} from "../../../util/TagUtil";
 import React, {useState} from "react";
 import {useTagContext} from "../../../context/TagContext";
 import {SaveTagRequest, TagColor, TagResponse} from "../../../api/tag/TagTypes";
 import {request_createTag} from "../../../api/tag/TagApi";
-import {ColorBadge} from "../../../component/ColorBadge";
 
 export const RightbarContents = () => {
     const { userTags, setUserTags, selectedTagIds, setSelectedTagIds } = useTagContext();

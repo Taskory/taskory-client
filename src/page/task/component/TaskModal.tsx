@@ -96,13 +96,10 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus })
         };
 
         try {
-            let response: TaskResponse;
             if (selectedTaskId) {
-                response = await updateTask(selectedTaskId, saveTaskRequest);
-                console.log('Task updated:', response);
+                await updateTask(selectedTaskId, saveTaskRequest);
             } else {
-                response = await createTask(saveTaskRequest);
-                console.log('Task created:', response);
+                 await createTask(saveTaskRequest);
             }
             closeTaskModal();
         } catch (error) {
