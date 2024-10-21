@@ -23,8 +23,8 @@ export const getTagStringColor = (color: string | TagColor | null) => {
                 return 'text-cyan-600';
             case TagColor.BLACK:
                 return 'text-black';
-            default:
-                return 'text-gray-600';
+            case TagColor.NONE:
+                return 'text-white';
         }
     }
 };
@@ -52,8 +52,37 @@ export const getTagBGColor = (color: string | TagColor | null) => {
                 return 'bg-cyan-600';
             case TagColor.BLACK:
                 return 'bg-black';
-            default:
-                return 'bg-gray-600';
+            case TagColor.NONE:
+                return 'bg-white';
         }
+    }
+};
+
+export const getTagColorStyle = (tagColor: string) => {
+    switch (tagColor) {
+        case TagColor.BLACK:
+            return 'bg-black text-white';
+        case TagColor.RED:
+            return 'bg-red-100 text-red-800';
+        case TagColor.GREEN:
+            return 'bg-green-100 text-green-800';
+        case TagColor.BLUE:
+            return 'bg-blue-100 text-blue-800';
+        case TagColor.YELLOW:
+            return 'bg-yellow-100 text-yellow-800';
+        case TagColor.ORANGE:
+            return 'bg-orange-100 text-orange-800';
+        case TagColor.PURPLE:
+            return 'bg-purple-100 text-purple-800';
+        case TagColor.BROWN:
+            return 'bg-yellow-900 text-yellow-100';
+        case TagColor.PINK:
+            return 'bg-pink-100 text-pink-800';
+        case TagColor.CYAN:
+            return 'bg-cyan-100 text-cyan-800';
+        case TagColor.NONE:
+            return 'bg-white text-black';
+        default:
+            return 'bg-gray-100 text-gray-800';
     }
 };

@@ -21,6 +21,5 @@ export enum TagColor {
     BROWN = "BROWN",
     PINK = "PINK",
     CYAN = "CYAN",
-    LINE = "LINE",
     NONE = "NONE"
 }

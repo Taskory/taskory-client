@@ -1,9 +1,10 @@
 import React from "react";
-import {TaskStatus, TaskSummary} from "../../../api/task/TaskTypes";
+import {TaskSummary} from "../../../api/task/TaskTypes";
 import { useTaskModal } from "../context/TaskModalContext";
 import { useDrag } from "react-dnd";
 import { ItemType } from "../../../api/task/TaskApi";
-import {TagColor} from "../../../api/tag/TagTypes";
+import {getTagColorStyle} from "../../../util/TagUtil";
+import {getStatusStyle} from "../../../util/StatusUtil";
 
 interface TaskItemProps {
     task: TaskSummary;
@@ -54,44 +55,4 @@ export const TaskCard: React.FC<TaskItemProps> = ({ task }) => {
     );
 };
 
-const getStatusStyle = (status: string) => {
-    switch (status) {
-        case TaskStatus.DONE:
-            return 'bg-green-100 text-green-800';
-        case TaskStatus.IN_PROGRESS:
-            return 'bg-yellow-100 text-yellow-800';
-        case TaskStatus.TO_DO:
-            return 'bg-red-100 text-red-800';
-        default:
-            return 'bg-gray-100 text-gray-800';
-    }
-};
 
-const getTagColorStyle = (tagColor: string) => {
-    switch (tagColor) {
-        case TagColor.BLACK:
-            return 'bg-black text-white';
-        case TagColor.RED:
-            return 'bg-red-100 text-red-800';
-        case TagColor.GREEN:
-            return 'bg-green-100 text-green-800';
-        case TagColor.BLUE:
-            return 'bg-blue-100 text-blue-800';
-        case TagColor.YELLOW:
-            return 'bg-yellow-100 text-yellow-800';
-        case TagColor.ORANGE:
-            return 'bg-orange-100 text-orange-800';
-        case TagColor.PURPLE:
-            return 'bg-purple-100 text-purple-800';
-        case TagColor.BROWN:
-            return 'bg-yellow-900 text-yellow-100';
-        case TagColor.PINK:
-            return 'bg-pink-100 text-pink-800';
-        case TagColor.CYAN:
-            return 'bg-cyan-100 text-cyan-800';
-        case TagColor.LINE:
-            return 'bg-gray-100 text-gray-800';
-        default:
-            return 'bg-gray-100 text-gray-800';
-    }
-};
