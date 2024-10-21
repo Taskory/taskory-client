@@ -1,5 +1,5 @@
 import {getTagBGColor} from "../util/TagUtil";
-import {useState} from "react";
+import React, {useState} from "react";
 import {TagColor} from "../api/tag/TagTypes";
 
 interface ColorSelectBoxProps {
