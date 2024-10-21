@@ -1,6 +1,7 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import { getTagBGColor } from '../util/TagUtil';
 import {TagResponse} from '../api/tag/TagTypes';
+import {ColorBadge} from "./ColorBadge";
 
 interface TagSelectBoxProps {
     list: TagResponse[];
@@ -27,7 +28,7 @@ export const TagSelectBox: React.FC<TagSelectBoxProps> = ({list, state, setState
             <div tabIndex={0} role="button"
                  onClick={toggleDropdown}
                  className="flex items-center cursor-pointer">
-                <div className={`badge cursor-pointer ${getTagBGColor(state?.toString() ?? '')}`}/>
+                <ColorBadge color={state?.color ?? ''} />
                 <div className="px-1">{state?.title ?? "none"}</div>
             </div>
             <ul tabIndex={0}
@@ -38,7 +39,7 @@ export const TagSelectBox: React.FC<TagSelectBoxProps> = ({list, state, setState
                             <li key={option ? `TagColor-${option.toString()}-${index.toString()}` : `TagColor-${index.toString()}`}
                                 className={`flex items-center gap-y-2 cursor-pointer text-center`}
                                 onClick={() => handleSelect(option)}>
-                                <div className={`badge cursor-pointer ${getTagBGColor(option?.toString() ?? '')}`}/>
+                                <ColorBadge color={option?.color} />
                                 <div className="px-1">{option.title}</div>
                             </li>
                         ))

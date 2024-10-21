@@ -7,11 +7,14 @@ import { TimeUtil } from "../../../util/TimeUtil";
 import { HashtagResponse } from "../../../api/hashtag/HashtagTypes";
 import {useCalendar} from "../context/CalendarContext";
 import {useEventModal} from "../context/EventModalContext";
+import { TagSelectBox } from '../../../component/TagSelectBox';
+import {useTagContext} from "../../../context/TagContext";
+import {TagResponse} from "../../../api/tag/TagTypes";
 
 const EventModal: React.FC = () => {
     const {isModalOpen, closeEventModal, selectedEventId} = useEventModal();
     const [title, setTitle] = useState('');
-    const [tagId, setTagId] = useState<number | undefined>(undefined);
+    const [tag, setTag] = useState<TagResponse | undefined>(undefined);
     const [hashtagTitle, setHashtagTitle] = useState('');
     const [hashtagIds, setHashtagIds] = useState<number[]>([]);
     const [hashtags, setHashtags] = useState<HashtagResponse[]>([]);
@@ -22,6 +25,7 @@ const EventModal: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [dateError, setDateError] = useState('');
     const {refetchEvents} = useCalendar();
+    const {userTags} = useTagContext();
 
     useEffect(() => {
         if (isModalOpen) {
@@ -47,7 +51,7 @@ const EventModal: React.FC = () => {
             if (response.status === 200) {
                 const data: EventResponse = response.data;
                 setTitle(data.title ?? "");
-                setTagId(data.tag?.id ?? undefined);
+                setTag(data.tag ?? undefined)
                 setHashtags(data.hashtags ?? []);
                 setHashtagIds(data.hashtags ? data.hashtags.map((hashtag) => hashtag.id) : []);
                 setDescription(data.description ?? "");
@@ -125,7 +129,7 @@ const EventModal: React.FC = () => {
 
             const eventPayload: SaveEventRequest = {
                 title,
-                tagId,
+                tagId: tag?.id,
                 hashtagIds,
                 description,
                 startDateTime: formattedStartDateTime,
@@ -205,24 +209,8 @@ const EventModal: React.FC = () => {
                                 />
                             </div>
                             <div className="col-span-1 content-center">
-                                {/*<div className={"flex items-center"}>*/}
-                                {/*    /!* apply color*!/*/}
-                                {/*    <p className={getTagColorClass(tags.find(tag => tag.id === tagId)?.color || '')}>●</p>*/}
-                                {/*    <select*/}
-                                {/*        className="select select-sm w-full ml-1"*/}
-                                {/*        value={tagId ?? ''}*/}
-                                {/*        onChange={(e) => setTagId(Number(e.target.value))}*/}
-                                {/*    >*/}
-                                {/*        <option value="">none</option>*/}
-                                {/*        {tags.map(tag => (*/}
-                                {/*            <option key={tag.id} value={tag.id}>*/}
-                                {/*                {tag.title} ({tag.color})*/}
-                                {/*            </option>*/}
-                                {/*        ))}*/}
-                                {/*    </select>*/}
-                                {/*</div>*/}
                                 {/* TODO: set new TagSelectBox */}
-                                {/*<TagSelectBox selectedTagId={tagId} onChange={(tagId) => setTagId(tagId)} />*/}
+                                <TagSelectBox list={userTags} state={tag} setState={setTag} />
                             </div>
                             <div className="col-span-1">
                                 <label className="label text-sm justify-end mr-1">Date & Time</label>

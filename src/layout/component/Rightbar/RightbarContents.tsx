@@ -1,9 +1,10 @@
 import {ColorSelectBox} from "../../../component/ColorSelectBox";
-import {getTagStringColor} from "../../../util/TagUtil";
+import {getTagBGColor, getTagStringColor} from "../../../util/TagUtil";
 import React, {useState} from "react";
 import {useTagContext} from "../../../context/TagContext";
 import {SaveTagRequest, TagColor, TagResponse} from "../../../api/tag/TagTypes";
 import {request_createTag} from "../../../api/tag/TagApi";
+import {ColorBadge} from "../../../component/ColorBadge";
 
 export const RightbarContents = () => {
     const { userTags, setUserTags, selectedTagIds, setSelectedTagIds } = useTagContext();
@@ -112,14 +113,14 @@ export const RightbarContents = () => {
                     {userTags.map((tag, index) => (
                         <div
                             key={tag.id}
-                            className={`flex items-center justify-between group hover:bg-gray-100 rounded ${getTagStringColor(tag.color)}`}
+                            className={`flex items-center justify-between group hover:bg-gray-100 rounded`}
                         >
                             <div className="flex items-center gap-2 w-full">
                                 <input
                                     type="checkbox"
                                     checked={selectedTagIds.includes(tag.id)}
                                     onChange={() => handleCheckboxChange(tag.id)}
-                                    className={`checkbox checkbox-xs`}
+                                    className={`checkbox checkbox-xs ${getTagBGColor(tag.color)}`}
                                 />
 
                                 {editIndex === index ? (
@@ -135,11 +136,9 @@ export const RightbarContents = () => {
                                         autoFocus
                                     />
                                 ) : (
-                                    <span
-                                        onDoubleClick={() => startEditing(index)}
-                                        className="cursor-pointer w-full text-xs"
-                                    >
-                                                {tag.title}
+                                    <span onDoubleClick={() => startEditing(index)}
+                                          className="cursor-pointer w-full text-xs">
+                                        {tag.title}
                                             </span>
                                 )}
                             </div>

@@ -1,9 +1,10 @@
 import {HashtagResponse} from "../hashtag/HashtagTypes";
+import {TagResponse} from "../tag/TagTypes";
 
 export interface EventResponse {
     id: number;
     title: string;
-    tag: { id: number; title: string; color: string };
+    tag: TagResponse | undefined;
     hashtags: HashtagResponse[];
     description: string;
     startDateTime: string;

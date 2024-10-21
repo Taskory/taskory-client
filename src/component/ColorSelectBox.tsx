@@ -1,6 +1,6 @@
-import {getTagBGColor} from "../util/TagUtil";
 import React, {useState} from "react";
 import {TagColor} from "../api/tag/TagTypes";
+import {ColorBadge} from "./ColorBadge";
 
 interface ColorSelectBoxProps {
     list: TagColor[];
@@ -22,17 +22,15 @@ export const ColorSelectBox: React.FC<ColorSelectBoxProps> = ({ list, state, set
 
     return (
         <div className="relative">
-            <button
-                type="button"
-                onClick={toggleDropdown}
-                className={`badge cursor-pointer ${getTagBGColor(state ? state.toString() : '')}`} />
+            <div onClick={toggleDropdown}>
+                <ColorBadge color={state} />
+            </div>
             {isDropdownOpen && (
                 <ul className="mb-1 rounded-box flex flex-col z-[1] shadow absolute bg-white">
                     {list.map((option, index) => (
-                        <li
-                            key={`TagColor-${option}-${index}`}
-                            className={`badge cursor-pointer ${getTagBGColor(option.toString())} text-center`}
-                            onClick={() => handleSelect(option)}/>
+                        <li key={`TagColor-${option}-${index}`} onClick={() => handleSelect(option)}>
+                            <ColorBadge color={option} />
+                        </li>
                     ))}
                 </ul>
             )}
