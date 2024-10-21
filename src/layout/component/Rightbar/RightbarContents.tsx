@@ -1,5 +1,5 @@
 import {ColorSelectBox} from "../../../component/ColorSelectBox";
-import {getTagBGColor} from "../../../util/TagUtil";
+import {getTagCheckBoxColor} from "../../../util/TagUtil";
 import React, {useState} from "react";
 import {useTagContext} from "../../../context/TagContext";
 import {SaveTagRequest, TagColor, TagResponse} from "../../../api/tag/TagTypes";
@@ -119,7 +119,7 @@ export const RightbarContents = () => {
                                     type="checkbox"
                                     checked={selectedTagIds.includes(tag.id)}
                                     onChange={() => handleCheckboxChange(tag.id)}
-                                    className={`checkbox checkbox-xs ${getTagBGColor(tag.color)}`}
+                                    className={`checkbox checkbox-xs ${getTagCheckBoxColor(tag.color)}`}
                                 />
 
                                 {editIndex === index ? (

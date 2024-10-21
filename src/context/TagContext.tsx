@@ -32,6 +32,8 @@ export const TagContextProvider: React.FC<TagContextProviderProps> = ({ children
         try {
             const response = await request_getAllTags();
             setUserTags(response.data);
+            const ids = response.data.map((tag: TagResponse) => tag.id); // Extract all tag IDs
+            setSelectedTagIds(ids); // Set the IDs in selectedTagIds
         } catch (error) {
             console.error('Error fetching tags:', error);
         }
@@ -55,7 +57,6 @@ export const TagContextProvider: React.FC<TagContextProviderProps> = ({ children
         </TagContext.Provider>
     );
 };
-
 export const useTagContext = (): TagContextProps => {
     const context = useContext(TagContext);
     if (!context) {

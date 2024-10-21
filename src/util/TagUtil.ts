@@ -86,3 +86,33 @@ export const getTagColorStyle = (tagColor: string) => {
             return 'bg-gray-100 text-gray-800';
     }
 };
+
+export const getTagCheckBoxColor = (color: string | TagColor | null) => {
+    // [--chkbg:theme(colors.indigo.600)] [--chkfg:orange]
+    if (color) {
+        switch (color) {
+            case TagColor.RED:
+                return 'bg-red-600 [--chkbg:theme(colors.red.600)] [--chkfg:white]';
+            case TagColor.GREEN:
+                return 'bg-green-600 [--chkbg:theme(colors.green.600)] [--chkfg:white]';
+            case TagColor.BLUE:
+                return 'bg-blue-600 [--chkbg:theme(colors.red.600)] [--chkfg:white]';
+            case TagColor.YELLOW:
+                return 'bg-yellow-600 [--chkbg:theme(colors.yellow.600)] [--chkfg:white]';
+            case TagColor.ORANGE:
+                return 'bg-orange-600 [--chkbg:theme(colors.orange.600)] [--chkfg:white]';
+            case TagColor.PURPLE:
+                return 'bg-purple-600 [--chkbg:theme(colors.purple.600)] [--chkfg:white]';
+            case TagColor.BROWN:
+                return 'bg-yellow-900 [--chkbg:theme(colors.yellow.900)] [--chkfg:white]';
+            case TagColor.PINK:
+                return 'bg-pink-600 [--chkbg:theme(colors.pink.600)] [--chkfg:white]';
+            case TagColor.CYAN:
+                return 'bg-cyan-600 [--chkbg:theme(colors.cyan.600)] [--chkfg:white]';
+            case TagColor.BLACK:
+                return 'bg-black [--chkbg:theme(colors.black)] [--chkfg:white]';
+            case TagColor.NONE:
+                return 'bg-white [--chkbg:theme(colors.white)] [--chkfg:black]';
+        }
+    }
+};
