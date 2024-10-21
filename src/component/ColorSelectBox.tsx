@@ -21,21 +21,18 @@ export const ColorSelectBox: React.FC<ColorSelectBoxProps> = ({ list, state, set
     };
 
     return (
-        <div className="dropdown relative">
+        <div className="relative">
             <button
                 type="button"
                 onClick={toggleDropdown}
                 className={`badge cursor-pointer ${getTagBGColor(state ? state.toString() : '')}`} />
             {isDropdownOpen && (
-                <ul className="dropdown-content mb-1 rounded-box flex flex-col z-[1] shadow absolute bg-white">
+                <ul className="mb-1 rounded-box flex flex-col z-[1] shadow absolute bg-white">
                     {list.map((option, index) => (
                         <li
                             key={`TagColor-${option}-${index}`}
                             className={`badge cursor-pointer ${getTagBGColor(option.toString())} text-center`}
-                            onClick={() => handleSelect(option)}
-                        >
-                            {option}
-                        </li>
+                            onClick={() => handleSelect(option)}/>
                     ))}
                 </ul>
             )}
