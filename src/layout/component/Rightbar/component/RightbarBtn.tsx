@@ -1,5 +1,5 @@
 import React from "react";
-import {useSidebarStateContext} from "../../../context/SidebarStateContext";
+import {useSidebarStateContext} from "../../../../context/SidebarStateContext";
 
 export const RightbarBtn: React.FC = () => {
     const { isRightbarOpened, toggleRightbar } = useSidebarStateContext();

@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import calendarData from "../../../constants/calendar.json";
+import calendarData from "../../../../constants/calendar.json";
 
 export const MiniCalendar = () => {
     const [currentDate, setCurrentDate] = useState(new Date());
