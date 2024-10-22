@@ -6,11 +6,6 @@ import {TagItem} from "./TagItem";
 export const RightbarContents = () => {
     const { userTags, setSelectedTagIds } = useTagContext();
 
-
-
-
-
-
     const selectAllTags = () => setSelectedTagIds(userTags.map((tag) => tag.id));
     const clearAllTags = () => setSelectedTagIds([]);
 

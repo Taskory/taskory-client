@@ -30,6 +30,7 @@ export const TagInputSection: React.FC = () => {
             'color': TagColor.NONE,
         })
     }
+
     const TagColors = Object.values(TagColor) as TagColor[];
 
     return (
