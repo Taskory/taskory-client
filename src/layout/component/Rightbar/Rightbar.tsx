@@ -3,7 +3,7 @@ import React from "react";
 import { useSidebarStateContext } from "../../../context/SidebarStateContext";
 import { MiniCalendar } from "./component/MiniCalendar";
 import { RightbarBtn } from "./component/RightbarBtn";
-import {RightbarContents} from "./component/RightbarContents";
+import { RightbarContents } from "./component/RightbarContents";
 
 export const Rightbar: React.FC = () => {
     const { isRightbarOpened } = useSidebarStateContext();
