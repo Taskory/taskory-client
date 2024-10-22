@@ -1,7 +1,6 @@
 import React, {createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState} from 'react';
 import {TaskStatus, TaskSummary} from "../api/task/TaskTypes";
 import {getAllTasks, updateTaskStatus} from "../api/task/TaskApi";
-import {filter} from "lodash";
 
 interface TaskContextProps {
     TO_DO: TaskSummary[],
