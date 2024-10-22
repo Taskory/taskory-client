@@ -1,6 +1,5 @@
 import React from 'react';
 import { TaskContextProvider } from '../../context/TaskContext';
-import { CommonLayout } from '../../layout/CommonLayout';
 import {TaskModalProvider} from "./context/TaskModalContext";
 
 interface TaskLayoutProps {
@@ -9,12 +8,10 @@ interface TaskLayoutProps {
 
 export const TaskWrapper: React.FC<TaskLayoutProps> = ({children}) => {
     return (
-        <CommonLayout>
-            <TaskContextProvider>
-                <TaskModalProvider>
-                    {children}
-                </TaskModalProvider>
-            </TaskContextProvider>
-        </CommonLayout>
+        <TaskContextProvider>
+            <TaskModalProvider>
+                {children}
+            </TaskModalProvider>
+        </TaskContextProvider>
     );
 };

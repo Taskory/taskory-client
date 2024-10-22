@@ -1,20 +1,17 @@
-import React, {  ReactNode } from 'react';
-import { Header } from './component/Header';
+import React from 'react';
+import { CommonHeader } from './component/Header/CommonHeader';
 import { Leftbar } from './component/Leftbar';
 import { Rightbar } from './component/Rightbar/Rightbar';
 import {TagContextProvider} from "../context/TagContext";
+import { Outlet } from 'react-router-dom';
 
 
-interface CommonLayoutProps {
-    children: ReactNode;
-}
-
-export const CommonLayout: React.FC<CommonLayoutProps> = ({children}) => {
+export const CommonLayout: React.FC = () => {
     return (
         <TagContextProvider>
             <div className="h-screen w-screen flex flex-col overflow-hidden">
                 {/* Header */}
-                <Header/>
+                <CommonHeader/>
                 {/* Main Content with Leftbar and Rightbar */}
                 <div className="flex flex-1 overflow-hidden">
                     {/* Leftbar */}
@@ -22,7 +19,7 @@ export const CommonLayout: React.FC<CommonLayoutProps> = ({children}) => {
 
                     {/* Main Content */}
                     <div className="flex-1 flex flex-col overflow-auto ">
-                        {children}
+                        <Outlet />
                     </div>
 
                     {/* Rightbar */}

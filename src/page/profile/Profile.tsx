@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import {CommonLayout} from "../../layout/CommonLayout";
 import {existAuthCookie} from "../../util/CookieUtil";
 import {useNavigate} from "react-router-dom";
 import {UserInfoInterface} from "../../api/interface/UserInfoInterface";
@@ -28,7 +27,7 @@ export const Profile: React.FC = () => {
     };
 
     return (
-        <CommonLayout>
+        <>
             <div className="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8 bg-white shadow-md rounded-lg">
                 <div className="px-4 py-2 flex justify-between items-center">
                     <h2 className="text-2xl font-bold mb-6">Profile</h2>
@@ -68,6 +67,6 @@ export const Profile: React.FC = () => {
                     </div>
                 </div>
             </div>
-        </CommonLayout>
+        </>
     );
 }

@@ -1,12 +1,10 @@
-import React, { ReactNode } from 'react';
-import {HomeHeader} from "./component/HomeHeader";
+import React from 'react';
+import {HomeHeader} from "./component/Header/HomeHeader";
 import {Footer} from "./component/Footer";
+import {Outlet} from "react-router-dom";
 
-interface HomeLayoutProps {
-    children: ReactNode;
-}
 
-export const HomeLayout: React.FC<HomeLayoutProps> = ({ children }) => {
+export const HomeLayout: React.FC = () => {
     return (
         <>
             <div className="flex flex-col min-h-screen">
@@ -14,7 +12,7 @@ export const HomeLayout: React.FC<HomeLayoutProps> = ({ children }) => {
                     <HomeHeader/>
                 </header>
                 <main className="flex-grow">
-                    {children}
+                    <Outlet />
                 </main>
             </div>
             <footer>

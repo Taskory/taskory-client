@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { CommonLayout } from "../../layout/CommonLayout";
 import { TaskStatus, TaskSummary } from "../../api/task/TaskTypes";
 import {ItemType} from "../../api/task/TaskApi";
 
@@ -126,13 +125,11 @@ export const Temp = () => {
     };
 
     return (
-        <CommonLayout>
-            <DndProvider backend={HTML5Backend}>
-                <div className="grid grid-cols-2 gap-2">
-                    <TaskBoard items={TO_DO} status={TaskStatus.TO_DO} moveItem={moveItem} />
-                    <TaskBoard items={IN_PROGRESS} status={TaskStatus.IN_PROGRESS} moveItem={moveItem} />
-                </div>
-            </DndProvider>
-        </CommonLayout>
+        <DndProvider backend={HTML5Backend}>
+            <div className="grid grid-cols-2 gap-2">
+                <TaskBoard items={TO_DO} status={TaskStatus.TO_DO} moveItem={moveItem}/>
+                <TaskBoard items={IN_PROGRESS} status={TaskStatus.IN_PROGRESS} moveItem={moveItem}/>
+            </div>
+        </DndProvider>
     );
 };
