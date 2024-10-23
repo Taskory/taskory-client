@@ -9,7 +9,7 @@ export const CommonHeader: React.FC = () => {
 
     return (
         <>
-            <div className="flex justify-between items-center border-b">
+            <div className="flex justify-between items-center border-b h-12">
                 {/* 1st space*/}
                 <div className="flex w-20">
                     {/* Leftbar toggle button */}

@@ -5,7 +5,7 @@ import {LogoBtn} from "../common/LogoBtn";
 
 export const HomeHeader = () => {
     return (
-        <div className="flex justify-between items-center border-b">
+        <div className="flex justify-between items-center border-b h-12">
             {/* 1st space*/}
             <div className="w-20"/>
 
