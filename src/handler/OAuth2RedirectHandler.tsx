@@ -1,8 +1,10 @@
 import React, {useEffect} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import {setAuthCookie} from "../util/CookieUtil";
+import {useAuthContext} from "../context/AuthContext";
 
 export const OAuth2RedirectHandler: React.FC = () => {
+  const {setAuthToken} = useAuthContext();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -19,6 +21,7 @@ export const OAuth2RedirectHandler: React.FC = () => {
 
     if (token) {
       setAuthCookie(token);
+      setAuthToken(token);
       if (forbidden) {
         navigate("/register", {state: {data: forbidden}});
       } else {
