@@ -15,10 +15,11 @@ export const TaskCard: React.FC<TaskItemProps> = ({ task }) => {
 
     const [, drag] = useDrag(() => ({
         type: ItemType,
-        item: () => {
-            return task;
-        }
-    }));
+        item: () => ({
+            ...task,
+        }),
+    }), [task]);
+
 
     return (
         <div className="bg-white p-4 rounded-lg shadow-md border border-gray-300 hover:shadow-lg transition-all duration-300 cursor-pointer"
