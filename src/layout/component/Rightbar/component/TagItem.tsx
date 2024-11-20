@@ -2,6 +2,7 @@ import {TagResponse} from "../../../../api/tag/TagTypes";
 import React, {useState} from "react";
 import {getTagCheckBoxColor} from "../../../../util/TagUtil";
 import {useTagContext} from "../../../../context/TagContext";
+import {request_deleteTag} from "../../../../api/tag/TagApi";
 
 type TagItemProps = {
     tag: TagResponse;
@@ -21,9 +22,13 @@ export const TagItem: React.FC<TagItemProps> = ({ tag, index }) => {
 
     // TODO: implement api request
     const deleteTag = (id: number) => {
-        const updatedTags = userTags.filter((tag) => tag.id !== id);
-        setUserTags(updatedTags);
-        setSelectedTagIds(selectedTagIds.filter((tagId) => tagId !== id));
+        request_deleteTag(id).then((res) => {
+            if (res) {
+                const updatedTags = userTags.filter((tag) => tag.id !== id);
+                setUserTags(updatedTags);
+                setSelectedTagIds(selectedTagIds.filter((tagId) => tagId !== id));
+            }
+        });
     };
 
     const startEditing = (index: number) => {
