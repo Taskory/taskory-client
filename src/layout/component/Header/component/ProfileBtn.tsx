@@ -1,11 +1,12 @@
 import {existAuthCookie} from "../../../../util/CookieUtil";
-import React from "react";
+import React, {useRef} from "react";
 import {useNavigate} from "react-router-dom";
 
 export const ProfileBtn = () => {
     const navigate = useNavigate();
+    const navigateRef = useRef(navigate);
     const navigateToProfile = () => {
-        navigate("/profile");
+        navigateRef.current("/profile");
     };
     return (
         <>

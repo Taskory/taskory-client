@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useRef} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import {setAuthCookie} from "../util/CookieUtil";
 import {useAuthContext} from "../context/AuthContext";
@@ -7,6 +7,7 @@ export const OAuth2RedirectHandler: React.FC = () => {
   const {setAuthToken} = useAuthContext();
   const location = useLocation();
   const navigate = useNavigate();
+  const navigateRef = useRef(navigate);
 
   const getUrlParameter = (name: string): string | undefined => {
     const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
@@ -23,12 +24,12 @@ export const OAuth2RedirectHandler: React.FC = () => {
       setAuthCookie(token);
       setAuthToken(token);
       if (forbidden) {
-        navigate("/register", {state: {data: forbidden}});
+        navigateRef.current("/register", {state: {data: forbidden}});
       } else {
-        navigate("/");
+        navigateRef.current("/");
       }
     } else if (error) {
-      navigate("/");
+      navigateRef.current("/");
       console.log(error);
     } else {
       throw new Error("OAuth error")

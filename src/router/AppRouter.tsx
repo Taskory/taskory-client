@@ -1,7 +1,6 @@
 import {Route, Routes} from "react-router-dom";
 import {Home} from "../page/home/Home";
 import {Login} from "../page/auth/Login";
-import { Signup } from "../page/auth/Signup";
 import {Dashboard} from "../page/dashboard/Dashboard";
 import {CalendarPage} from "../page/calendar/CalendarPage";
 import {Routine} from "../page/routine/Routine";
@@ -24,7 +23,6 @@ export const AppRouter = (): React.JSX.Element => {
             <Route element={<HomeLayout/>}>
                 <Route path="/" element={<Home/>}/>
                 <Route path="/login" element={<Login/>}/>
-                <Route path="/signup" element={<Signup/>}/>
                 <Route path="/register" element={<Register/>}/>
                 <Route path="/profile" element={<Profile/>}/>
                 <Route path="/profile/update" element={<ProfileUpdate/>}/>

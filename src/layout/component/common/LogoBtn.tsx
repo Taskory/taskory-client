@@ -1,11 +1,11 @@
-import React from "react";
+import React, {useRef} from "react";
 import {useNavigate} from "react-router-dom";
 
 export const LogoBtn = () => {
     const navigate = useNavigate();
-
+    const navigateRef = useRef(navigate);
     const navigateToHome = () => {
-        navigate("/");
+        navigateRef.current("/");
     };
 
     return (

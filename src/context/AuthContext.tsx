@@ -1,5 +1,5 @@
 // src/context/AuthContext.tsx
-import React, {createContext, useContext, ReactNode, useMemo, useCallback, useState, useEffect} from 'react';
+import React, {createContext, useContext, ReactNode, useMemo, useCallback, useState, useEffect, useRef} from 'react';
 import {existAuthCookie, getAuthCookie, removeAuthCookie} from "../util/CookieUtil";
 import { useNavigate } from "react-router-dom";
 
@@ -18,25 +18,26 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const navigate = useNavigate();
+    const navigateRef = useRef(navigate);
     const [authToken, setAuthToken] = useState<string | undefined>(getAuthCookie());
 
     useEffect(() => {
         if (authToken) {
-            navigate("/dashboard");
+            navigateRef.current("/dashboard");
         }
-    }, [authToken, navigate])
+    }, [authToken])
 
     const handleLogout = useCallback(() => {
         if (existAuthCookie()) {
             removeAuthCookie();
             setAuthToken(undefined);
-            navigate("/");
+            navigateRef.current("/");
         }
-    }, [navigate]);
+    }, []);
 
     const handleLogin = useCallback(() => {
-        navigate("/login");
-    }, [navigate]);
+        navigateRef.current("/login");
+    }, []);
 
     const contextValue: AuthContextProps = useMemo(() => ({
         handleLogin,
