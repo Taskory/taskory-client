@@ -6,8 +6,7 @@ import {useAuthContext} from "../context/AuthContext";
 export const OAuth2RedirectHandler: React.FC = () => {
   const {setAuthToken} = useAuthContext();
   const location = useLocation();
-  const navigate = useNavigate();
-  const navigateRef = useRef(navigate);
+  const navigate = useRef(useNavigate());
 
   const getUrlParameter = (name: string): string | undefined => {
     const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
@@ -24,12 +23,12 @@ export const OAuth2RedirectHandler: React.FC = () => {
       setAuthCookie(token);
       setAuthToken(token);
       if (forbidden) {
-        navigateRef.current("/register", {state: {data: forbidden}});
+        navigate.current("/register", {state: {data: forbidden}});
       } else {
-        navigateRef.current("/");
+        navigate.current("/");
       }
     } else if (error) {
-      navigateRef.current("/");
+      navigate.current("/");
       console.log(error);
     } else {
       throw new Error("OAuth error")

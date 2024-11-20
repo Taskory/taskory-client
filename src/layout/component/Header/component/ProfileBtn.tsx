@@ -3,10 +3,9 @@ import React, {useRef} from "react";
 import {useNavigate} from "react-router-dom";
 
 export const ProfileBtn = () => {
-    const navigate = useNavigate();
-    const navigateRef = useRef(navigate);
+    const navigate = useRef(useNavigate());
     const navigateToProfile = () => {
-        navigateRef.current("/profile");
+        navigate.current("/profile");
     };
     return (
         <>
