@@ -14,7 +14,7 @@ import {TagResponse} from "../../../api/tag/TagTypes";
 const EventModal: React.FC = () => {
     const {isModalOpen, closeEventModal, selectedEventId} = useEventModal();
     const [title, setTitle] = useState('');
-    const [tag, setTag] = useState<TagResponse | undefined>(undefined);
+    const [tag, setTag] = useState<TagResponse | undefined | null>(undefined);
     const [hashtagTitle, setHashtagTitle] = useState('');
     const [hashtagIds, setHashtagIds] = useState<number[]>([]);
     const [hashtags, setHashtags] = useState<HashtagResponse[]>([]);
@@ -210,7 +210,7 @@ const EventModal: React.FC = () => {
                             </div>
                             <div className="col-span-1 content-center">
                                 {/* TODO: set new TagSelectBox */}
-                                <TagSelectBox list={userTags} state={tag} setState={setTag} />
+                                <TagSelectBox list={userTags} tagState={tag} setTagState={setTag} />
                             </div>
                             <div className="col-span-1">
                                 <label className="label text-sm justify-end mr-1">Date & Time</label>

@@ -4,16 +4,16 @@ import {ColorBadge} from "./ColorBadge";
 
 interface TagSelectBoxProps {
     list: TagResponse[];
-    state: TagResponse | undefined;
-    setState: Dispatch<SetStateAction<TagResponse | undefined>>;
+    tagState: TagResponse | undefined | null;
+    setTagState: Dispatch<SetStateAction<TagResponse | undefined | null>>;
 }
 
-export const TagSelectBox: React.FC<TagSelectBoxProps> = ({list, state, setState}) => {
+export const TagSelectBox: React.FC<TagSelectBoxProps> = ({list, tagState, setTagState}) => {
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-    const handleSelect = (tag: TagResponse) => {
-        setState(tag);
+    const handleSelect = (tag: TagResponse | null) => {
+        setTagState(tag ?? null);
         setIsDropdownOpen(false);
     };
 
@@ -21,28 +21,31 @@ export const TagSelectBox: React.FC<TagSelectBoxProps> = ({list, state, setState
         setIsDropdownOpen(!isDropdownOpen);
     };
 
-
     return (
-        <div className={`dropdown`}>
+        <div className={`dropdown w-full`}>
             <div tabIndex={0} role="button"
                  onClick={toggleDropdown}
                  className="flex items-center cursor-pointer">
-                <ColorBadge color={state?.color ?? ''} />
-                <div className="px-1">{state?.title ?? "none"}</div>
+                <ColorBadge color={tagState?.color ?? ''} />
+                <div className="px-1 truncate w-full">{tagState?.title ?? "none"}</div>
             </div>
             <ul tabIndex={0}
-                className={`dropdown-content mb-1 bg-white rounded-b flex flex-col z-[1] ${isDropdownOpen ? '' : 'hidden'}`}>
+                className={`dropdown-content mb-1 bg-white rounded-b flex flex-col z-[1] ${isDropdownOpen ? '' : 'hidden'} w-full`}>
+                <li className={`flex items-center gap-y-2 cursor-pointer text-center`}
+                    onClick={() => handleSelect(null)}>
+                    <ColorBadge color={"NONE"}/>
+                    <div className="px-1">none</div>
+                </li>
                 {list.map((option, index) => (
-                    (state?.title !== option.title &&
+                    (tagState?.title !== option.title &&
                         (
                             <li key={option ? `TagColor-${option.toString()}-${index.toString()}` : `TagColor-${index.toString()}`}
                                 className={`flex items-center gap-y-2 cursor-pointer text-center`}
                                 onClick={() => handleSelect(option)}>
-                                <ColorBadge color={option?.color} />
-                                <div className="px-1">{option.title}</div>
+                                <ColorBadge color={option?.color}/>
+                                <div className="px-1 truncate">{option.title}</div>
                             </li>
                         ))
-
                 ))}
             </ul>
         </div>

@@ -16,8 +16,8 @@ interface TaskModalProps {
 interface Task {
     id?: number;
     title: string;
-    eventId?: number | undefined;
-    tag?: TagResponse | undefined;
+    eventId?: number | undefined | null;
+    tag?: TagResponse | undefined | null;
     hashtagIds: number[];
     description: string;
     status: TaskStatus;
@@ -129,8 +129,8 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus })
                             <div className="col-span-1 content-center">
                                 <TagSelectBox
                                     list={userTags}
-                                    state={task.tag}
-                                    setState={(valueOrUpdater) =>
+                                    tagState={task.tag}
+                                    setTagState={(valueOrUpdater) =>
                                         setTask((prevTask: Task) =>
                                             typeof valueOrUpdater === 'function'
                                                 ? { ...prevTask, tag: valueOrUpdater(prevTask.tag) }

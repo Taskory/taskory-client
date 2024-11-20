@@ -22,22 +22,18 @@ export const TaskCard: React.FC<TaskItemProps> = ({ task }) => {
 
 
     return (
-        <div className="bg-white p-4 rounded-lg shadow-md border border-gray-300 hover:shadow-lg transition-all duration-300 cursor-pointer"
-             onClick={() => openTaskModal(task.id)}
-             ref={drag}>
+        <div
+            className="bg-white p-4 rounded-lg shadow-md border border-gray-300 hover:shadow-lg transition-all duration-300 cursor-pointer"
+            onClick={() => openTaskModal(task.id)}
+            ref={drag}>
             <div className="flex justify-between items-center mb-2">
                 <p className="text-gray-900 font-bold text-lg truncate">{task.title}</p>
-                {task.tagTitle && (
-                    <span
-                        className={`inline-block rounded-full px-3 py-1 text-xs font-semibold ${getTagColorStyle(task.tagColor)}`}>
-                        {task.tagTitle}
-
-                    </span>
-                )}
+                <span
+                    className={`inline-block rounded-full px-3 py-1 text-xs font-semibold truncate w-24 ${getTagColorStyle(task.tagColor ?? "")}`}>
+                        {task.tagTitle ?? ""}
+                </span>
             </div>
-            {task.event && (
-                <p className="text-sm text-gray-600 mb-2 truncate">Event: {task.event.title}</p>
-            )}
+            <p className="text-sm text-gray-600 mb-2 truncate">Event: {task.event?.title}</p>
             {task.hashtags.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-2">
                     {task.hashtags.map((hashtag) => (
@@ -48,7 +44,8 @@ export const TaskCard: React.FC<TaskItemProps> = ({ task }) => {
                 </div>
             )}
             <div className="mt-3">
-                <span className={`inline-block px-3 py-1 text-xs font-semibold rounded-full ${getStatusStyle(task.status)}`}>
+                <span
+                    className={`inline-block px-3 py-1 text-xs font-semibold rounded-full ${getStatusStyle(task.status)}`}>
                     {task.status}
                 </span>
             </div>

@@ -20,7 +20,6 @@ export const TagItem: React.FC<TagItemProps> = ({ tag, index }) => {
         );
     };
 
-    // TODO: implement api request
     const deleteTag = (id: number) => {
         request_deleteTag(id).then((res) => {
             if (res) {
@@ -63,13 +62,13 @@ export const TagItem: React.FC<TagItemProps> = ({ tag, index }) => {
                         onChange={(e) => setEditedTagTitle(e.target.value)}
                         onBlur={() => updateTag(index)}
                         onKeyDown={(e) => e.key === "Enter" && updateTag(index)}
-                        className="input input-xs input-bordered"
+                        className="input input-xs w-28 input-bordered"
                         autoFocus
                     />
                 ) : (
                     <span
                         onDoubleClick={() => startEditing(index)}
-                        className="cursor-pointer w-full text-xs"
+                        className="cursor-pointer w-28 text-xs truncate"
                     >
                         {tag.title}
                     </span>
