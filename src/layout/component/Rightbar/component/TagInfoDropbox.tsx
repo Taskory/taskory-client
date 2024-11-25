@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import {SaveTagRequest, TagColor, TagResponse} from "../../../../api/tag/TagTypes";
-import { useTagContext } from "../../../../context/TagContext";
+import { useTagContext } from "../../../../context/data/TagContext";
 import {request_deleteTag, request_updateTag} from "../../../../api/tag/TagApi";
 import { ColorSelectBox } from "../../../../component/ColorSelectBox";
 

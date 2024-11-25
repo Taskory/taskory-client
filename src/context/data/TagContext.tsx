@@ -7,8 +7,8 @@ import React, {
     useMemo,
     useState
 } from 'react';
-import {request_getAllTags} from "../api/tag/TagApi";
-import {TagResponse} from "../api/tag/TagTypes";
+import {request_getAllTags} from "../../api/tag/TagApi";
+import {TagResponse} from "../../api/tag/TagTypes";
 
 interface TagContextProps {
     userTags: TagResponse[];

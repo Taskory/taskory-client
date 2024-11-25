@@ -2,7 +2,7 @@ import {SaveTagRequest, TagColor, TagResponse} from "../../../../api/tag/TagType
 import React, {useState} from "react";
 import {ColorSelectBox} from "../../../../component/ColorSelectBox";
 import {request_createTag} from "../../../../api/tag/TagApi";
-import {useTagContext} from "../../../../context/TagContext";
+import {useTagContext} from "../../../../context/data/TagContext";
 
 export const TagInputSection: React.FC = () => {
     const { setUserTags} = useTagContext();

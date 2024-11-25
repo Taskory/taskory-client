@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {TaskBoardHeader} from "./TaskBoardHeader";
 import {TaskStatus, TaskSummary} from "../../../api/task/TaskTypes";
-import {useTaskContext} from "../../../context/TaskContext";
+import {useTaskContext} from "../../../context/data/TaskContext";
 import { TaskCard } from "./TaskCard";
 import {useDrop} from "react-dnd";
 import {ItemType} from "../../../api/task/TaskApi";

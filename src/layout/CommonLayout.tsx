@@ -2,7 +2,7 @@ import React from 'react';
 import { CommonHeader } from './component/Header/CommonHeader';
 import { Leftbar } from './component/Leftbar';
 import { Rightbar } from './component/Rightbar/Rightbar';
-import {TagContextProvider} from "../context/TagContext";
+import {TagContextProvider} from "../context/data/TagContext";
 import { Outlet } from 'react-router-dom';
 
 

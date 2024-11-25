@@ -1,6 +1,6 @@
 import React, {createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState} from 'react';
-import {TaskStatus, TaskSummary} from "../api/task/TaskTypes";
-import {request_getAllTasks, request_updateTaskStatus} from "../api/task/TaskApi";
+import {TaskStatus, TaskSummary} from "../../api/task/TaskTypes";
+import {request_getAllTasks, request_updateTaskStatus} from "../../api/task/TaskApi";
 
 interface TaskContextProps {
     TO_DO: TaskSummary[],

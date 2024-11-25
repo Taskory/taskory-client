@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useMemo, useCallback, ReactNode, useState } from 'react';
 import { TaskModal } from '../component/TaskModal';
-import { useTaskContext } from "../../../context/TaskContext";
+import { useTaskContext } from "../../../context/data/TaskContext";
 import {TaskStatus} from "../../../api/task/TaskTypes";
 
 interface TaskModalContextType {

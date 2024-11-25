@@ -1,7 +1,7 @@
 import React, {useEffect, useRef} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import {setAuthCookie} from "../util/CookieUtil";
-import {useAuthContext} from "../context/AuthContext";
+import {useAuthContext} from "../context/data/AuthContext";
 
 export const OAuth2RedirectHandler: React.FC = () => {
   const {setAuthToken} = useAuthContext();

@@ -8,7 +8,7 @@ import { HashtagResponse } from "../../../api/hashtag/HashtagTypes";
 import {useCalendar} from "../context/CalendarContext";
 import {useEventModal} from "../context/EventModalContext";
 import { TagSelectBox } from '../../../component/TagSelectBox';
-import {useTagContext} from "../../../context/TagContext";
+import {useTagContext} from "../../../context/data/TagContext";
 import {TagResponse} from "../../../api/tag/TagTypes";
 
 const EventModal: React.FC = () => {

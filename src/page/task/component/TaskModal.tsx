@@ -4,7 +4,7 @@ import {useTaskModal} from "../context/TaskModalContext";
 import {request_createTask, request_getTaskById, request_updateTask} from "../../../api/task/TaskApi";
 import {SaveTaskRequest, TaskResponse, TaskStatus} from "../../../api/task/TaskTypes";
 import { TagSelectBox } from '../../../component/TagSelectBox';
-import {useTagContext} from "../../../context/TagContext";
+import {useTagContext} from "../../../context/data/TagContext";
 import {TagResponse} from "../../../api/tag/TagTypes";
 
 interface TaskModalProps {
