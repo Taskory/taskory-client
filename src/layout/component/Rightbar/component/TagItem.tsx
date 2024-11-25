@@ -1,18 +1,17 @@
-import {TagResponse} from "../../../../api/tag/TagTypes";
-import React, {useState} from "react";
-import {getTagCheckBoxColor} from "../../../../util/TagUtil";
-import {useTagContext} from "../../../../context/TagContext";
-import {request_deleteTag} from "../../../../api/tag/TagApi";
+import React, { useState } from "react";
+import { TagResponse } from "../../../../api/tag/TagTypes";
+import { getTagCheckBoxColor } from "../../../../util/TagUtil";
+import { useTagContext } from "../../../../context/TagContext";
+import { TagInfoDropbox } from "./TagInfoDropbox"; // Import the dropdown component
 
 type TagItemProps = {
     tag: TagResponse;
     index: number;
 };
 
-export const TagItem: React.FC<TagItemProps> = ({ tag, index }) => {
-    const [editedTagTitle, setEditedTagTitle] = useState("");
-    const { userTags, setUserTags, selectedTagIds, setSelectedTagIds } = useTagContext();
-    const [editIndex, setEditIndex] = useState<number | null>(null);
+export const TagItem: React.FC<TagItemProps> = ({ tag }) => {
+    const { selectedTagIds, setSelectedTagIds } = useTagContext();
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     const handleCheckboxChange = (id: number) => {
         setSelectedTagIds((prev) =>
@@ -20,28 +19,6 @@ export const TagItem: React.FC<TagItemProps> = ({ tag, index }) => {
         );
     };
 
-    const deleteTag = (id: number) => {
-        request_deleteTag(id).then((res) => {
-            if (res) {
-                const updatedTags = userTags.filter((tag) => tag.id !== id);
-                setUserTags(updatedTags);
-                setSelectedTagIds(selectedTagIds.filter((tagId) => tagId !== id));
-            }
-        });
-    };
-
-    const startEditing = (index: number) => {
-        setEditIndex(index);
-        setEditedTagTitle(userTags[index].title);
-    };
-
-    // TODO: implement api request
-    const updateTag = (index: number) => {
-        const updatedTags: TagResponse[] = [...userTags];
-        updatedTags[index].title = editedTagTitle.trim();
-        setUserTags(updatedTags);
-        setEditIndex(null);
-    };
     return (
         <div
             key={tag.id}
@@ -55,33 +32,25 @@ export const TagItem: React.FC<TagItemProps> = ({ tag, index }) => {
                     className={`checkbox checkbox-xs ${getTagCheckBoxColor(tag.color)}`}
                 />
 
-                {editIndex === index ? (
-                    <input
-                        type="text"
-                        value={editedTagTitle}
-                        onChange={(e) => setEditedTagTitle(e.target.value)}
-                        onBlur={() => updateTag(index)}
-                        onKeyDown={(e) => e.key === "Enter" && updateTag(index)}
-                        className="input input-xs w-28 input-bordered"
-                        autoFocus
-                    />
-                ) : (
-                    <span
-                        onDoubleClick={() => startEditing(index)}
-                        className="cursor-pointer w-28 text-xs truncate"
-                    >
-                        {tag.title}
-                    </span>
-                )}
+                <span className="cursor-pointer w-28 text-xs truncate">
+                    {tag.title}
+                </span>
             </div>
 
-            <div className="flex gap-1 opacity-0 group-hover:opacity-100">
-                <button onClick={() => startEditing(index)} className="btn btn-xs btn-info">
-                    edit
+            <div className="relative">
+                <button
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                    className="btn btn-xs btn-info"
+                >
+                    info
                 </button>
-                <button onClick={() => deleteTag(tag.id)} className="btn btn-xs btn-error">
-                    delete
-                </button>
+
+                {isDropdownOpen && (
+                    <TagInfoDropbox
+                        tag={tag}
+                        onClose={() => setIsDropdownOpen(false)}
+                    />
+                )}
             </div>
         </div>
     );
