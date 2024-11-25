@@ -25,7 +25,7 @@ export const OAuth2RedirectHandler: React.FC = () => {
       if (forbidden) {
         navigate.current("/register", {state: {data: forbidden}});
       } else {
-        navigate.current("/");
+        navigate.current("/dashboard");
       }
     } else if (error) {
       navigate.current("/");
