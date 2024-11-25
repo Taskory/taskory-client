@@ -8,10 +8,10 @@ interface TaskLayoutProps {
 
 export const TaskWrapper: React.FC<TaskLayoutProps> = ({children}) => {
     return (
-        <TaskContextProvider>
+        // <TaskContextProvider>
             <TaskModalProvider>
                 {children}
             </TaskModalProvider>
-        </TaskContextProvider>
+        // </TaskContextProvider>
     );
 };

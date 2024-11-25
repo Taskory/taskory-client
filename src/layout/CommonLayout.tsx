@@ -2,13 +2,13 @@ import React from 'react';
 import { CommonHeader } from './component/Header/CommonHeader';
 import { Leftbar } from './component/Leftbar';
 import { Rightbar } from './component/Rightbar/Rightbar';
-import {TagContextProvider} from "../context/data/TagContext";
 import { Outlet } from 'react-router-dom';
+import {DataWrapper} from "./wrapper/DataWrapper";
 
 
 export const CommonLayout: React.FC = () => {
     return (
-        <TagContextProvider>
+        <DataWrapper>
             <div className="h-screen w-screen flex flex-col overflow-hidden">
                 {/* Header */}
                 <CommonHeader/>
@@ -26,6 +26,6 @@ export const CommonLayout: React.FC = () => {
                     <Rightbar/>
                 </div>
             </div>
-        </TagContextProvider>
+        </DataWrapper>
     );
 };

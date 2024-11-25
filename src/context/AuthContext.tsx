@@ -1,6 +1,6 @@
 // src/context/AuthContext.tsx
 import React, {createContext, useContext, ReactNode, useMemo, useCallback, useState, useEffect, useRef} from 'react';
-import {existAuthCookie, getAuthCookie, removeAuthCookie} from "../../util/CookieUtil";
+import {existAuthCookie, getAuthCookie, removeAuthCookie} from "../util/CookieUtil";
 import {useLocation, useNavigate} from "react-router-dom";
 
 interface AuthContextProps {
