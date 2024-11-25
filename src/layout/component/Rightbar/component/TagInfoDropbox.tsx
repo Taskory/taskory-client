@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import { TagColor, TagResponse } from "../../../../api/tag/TagTypes";
+import {SaveTagRequest, TagColor, TagResponse} from "../../../../api/tag/TagTypes";
 import { useTagContext } from "../../../../context/TagContext";
-import { request_deleteTag } from "../../../../api/tag/TagApi";
+import {request_deleteTag, request_updateTag} from "../../../../api/tag/TagApi";
 import { ColorSelectBox } from "../../../../component/ColorSelectBox";
 
 type TagInfoDropboxProps = {
@@ -31,10 +31,18 @@ export const TagInfoDropbox: React.FC<TagInfoDropboxProps> = ({ tag, onClose }) 
     }, [onClose]);
 
     const updateTag = () => {
-        const updatedTags = userTags.map((t) =>
-            t.id === tag.id ? { ...t, title: editedTagTitle.trim(), color: selectedColor } : t
-        );
-        setUserTags(updatedTags);
+        const updateTag: SaveTagRequest = {
+            title: editedTagTitle,
+            color: selectedColor
+        }
+        request_updateTag(tag.id, updateTag).then((res) => {
+            if (res) {
+                const updatedTags = userTags.map((t) =>
+                    t.id === tag.id ? { ...t, title: editedTagTitle.trim(), color: selectedColor } : t
+                );
+                setUserTags(updatedTags);
+            }
+        })
         onClose();
     };
 

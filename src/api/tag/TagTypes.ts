@@ -6,7 +6,7 @@ export interface TagResponse {
 
 export interface SaveTagRequest {
     title: string;
-    color: TagColor;
+    color: TagColor | null;
 }
 
 
