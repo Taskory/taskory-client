@@ -11,7 +11,7 @@ import {getAuthCookie} from "../../util/CookieUtil";
 import {API_URL} from "../../constants";
 
 // Creates a new task
-export const createTask = async (saveTaskRequest: SaveTaskRequest): Promise<TaskResponse> => {
+export const request_createTask = async (saveTaskRequest: SaveTaskRequest): Promise<TaskResponse> => {
     const authToken = getAuthCookie();  // Fetch the latest cookie value here
     const requestOptions = {
         headers: {
@@ -25,7 +25,7 @@ export const createTask = async (saveTaskRequest: SaveTaskRequest): Promise<Task
 };
 
 // Retrieves a task by ID
-export const getTaskById = async (taskId: number): Promise<TaskResponse> => {
+export const request_getTaskById = async (taskId: number): Promise<TaskResponse> => {
     const authToken = getAuthCookie();  // Fetch the latest cookie value here
     const requestOptions = {
         headers: {
@@ -39,7 +39,7 @@ export const getTaskById = async (taskId: number): Promise<TaskResponse> => {
 };
 
 // Retrieves all tasks for the current user
-export const getAllTasks = async (): Promise<TaskSummary[]> => {
+export const request_getAllTasks = async (): Promise<TaskSummary[]> => {
     const authToken = getAuthCookie();  // Fetch the latest cookie value
 
     const requestOptions = {
@@ -59,7 +59,7 @@ export const getAllTasks = async (): Promise<TaskSummary[]> => {
 }
 
 // Updates an existing task by ID
-export const updateTask = async (taskId: number, saveTaskRequest: SaveTaskRequest): Promise<TaskResponse> => {
+export const request_updateTask = async (taskId: number, saveTaskRequest: SaveTaskRequest): Promise<TaskResponse> => {
     const authToken = getAuthCookie();  // Fetch the latest cookie value here
     const requestOptions = {
         headers: {
@@ -73,7 +73,7 @@ export const updateTask = async (taskId: number, saveTaskRequest: SaveTaskReques
 };
 
 // Deletes a task by ID
-export const deleteTask = async (taskId: number): Promise<void> => {
+export const request_deleteTask = async (taskId: number): Promise<void> => {
     const authToken = getAuthCookie();  // Fetch the latest cookie value here
     const requestOptions = {
         headers: {
@@ -86,7 +86,7 @@ export const deleteTask = async (taskId: number): Promise<void> => {
 };
 
 // Adds a new task item to an existing task
-export const createTaskItem = async (saveTaskItemRequest: SaveTaskItemRequest): Promise<TaskItemResponse> => {
+export const request_createTaskItem = async (saveTaskItemRequest: SaveTaskItemRequest): Promise<TaskItemResponse> => {
     const authToken = getAuthCookie();  // Fetch the latest cookie value here
     const requestOptions = {
         headers: {
@@ -100,7 +100,7 @@ export const createTaskItem = async (saveTaskItemRequest: SaveTaskItemRequest): 
 };
 
 // Retrieves a task item by ID
-export const getTaskItemById = async (taskItemId: number): Promise<TaskItemResponse> => {
+export const request_getTaskItemById = async (taskItemId: number): Promise<TaskItemResponse> => {
     const authToken = getAuthCookie();  // Fetch the latest cookie value here
     const requestOptions = {
         headers: {
@@ -114,7 +114,7 @@ export const getTaskItemById = async (taskItemId: number): Promise<TaskItemRespo
 };
 
 // Updates the title of a task item by ID
-export const updateTaskItemTitle = async (taskItemId: number, newTitle: string): Promise<TaskItemResponse> => {
+export const request_updateTaskItemTitle = async (taskItemId: number, newTitle: string): Promise<TaskItemResponse> => {
     const authToken = getAuthCookie();  // Fetch the latest cookie value here
     const requestOptions = {
         headers: {
@@ -128,7 +128,7 @@ export const updateTaskItemTitle = async (taskItemId: number, newTitle: string):
 };
 
 // Updates the completion status of a task item by ID
-export const setTaskItemCompleted = async (taskItemId: number, completed: boolean): Promise<TaskItemResponse> => {
+export const request_setTaskItemCompleted = async (taskItemId: number, completed: boolean): Promise<TaskItemResponse> => {
     const authToken = getAuthCookie();  // Fetch the latest cookie value here
     const requestOptions = {
         headers: {
@@ -142,7 +142,7 @@ export const setTaskItemCompleted = async (taskItemId: number, completed: boolea
 };
 
 // Deletes a task item by ID
-export const deleteTaskItem = async (taskItemId: number): Promise<void> => {
+export const request_deleteTaskItem = async (taskItemId: number): Promise<void> => {
     const authToken = getAuthCookie();  // Fetch the latest cookie value here
     const requestOptions = {
         headers: {
@@ -154,7 +154,7 @@ export const deleteTaskItem = async (taskItemId: number): Promise<void> => {
     await axios.delete(`${API_URL}/task/items/${taskItemId}`, requestOptions);
 };
 
-export const updateTaskStatus = async (taskId: number, taskStatus: TaskStatus): Promise<boolean> => {
+export const request_updateTaskStatus = async (taskId: number, taskStatus: TaskStatus): Promise<boolean> => {
     const requestUrl = `${API_URL}/task/status/${taskId}`
 
     const authToken = getAuthCookie();  // Fetch the latest cookie value here

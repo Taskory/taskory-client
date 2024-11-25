@@ -1,6 +1,6 @@
 import React, {createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState} from 'react';
 import {TaskStatus, TaskSummary} from "../api/task/TaskTypes";
-import {getAllTasks, updateTaskStatus} from "../api/task/TaskApi";
+import {request_getAllTasks, request_updateTaskStatus} from "../api/task/TaskApi";
 
 interface TaskContextProps {
     TO_DO: TaskSummary[],
@@ -23,7 +23,7 @@ export const TaskContextProvider: React.FC<TaskContextProviderProps> = ({ childr
 
     const fetchTasks = useCallback(async () => {
         try {
-            const taskData: TaskSummary[] = await getAllTasks(); // Fetch tasks using getAllTasks
+            const taskData: TaskSummary[] = await request_getAllTasks(); // Fetch tasks using getAllTasks
 
             const toDoTasks: TaskSummary[] = [];
             const inProgressTasks: TaskSummary[] = [];
@@ -57,7 +57,7 @@ export const TaskContextProvider: React.FC<TaskContextProviderProps> = ({ childr
         if (taskItem.status === toStatus) return; // if status of task item equals toStatus not request
 
         try {
-            const result = await updateTaskStatus(taskItem.id, toStatus);
+            const result = await request_updateTaskStatus(taskItem.id, toStatus);
             if (result) {
                 switch (taskItem.status) {
                     case TaskStatus.TO_DO:

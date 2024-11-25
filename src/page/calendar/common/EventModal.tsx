@@ -1,7 +1,7 @@
 import React, { useState, useEffect, KeyboardEvent } from 'react';
 import { API_URL } from "../../../constants";
 import { format, addHours, isBefore } from 'date-fns';
-import { createEvent, deleteEvent, getEventById, updateEvent } from "../../../api/event/EventApi";
+import { request_createEvent, request_deleteEvent, request_getEventById, request_updateEvent } from "../../../api/event/EventApi";
 import { SaveEventRequest, EventResponse } from "../../../api/event/EventsTypes";
 import { TimeUtil } from "../../../util/TimeUtil";
 import { HashtagResponse } from "../../../api/hashtag/HashtagTypes";
@@ -47,7 +47,7 @@ const EventModal: React.FC = () => {
     const fetchEvent = async (eventId: number): Promise<void> => {
         setLoading(true);
         try {
-            const response = await getEventById(eventId);
+            const response = await request_getEventById(eventId);
             if (response.status === 200) {
                 const data: EventResponse = response.data;
                 setTitle(data.title ?? "");
@@ -139,7 +139,7 @@ const EventModal: React.FC = () => {
 
             try {
                 if (selectedEventId) {
-                    const response = await updateEvent(selectedEventId, eventPayload);
+                    const response = await request_updateEvent(selectedEventId, eventPayload);
                     if (response.status === 200) {
                         console.log('Event successfully updated');
                         refetchEvents();
@@ -148,7 +148,7 @@ const EventModal: React.FC = () => {
                         console.error('Failed to update event');
                     }
                 } else {
-                    const response = await createEvent(eventPayload);
+                    const response = await request_createEvent(eventPayload);
                     if (response.status === 200) {
                         refetchEvents();
                         closeEventModal();
@@ -172,7 +172,7 @@ const EventModal: React.FC = () => {
     const handleDelete = async (): Promise<void> => {
         if (selectedEventId) {
             try {
-                const response = await deleteEvent(selectedEventId);
+                const response = await request_deleteEvent(selectedEventId);
                 if (response.status === 200) {
                     refetchEvents();
                     closeEventModal();

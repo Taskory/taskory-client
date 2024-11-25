@@ -6,7 +6,7 @@ import { getAuthCookie } from "../../util/CookieUtil";
 import {TimeUtil} from "../../util/TimeUtil";
 
 // API 요청 함수들 정의
-export const getMonthlyEvents = async (date: string): Promise<AxiosResponse<EventSummary[]>> => {
+export const request_getMonthlyEvents = async (date: string): Promise<AxiosResponse<EventSummary[]>> => {
     const {start, end} = TimeUtil.getFirstSundayAndLastSaturday(date);
 
     const authToken = getAuthCookie();  // Fetch the latest cookie value here
@@ -23,7 +23,7 @@ export const getMonthlyEvents = async (date: string): Promise<AxiosResponse<Even
     });
 };
 
-export const createEvent = async (event: SaveEventRequest): Promise<AxiosResponse<EventResponse>> => {
+export const request_createEvent = async (event: SaveEventRequest): Promise<AxiosResponse<EventResponse>> => {
     const authToken = getAuthCookie();  // Fetch the latest cookie value here
     const requestOptions = {
         headers: {
@@ -37,7 +37,7 @@ export const createEvent = async (event: SaveEventRequest): Promise<AxiosRespons
     });
 };
 
-export const updateEvent = async (eventId: number, event: SaveEventRequest): Promise<AxiosResponse<EventResponse>> => {
+export const request_updateEvent = async (eventId: number, event: SaveEventRequest): Promise<AxiosResponse<EventResponse>> => {
     const authToken = getAuthCookie();  // Fetch the latest cookie value here
     const requestOptions = {
         headers: {
@@ -52,7 +52,7 @@ export const updateEvent = async (eventId: number, event: SaveEventRequest): Pro
     });
 };
 
-export const deleteEvent = async (eventId: number): Promise<AxiosResponse<{ status: number; message: string }>> => {
+export const request_deleteEvent = async (eventId: number): Promise<AxiosResponse<{ status: number; message: string }>> => {
     const authToken = getAuthCookie();  // Fetch the latest cookie value here
     const requestOptions = {
         headers: {
@@ -67,7 +67,7 @@ export const deleteEvent = async (eventId: number): Promise<AxiosResponse<{ stat
     });
 };
 
-export const getEventById = async (eventId: number): Promise<AxiosResponse<EventResponse>> => {
+export const request_getEventById = async (eventId: number): Promise<AxiosResponse<EventResponse>> => {
     const authToken = getAuthCookie();  // Fetch the latest cookie value here
     const requestOptions = {
         headers: {
@@ -81,7 +81,7 @@ export const getEventById = async (eventId: number): Promise<AxiosResponse<Event
     });
 };
 
-export const getAllEvents = async (): Promise<AxiosResponse<EventSummary[]>> => {
+export const request_getAllEvents = async (): Promise<AxiosResponse<EventSummary[]>> => {
     const authToken = getAuthCookie();  // Fetch the latest cookie value here
     const requestOptions = {
         headers: {

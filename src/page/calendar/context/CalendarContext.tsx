@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback, ReactNode, useReducer } from 'react';
 import { SplitEventsInterface } from "./CalendarContextInterface";
 import { getProcessedEvents } from "./CalendarContextUtils";
-import { getMonthlyEvents } from "../../../api/event/EventApi";
+import { request_getMonthlyEvents } from "../../../api/event/EventApi";
 import { EventSummary } from "../../../api/event/EventsTypes";
 import {TimeUtil} from "../../../util/TimeUtil";
 
@@ -61,7 +61,7 @@ export const CalendarProvider: React.FC<{ children: ReactNode }> = ({ children }
     const fetchEvents: () => Promise<void> = useCallback(async () => {
         try {
             const utcString: string = TimeUtil.dateToString(state.currentDate);
-            const response = await getMonthlyEvents(utcString);
+            const response = await request_getMonthlyEvents(utcString);
             setOriginEvents(response.data);
         } catch (error) {
             console.error('Error fetching events:', error);

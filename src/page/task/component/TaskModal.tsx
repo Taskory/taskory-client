@@ -1,7 +1,7 @@
 // TaskModal.tsx
 import React, {useEffect, useState} from 'react';
 import {useTaskModal} from "../context/TaskModalContext";
-import {createTask, getTaskById, updateTask} from "../../../api/task/TaskApi";
+import {request_createTask, request_getTaskById, request_updateTask} from "../../../api/task/TaskApi";
 import {SaveTaskRequest, TaskResponse, TaskStatus} from "../../../api/task/TaskTypes";
 import { TagSelectBox } from '../../../component/TagSelectBox';
 import {useTagContext} from "../../../context/TagContext";
@@ -58,7 +58,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus })
 
     const fetchTask = async (taskId: number): Promise<void> => {
         try {
-            const response: TaskResponse = await getTaskById(taskId);
+            const response: TaskResponse = await request_getTaskById(taskId);
             setTask({
                 id: response.id,
                 title: response.title,
@@ -97,9 +97,9 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus })
 
         try {
             if (selectedTaskId) {
-                await updateTask(selectedTaskId, saveTaskRequest);
+                await request_updateTask(selectedTaskId, saveTaskRequest);
             } else {
-                 await createTask(saveTaskRequest);
+                 await request_createTask(saveTaskRequest);
             }
             closeTaskModal();
         } catch (error) {
