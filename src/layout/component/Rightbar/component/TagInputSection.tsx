@@ -5,7 +5,7 @@ import {request_createTag} from "../../../../api/tag/TagApi";
 import {useTagContext} from "../../../../context/data/TagContext";
 
 export const TagInputSection: React.FC = () => {
-    const { setUserTags} = useTagContext();
+    const { setUserTags, setSelectedTagIds} = useTagContext();
     const [newTagInfo, setNewTagInfo] = useState<SaveTagRequest>({
         title: '',
         color: TagColor.NONE,
@@ -17,6 +17,7 @@ export const TagInputSection: React.FC = () => {
             if (newTagInfo.title.length > 0) {
                 const createdTag: TagResponse = await request_createTag(newTagInfo); // Await async function
                 setUserTags((prevTags: TagResponse[]) => [...prevTags, createdTag]);
+                setSelectedTagIds((prevIds: number[]) => [...prevIds, createdTag.id]);
                 resetNewTagInputBox();
             }
         } catch (error) {
