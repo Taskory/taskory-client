@@ -8,16 +8,16 @@ import {DailyColumn} from "./DailyColumn";
 import {TimeTableLayout} from "../common/TimeTableLayout";
 
 export const DailyPage: React.FC = () => {
-    const { currentDate, splitEvents } = useCalendar();
-    const [eventsUnder24, setEventsUnder24] = useState<EventSummary[]>(getEventsForDate(splitEvents.eventsUnder24, currentDate));
-    const [eventsOver24, setEventsOver24] = useState<EventSummary[]>(getEventsForDate(splitEvents.eventsOver24, currentDate));
+    const { currentDate, processedEvents } = useCalendar();
+    const [eventsUnder24, setEventsUnder24] = useState<EventSummary[]>(getEventsForDate(processedEvents.eventsUnder24, currentDate));
+    const [eventsOver24, setEventsOver24] = useState<EventSummary[]>(getEventsForDate(processedEvents.eventsOver24, currentDate));
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [scrollBarWidth ] = useState(0);
 
     useEffect(() => {
-        setEventsUnder24(getEventsForDate(splitEvents.eventsUnder24, currentDate));
-        setEventsOver24(getEventsForDate(splitEvents.eventsOver24, currentDate));
-    }, [currentDate, splitEvents]);
+        setEventsUnder24(getEventsForDate(processedEvents.eventsUnder24, currentDate));
+        setEventsOver24(getEventsForDate(processedEvents.eventsOver24, currentDate));
+    }, [currentDate, processedEvents]);
 
     return (
         <div className="w-full flex-grow flex flex-col">

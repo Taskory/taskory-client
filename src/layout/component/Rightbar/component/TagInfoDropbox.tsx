@@ -3,6 +3,8 @@ import {SaveTagRequest, TagColor, TagResponse} from "../../../../api/tag/TagType
 import { useTagContext } from "../../../../context/data/TagContext";
 import {request_deleteTag, request_updateTag} from "../../../../api/tag/TagApi";
 import { ColorSelectBox } from "../../../../component/ColorSelectBox";
+import {useEventContext} from "../../../../context/data/EventContext";
+import {useTaskContext} from "../../../../context/data/TaskContext";
 
 type TagInfoDropboxProps = {
     tag: TagResponse;
@@ -10,6 +12,8 @@ type TagInfoDropboxProps = {
 };
 
 export const TagInfoDropbox: React.FC<TagInfoDropboxProps> = ({ tag, onClose }) => {
+    const {fetchOriginEvents} = useEventContext();
+    const {fetchOriginTasks} = useTaskContext();
     const [editedTagTitle, setEditedTagTitle] = useState(tag.title);
     const [selectedColor, setSelectedColor] = useState<TagColor | null>(tag.color);
     const { userTags, setUserTags } = useTagContext();
@@ -41,6 +45,8 @@ export const TagInfoDropbox: React.FC<TagInfoDropboxProps> = ({ tag, onClose }) 
                     t.id === tag.id ? { ...t, title: editedTagTitle.trim(), color: selectedColor } : t
                 );
                 setUserTags(updatedTags);
+                fetchOriginEvents();
+                fetchOriginTasks();
             }
         })
         onClose();
@@ -51,6 +57,8 @@ export const TagInfoDropbox: React.FC<TagInfoDropboxProps> = ({ tag, onClose }) 
             if (res) {
                 const updatedTags = userTags.filter((t) => t.id !== tag.id);
                 setUserTags(updatedTags);
+                fetchOriginEvents();
+                fetchOriginTasks();
             }
         });
         onClose(); // Close the dropdown after delete

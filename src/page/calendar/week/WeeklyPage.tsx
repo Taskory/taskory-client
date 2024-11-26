@@ -9,7 +9,7 @@ import { WeeklyColumns } from './WeeklyColumns';
 import {TimeTableLayout} from "../common/TimeTableLayout";
 
 export const WeeklyPage: React.FC = () => {
-    const { currentDate, splitEvents } = useCalendar();
+    const { currentDate, processedEvents } = useCalendar();
     const [weekInfo, setWeekInfo] = useState<WeekInfoInterface>(initializeWeekInfo(currentDate));
     const [under24hoursEvents, setUnder24hoursEvents] = useState<EventSummary[][]>([[], [], [], [], [], [], []]);
     const [over24hoursEvents, setOver24hoursEvents] = useState<EventSummary[][]>([[], [], [], [], [], [], []]);
@@ -28,7 +28,7 @@ export const WeeklyPage: React.FC = () => {
 
 
         const newUnder24hoursEvents: EventSummary[][] = [[], [], [], [], [], [], []];
-        getWeeklyEvents(splitEvents.eventsUnder24, weekInfo.startSunday).forEach((event: EventSummary) => {
+        getWeeklyEvents(processedEvents.eventsUnder24, weekInfo.startSunday).forEach((event: EventSummary) => {
             const eventStart = new Date(event.startDateTime);
             const eventEnd = new Date(event.dueDateTime);
 
@@ -40,7 +40,7 @@ export const WeeklyPage: React.FC = () => {
 
         const newOver24hoursEvents: EventSummary[][] = [[], [], [], [], [], [], []];
 
-        getWeeklyEvents(splitEvents.eventsOver24, weekInfo.startSunday).forEach((event: EventSummary) => {
+        getWeeklyEvents(processedEvents.eventsOver24, weekInfo.startSunday).forEach((event: EventSummary) => {
             const eventStart: Date = new Date(event.startDateTime);
             const eventEnd: Date = new Date(event.dueDateTime);
 
@@ -57,7 +57,7 @@ export const WeeklyPage: React.FC = () => {
         });
         setOver24hoursEvents(newOver24hoursEvents);
 
-    }, [splitEvents, weekInfo.startSunday]);
+    }, [processedEvents, weekInfo.startSunday]);
 
 
     useEffect(() => {

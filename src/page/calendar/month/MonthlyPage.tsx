@@ -3,11 +3,11 @@ import React, { useEffect, useState } from "react";
 import { MonthlyCalendarCell } from "./MonthlyCalendarCell";
 import { MonthlyHeader } from "./MonthlyHeader";
 import { useCalendar } from "../context/CalendarContext";
-import { getMonthlyEvents } from "./MonthlyUtils";
+import { splitEventsPerDay } from "./MonthlyUtils";
 
 export const MonthlyPage: React.FC = () => {
-    const { currentDate, originEvents } = useCalendar();
-    const [monthlyEvents, setMonthlyEvents] = useState(getMonthlyEvents(originEvents, currentDate));
+    const { currentDate, monthlyEvents } = useCalendar();
+    const [eventsPerDayArray, setEventsPerDayArray] = useState(splitEventsPerDay(monthlyEvents, currentDate));
     const [monthInfo, setMonthInfo] = useState({
         daysInMonth: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate(),
         firstDayOfWeek: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay(),
@@ -18,8 +18,8 @@ export const MonthlyPage: React.FC = () => {
             daysInMonth: new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate(),
             firstDayOfWeek: new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay(),
         });
-        setMonthlyEvents(getMonthlyEvents(originEvents, currentDate));
-    }, [currentDate, originEvents]);
+        setEventsPerDayArray(splitEventsPerDay(monthlyEvents, currentDate));
+    }, [currentDate, monthlyEvents]);
 
     const weeksOfCurrentMonth = Math.ceil((monthInfo.firstDayOfWeek + monthInfo.daysInMonth) / 7);
 
@@ -38,7 +38,7 @@ export const MonthlyPage: React.FC = () => {
                 cells.push(<MonthlyCalendarCell key={i} day={dayOfMonth - monthInfo.daysInMonth} isCurrentMonth={false} />);
             } else {
                 // Current month's days with events
-                cells.push(<MonthlyCalendarCell key={i} day={dayOfMonth} events={monthlyEvents[dayOfMonth - 1]} isCurrentMonth={true} />);
+                cells.push(<MonthlyCalendarCell key={i} day={dayOfMonth} events={eventsPerDayArray[dayOfMonth - 1]} isCurrentMonth={true} />);
             }
         }
 

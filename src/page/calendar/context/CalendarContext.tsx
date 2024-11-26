@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback, ReactNode, useReducer } from 'react';
 import { SplitEventsInterface } from "./CalendarContextInterface";
 import { getProcessedEvents } from "./CalendarContextUtils";
-import { request_getMonthlyEvents } from "../../../api/event/EventApi";
 import { EventSummary } from "../../../api/event/EventsTypes";
 import {TimeUtil} from "../../../util/TimeUtil";
+import {useEventContext} from "../../../context/data/EventContext";
 
 interface CalendarContextType {
     currentDate: Date;
@@ -11,9 +11,9 @@ interface CalendarContextType {
     goToNext: (view: string) => void;
     goToPrev: (view: string) => void;
     goToToday: () => void;
-    originEvents: EventSummary[];
-    splitEvents: SplitEventsInterface;
-    refetchEvents: () => void;
+    monthlyEvents: EventSummary[];
+    processedEvents: SplitEventsInterface;
+    filterEventsByMonth: () => void;
 }
 
 const CalendarContext = createContext<CalendarContextType | undefined>(undefined);
@@ -50,23 +50,32 @@ const calendarReducer = (state: { currentDate: Date; sumOfMonthAndYear: number; 
 
 // Modify CalendarProvider to include refetchEvents
 export const CalendarProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+    const {originEvents} = useEventContext();
     const [state, dispatch] = useReducer(calendarReducer, {
         currentDate: getInitialDate(),
         sumOfMonthAndYear: getInitialDate().getFullYear() + getInitialDate().getMonth()
     });
-    const [originEvents, setOriginEvents] = useState<EventSummary[]>([]);
+    const [monthlyEvents, setMonthlyEvents] = useState<EventSummary[]>([]);
     const [processedEvents, setProcessedEvents] = useState<SplitEventsInterface>({ eventsUnder24: [], eventsOver24: [] });
 
-    // Function to refetch events
-    const fetchEvents: () => Promise<void> = useCallback(async () => {
-        try {
-            const utcString: string = TimeUtil.dateToString(state.currentDate);
-            const response = await request_getMonthlyEvents(utcString);
-            setOriginEvents(response.data);
-        } catch (error) {
-            console.error('Error fetching events:', error);
-        }
-    }, [state.currentDate]);
+    const filterEventsByMonth = useCallback(() => {
+        const utcString: string = TimeUtil.dateToString(state.currentDate);
+        const referenceDate = new Date(utcString);
+        const referenceYear = referenceDate.getFullYear();
+        const referenceMonth = referenceDate.getMonth();
+
+        const monthlyEvents = originEvents.filter(event => {
+            const eventStartDate = new Date(event.startDateTime);
+            const eventEndDate = new Date(event.dueDateTime);
+
+            return (
+                (eventStartDate.getFullYear() === referenceYear && eventStartDate.getMonth() === referenceMonth) ||
+                (eventEndDate.getFullYear() === referenceYear && eventEndDate.getMonth() === referenceMonth)
+            );
+        });
+
+        setMonthlyEvents(monthlyEvents);
+    }, [state.currentDate, originEvents]);
 
     useEffect(() => {
         // Save the current date and timestamp in local storage
@@ -74,13 +83,13 @@ export const CalendarProvider: React.FC<{ children: ReactNode }> = ({ children }
         localStorage.setItem('currentDateTimestamp', new Date().toISOString());
 
         // Fetch events whenever sumOfMonthAndYear or currentDate changes
-        fetchEvents();
-    }, [state.sumOfMonthAndYear, fetchEvents, state.currentDate]);
+        filterEventsByMonth();
+    }, [state.sumOfMonthAndYear, filterEventsByMonth, state.currentDate]);
 
     useEffect(() => {
         // Split events based on the current month
-        setProcessedEvents(getProcessedEvents(originEvents, new Date(state.currentDate.getFullYear(), state.currentDate.getMonth(), 1)));
-    }, [originEvents, state.currentDate]);
+        setProcessedEvents(getProcessedEvents(monthlyEvents, new Date(state.currentDate.getFullYear(), state.currentDate.getMonth(), 1)));
+    }, [monthlyEvents, state.currentDate]);
 
     const goToNext = useCallback((view: string) => {
         const newDate = new Date(state.currentDate);
@@ -134,10 +143,10 @@ export const CalendarProvider: React.FC<{ children: ReactNode }> = ({ children }
         goToNext,
         goToPrev,
         goToToday,
-        originEvents,
-        splitEvents: processedEvents,
-        refetchEvents: fetchEvents,
-    }), [state.currentDate, goToNext, goToPrev, goToToday, originEvents, processedEvents, fetchEvents]);
+        monthlyEvents,
+        processedEvents,
+        filterEventsByMonth,
+    }), [state.currentDate, goToNext, goToPrev, goToToday, monthlyEvents, processedEvents, filterEventsByMonth]);
 
     return (
         <CalendarContext.Provider value={contextValue}>

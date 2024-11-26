@@ -6,7 +6,7 @@ interface TaskContextProps {
     TO_DO: TaskSummary[],
     IN_PROGRESS: TaskSummary[],
     DONE: TaskSummary[],
-    refetchTasks: () => Promise<void>;
+    fetchOriginTasks: () => void;
     moveTaskItem: (taskItem: TaskSummary, toContainerId: TaskStatus) => void;
 }
 
@@ -21,7 +21,7 @@ export const TaskContextProvider: React.FC<TaskContextProviderProps> = ({ childr
     const [IN_PROGRESS, setIN_PROGRESS] = useState<TaskSummary[]>([]);
     const [DONE, setDONE] = useState<TaskSummary[]>([]);
 
-    const fetchTasks = useCallback(async () => {
+    const fetchOriginTasks = useCallback(async () => {
         try {
             const taskData: TaskSummary[] = await request_getAllTasks(); // Fetch tasks using getAllTasks
 
@@ -90,16 +90,16 @@ export const TaskContextProvider: React.FC<TaskContextProviderProps> = ({ childr
     };
 
     useEffect(() => {
-        fetchTasks();
-    }, [fetchTasks]);
+        fetchOriginTasks();
+    }, [fetchOriginTasks]);
 
     const contextValue: TaskContextProps = useMemo(() => ({
         TO_DO,
         IN_PROGRESS,
         DONE,
-        refetchTasks: fetchTasks,
+        fetchOriginTasks,
         moveTaskItem
-    }), [TO_DO, IN_PROGRESS, DONE, fetchTasks]);
+    }), [TO_DO, IN_PROGRESS, DONE, fetchOriginTasks]);
 
     return (
         <TaskContext.Provider value={contextValue}>

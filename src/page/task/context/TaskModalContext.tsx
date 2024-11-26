@@ -13,7 +13,7 @@ interface TaskModalContextType {
 const TaskModalContext = createContext<TaskModalContextType | undefined>(undefined);
 
 export const TaskModalProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const { refetchTasks } = useTaskContext();
+    const { fetchOriginTasks } = useTaskContext();
     const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedStatus, setSelectedStatus] = useState<TaskStatus | null>(null);
@@ -21,8 +21,8 @@ export const TaskModalProvider: React.FC<{ children: ReactNode }> = ({ children 
     const closeTaskModal = useCallback(() => {
         setIsModalOpen(false);
         setSelectedTaskId(null);
-        refetchTasks();
-    }, [refetchTasks]);
+        fetchOriginTasks();
+    }, [fetchOriginTasks]);
 
     const openTaskModal = useCallback((taskIdOrStatus?: number | TaskStatus) => {
         if (taskIdOrStatus) {

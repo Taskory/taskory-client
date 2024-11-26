@@ -1,6 +1,6 @@
 import {EventSummary} from "../../../api/event/EventsTypes";
 
-export function getMonthlyEvents(events: EventSummary[], date: Date): EventSummary[][] {
+export function splitEventsPerDay(events: EventSummary[], date: Date): EventSummary[][] {
     const daysInMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
     const result: EventSummary[][] = Array.from({ length: daysInMonth }, () => []);
 

@@ -5,11 +5,11 @@ import { request_createEvent, request_deleteEvent, request_getEventById, request
 import { SaveEventRequest, EventResponse } from "../../../api/event/EventsTypes";
 import { TimeUtil } from "../../../util/TimeUtil";
 import { HashtagResponse } from "../../../api/hashtag/HashtagTypes";
-import {useCalendar} from "../context/CalendarContext";
 import {useEventModal} from "../context/EventModalContext";
 import { TagSelectBox } from '../../../component/TagSelectBox';
 import {useTagContext} from "../../../context/data/TagContext";
 import {TagResponse} from "../../../api/tag/TagTypes";
+import {useEventContext} from "../../../context/data/EventContext";
 
 const EventModal: React.FC = () => {
     const {isModalOpen, closeEventModal, selectedEventId} = useEventModal();
@@ -24,7 +24,7 @@ const EventModal: React.FC = () => {
     const [location, setLocation] = useState('');
     const [loading, setLoading] = useState(false);
     const [dateError, setDateError] = useState('');
-    const {refetchEvents} = useCalendar();
+    const {fetchOriginEvents} = useEventContext();
     const {userTags} = useTagContext();
 
     useEffect(() => {
@@ -142,7 +142,7 @@ const EventModal: React.FC = () => {
                     const response = await request_updateEvent(selectedEventId, eventPayload);
                     if (response.status === 200) {
                         console.log('Event successfully updated');
-                        refetchEvents();
+                        fetchOriginEvents();
                         closeEventModal();
                     } else {
                         console.error('Failed to update event');
@@ -150,7 +150,7 @@ const EventModal: React.FC = () => {
                 } else {
                     const response = await request_createEvent(eventPayload);
                     if (response.status === 200) {
-                        refetchEvents();
+                        fetchOriginEvents();
                         closeEventModal();
                     } else {
                         console.error('Failed to create event');
@@ -165,7 +165,7 @@ const EventModal: React.FC = () => {
     };
 
     const handleClose = (): void => {
-        refetchEvents();
+        fetchOriginEvents();
         closeEventModal();
     };
 
@@ -174,7 +174,7 @@ const EventModal: React.FC = () => {
             try {
                 const response = await request_deleteEvent(selectedEventId);
                 if (response.status === 200) {
-                    refetchEvents();
+                    fetchOriginEvents();
                     closeEventModal();
                 } else {
                     console.error('Failed to delete event');
