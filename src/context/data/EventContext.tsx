@@ -35,7 +35,7 @@ export const EventContextProvider: React.FC<EventContextProviderProps> = ({ chil
     const contextValue: EventContextProps = useMemo(() => ({
         originEvents,
         fetchOriginEvents
-    }), [originEvents]);
+    }), [fetchOriginEvents, originEvents]);
 
     return (
         <EventContext.Provider value={contextValue}>
