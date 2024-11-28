@@ -1,11 +1,11 @@
 // TaskModal.tsx
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {useTaskModal} from "../context/TaskModalContext";
 import {request_createTask, request_getTaskById, request_updateTask} from "../../../api/task/TaskApi";
 import {SaveTaskRequest, TaskResponse, TaskStatus} from "../../../api/task/TaskTypes";
 import {TagSelectBox} from '../../../component/TagSelectBox';
 import {useTagContext} from "../../../context/data/TagContext";
-import {TagColor, TagResponse} from "../../../api/tag/TagTypes";
+import {TagResponse} from "../../../api/tag/TagTypes";
 
 interface TaskModalProps {
     loading: boolean;
@@ -24,35 +24,32 @@ interface Task {
 }
 
 export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus }) => {
+   /* Context */
     const { isModalOpen, selectedTaskId, closeTaskModal } = useTaskModal();
     const {userTags} = useTagContext();
 
-    const initialTask = useMemo(() => ({
+    /* useState */
+    const [task, setTask] = useState<Task>({
         title: '',
-        tag: {
-            id: 0,
-            title: '',
-            color: TagColor.BLUE,
-        },
+        tag: userTags[0],
         hashtagIds: [],
         description: '',
         status: TaskStatus.TO_DO,
-    }), []);
+    });
 
-    const [task, setTask] = useState<Task>(initialTask);
 
+    /* variables and functions */
     // const [hashtagTitle, setHashtagTitle] = useState<string>('');
 
-    useEffect(() => {
-        if (isModalOpen) {
-            if (selectedTaskId) {
-                fetchTask(selectedTaskId);
-            } else {
-                setTask(initialTask);
-                // setHashtagTitle('');
-            }
-        }
-    }, [initialTask, isModalOpen, selectedStatus, selectedTaskId]);
+    const resetTaskStatus = useCallback((): void => {
+        setTask({
+            title: '',
+            tag: userTags[0],
+            hashtagIds: [],
+            description: '',
+            status: TaskStatus.TO_DO,
+        });
+    }, [userTags, setTask]);
 
     const fetchTask = async (taskId: number): Promise<void> => {
         try {
@@ -104,6 +101,18 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus })
             console.error('Error saving task:', error);
         }
     };
+
+    /* useEffect */
+    useEffect(() => {
+        if (isModalOpen) {
+            if (selectedTaskId) {
+                fetchTask(selectedTaskId);
+            } else {
+                resetTaskStatus();
+                // setHashtagTitle('');
+            }
+        }
+    }, [isModalOpen, resetTaskStatus, selectedStatus, selectedTaskId]);
 
     return (
         <dialog open={isModalOpen} className="modal max-h-screen max-w-screen">

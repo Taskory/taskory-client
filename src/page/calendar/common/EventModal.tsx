@@ -8,17 +8,18 @@ import { HashtagResponse } from "../../../api/hashtag/HashtagTypes";
 import {useEventModal} from "../context/EventModalContext";
 import { TagSelectBox } from '../../../component/TagSelectBox';
 import {useTagContext} from "../../../context/data/TagContext";
-import {TagColor, TagResponse} from "../../../api/tag/TagTypes";
+import {TagResponse} from "../../../api/tag/TagTypes";
 import {useEventContext} from "../../../context/data/EventContext";
 
 const EventModal: React.FC = () => {
+    /* Context */
+    const {fetchOriginEvents} = useEventContext();
+    const {userTags} = useTagContext();
     const {isModalOpen, closeEventModal, selectedEventId} = useEventModal();
+
+    /* useState */
     const [title, setTitle] = useState('');
-    const initialTag = {id: 0,
-        title: '',
-        color: TagColor.BLUE
-    }
-    const [tag, setTag] = useState<TagResponse>(initialTag);
+    const [tag, setTag] = useState<TagResponse>(userTags[0]);
     const [hashtagTitle, setHashtagTitle] = useState('');
     const [hashtagIds, setHashtagIds] = useState<number[]>([]);
     const [hashtags, setHashtags] = useState<HashtagResponse[]>([]);
@@ -28,9 +29,8 @@ const EventModal: React.FC = () => {
     const [location, setLocation] = useState('');
     const [loading, setLoading] = useState(false);
     const [dateError, setDateError] = useState('');
-    const {fetchOriginEvents} = useEventContext();
-    const {userTags} = useTagContext();
 
+    /* useEffect */
     useEffect(() => {
         if (isModalOpen) {
             if (selectedEventId) {
@@ -48,6 +48,7 @@ const EventModal: React.FC = () => {
         }
     }, [isModalOpen, selectedEventId]);
 
+    /* functions */
     const fetchEvent = async (eventId: number): Promise<void> => {
         setLoading(true);
         try {
