@@ -1,17 +1,19 @@
 export interface TagResponse {
     id: number;
     title: string;
-    color: TagColor | null;
+    color: TagColor;
 }
 
 export interface SaveTagRequest {
     title: string;
-    color: TagColor | null;
+    color: TagColor;
 }
 
 
 export enum TagColor {
+    // Don't modify color sequence
     RED = "RED",
+    PINK = "PINK",
     ORANGE = "ORANGE",
     YELLOW = "YELLOW",
     LIME = "LIME",
@@ -19,5 +21,4 @@ export enum TagColor {
     CYAN = "CYAN",
     BLUE = "BLUE",
     PURPLE = "PURPLE",
-    PINK = "PINK",
 }

@@ -3,7 +3,7 @@ import React from "react";
 import {TagColor} from "../api/tag/TagTypes";
 
 interface ColorBadgeProps {
-    color: TagColor | string | null;
+    color: TagColor | null;
 }
 
 export const ColorBadge: React.FC<ColorBadgeProps> = ({color}) => {
@@ -11,7 +11,7 @@ export const ColorBadge: React.FC<ColorBadgeProps> = ({color}) => {
         <>
             <button
                 type="button"
-                className={`badge cursor-pointer ${getTagBGColor(color ? color.toString() : '')}`}/>
+                className={`badge cursor-pointer ${getTagBGColor(color ?? null)}`}/>
         </>
     );
 };
