@@ -4,7 +4,7 @@ import {TagResponse} from "../tag/TagTypes";
 export interface EventResponse {
     id: number;
     title: string;
-    tag: TagResponse | undefined;
+    tag: TagResponse;
     hashtags: HashtagResponse[];
     description: string;
     startDateTime: string;

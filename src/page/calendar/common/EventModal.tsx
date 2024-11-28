@@ -8,13 +8,17 @@ import { HashtagResponse } from "../../../api/hashtag/HashtagTypes";
 import {useEventModal} from "../context/EventModalContext";
 import { TagSelectBox } from '../../../component/TagSelectBox';
 import {useTagContext} from "../../../context/data/TagContext";
-import {TagResponse} from "../../../api/tag/TagTypes";
+import {TagColor, TagResponse} from "../../../api/tag/TagTypes";
 import {useEventContext} from "../../../context/data/EventContext";
 
 const EventModal: React.FC = () => {
     const {isModalOpen, closeEventModal, selectedEventId} = useEventModal();
     const [title, setTitle] = useState('');
-    const [tag, setTag] = useState<TagResponse | undefined | null>(undefined);
+    const initialTag = {id: 0,
+        title: '',
+        color: TagColor.BLUE
+    }
+    const [tag, setTag] = useState<TagResponse>(initialTag);
     const [hashtagTitle, setHashtagTitle] = useState('');
     const [hashtagIds, setHashtagIds] = useState<number[]>([]);
     const [hashtags, setHashtags] = useState<HashtagResponse[]>([]);
@@ -51,7 +55,7 @@ const EventModal: React.FC = () => {
             if (response.status === 200) {
                 const data: EventResponse = response.data;
                 setTitle(data.title ?? "");
-                setTag(data.tag ?? undefined)
+                setTag(data.tag)
                 setHashtags(data.hashtags ?? []);
                 setHashtagIds(data.hashtags ? data.hashtags.map((hashtag) => hashtag.id) : []);
                 setDescription(data.description ?? "");

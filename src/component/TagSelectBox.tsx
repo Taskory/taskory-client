@@ -4,16 +4,16 @@ import {ColorBadge} from "./ColorBadge";
 
 interface TagSelectBoxProps {
     list: TagResponse[];
-    tagState: TagResponse | undefined | null;
-    setTagState: Dispatch<SetStateAction<TagResponse | undefined | null>>;
+    tagState: TagResponse;
+    setTagState: Dispatch<SetStateAction<TagResponse>>;
 }
 
 export const TagSelectBox: React.FC<TagSelectBoxProps> = ({list, tagState, setTagState}) => {
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-    const handleSelect = (tag: TagResponse | null) => {
-        setTagState(tag ?? null);
+    const handleSelect = (tag: TagResponse) => {
+        setTagState(tag);
         setIsDropdownOpen(false);
     };
 
@@ -31,11 +31,6 @@ export const TagSelectBox: React.FC<TagSelectBoxProps> = ({list, tagState, setTa
             </div>
             <ul tabIndex={0}
                 className={`dropdown-content mb-1 bg-white rounded-b flex flex-col z-[1] ${isDropdownOpen ? '' : 'hidden'} w-full`}>
-                <li className={`flex items-center gap-y-2 cursor-pointer text-center`}
-                    onClick={() => handleSelect(null)}>
-                    <ColorBadge color={"NONE"}/>
-                    <div className="px-1">none</div>
-                </li>
                 {list.map((option, index) => (
                     (tagState?.title !== option.title &&
                         (

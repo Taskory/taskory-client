@@ -15,7 +15,7 @@ export const TagInfoDropbox: React.FC<TagInfoDropboxProps> = ({ tag, onClose }) 
     const {fetchOriginEvents} = useEventContext();
     const {fetchOriginTasks} = useTaskContext();
     const [editedTagTitle, setEditedTagTitle] = useState(tag.title);
-    const [selectedColor, setSelectedColor] = useState<TagColor | null>(tag.color);
+    const [selectedColor, setSelectedColor] = useState<TagColor>(tag.color);
     const { userTags, setUserTags } = useTagContext();
     const dropdownRef = useRef<HTMLDivElement>(null);
 

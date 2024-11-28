@@ -4,7 +4,7 @@ import {ColorBadge} from "./ColorBadge";
 
 interface ColorSelectBoxProps {
     list: TagColor[];
-    state: TagColor | null;
+    state: TagColor;
     setState: (color: TagColor) => void;
 }
 

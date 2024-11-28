@@ -8,7 +8,7 @@ export const TagInputSection: React.FC = () => {
     const { setUserTags, setSelectedTagIds} = useTagContext();
     const [newTagInfo, setNewTagInfo] = useState<SaveTagRequest>({
         title: '',
-        color: TagColor.NONE,
+        color: TagColor.BLUE,
     });
 
     // SaveTag Function with Async Handling and Error Catching
@@ -28,7 +28,7 @@ export const TagInputSection: React.FC = () => {
     const resetNewTagInputBox = () => {
         setNewTagInfo({
             'title': '',
-            'color': TagColor.NONE,
+            'color': TagColor.BLUE,
         })
     }
 

@@ -7,7 +7,7 @@ export interface TaskResponse {
     id: number;
     title: string;
     event: EventSummary | undefined;
-    tag: TagResponse | undefined;
+    tag: TagResponse;
     hashtags: HashtagResponse[];
     description: string;
     status: string;
