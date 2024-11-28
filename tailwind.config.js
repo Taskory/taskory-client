@@ -1,10 +1,37 @@
-/** @type {import('tailwindcss').Config} */
+/** @type {DefaultColors} */
+
+const colors = require('tailwindcss/colors')
+
 module.exports = {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
     extend: {
+      colors: {
+        slate: colors.slate,
+        gray: colors.gray,
+        neutral: colors.neutral,
+        stone: colors.stone,
+        red: colors.red,
+        orange: colors.orange,
+        amber: colors.amber,
+        yellow: colors.yellow,
+        lime: colors.lime,
+        green: colors.green,
+        emerald: colors.emerald,
+        teal: colors.teal,
+        cyan: colors.cyan,
+        sky: colors.sky,
+        blue: colors.blue,
+        indigo: colors.indigo,
+        violet: colors.violet,
+        purple: colors.purple,
+        fuchsia: colors.fuchsia,
+        pink: colors.pink,
+        rose: colors.rose,
+        zinc: colors.zinc
+      },
       gridTemplateColumns: {
         // Define a custom grid template named 'custom-cols'
         'timetable': '0.5fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr',
@@ -31,8 +58,9 @@ module.exports = {
   ],
   safelist: [
     {pattern: /grid-cols-([123456789])/},
-    {pattern: /text-(red|green|blue|yellow|orange|purple|pink)-500/},
-    {pattern: /bg-(red|green|blue|yellow|orange|purple|pink)-400/},
-    {pattern: /bg-(red|green|blue|yellow|orange|purple|pink)-100/}
+    { pattern: /bg-(slate|gray|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose|zinc)-(50|100|200|300|400|500|600|700|800|900)/ },
+    { pattern: /text-(slate|gray|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose|zinc)-(50|100|200|300|400|500|600|700|800|900)/ },
+    { pattern: /border-(slate|gray|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose|zinc)-(50|100|200|300|400|500|600|700|800|900)/ },
+
   ],
 }
