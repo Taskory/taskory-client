@@ -7,15 +7,15 @@ import {useEventContext} from "../../../../context/data/EventContext";
 import {useTaskContext} from "../../../../context/data/TaskContext";
 
 type TagInfoDropboxProps = {
-    tag: TagResponse;
+    tag?: TagResponse;
     onClose: () => void; // Close dropdown callback
 };
 
 export const TagInfoDropbox: React.FC<TagInfoDropboxProps> = ({ tag, onClose }) => {
     const {fetchOriginEvents} = useEventContext();
     const {fetchOriginTasks} = useTaskContext();
-    const [editedTagTitle, setEditedTagTitle] = useState(tag.title);
-    const [selectedColor, setSelectedColor] = useState<TagColor>(tag.color);
+    const [editedTagTitle, setEditedTagTitle] = useState(tag?.title ?? "");
+    const [selectedColor, setSelectedColor] = useState<TagColor>(tag?.color ?? TagColor.BLUE);
     const { userTags, setUserTags } = useTagContext();
     const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -39,28 +39,32 @@ export const TagInfoDropbox: React.FC<TagInfoDropboxProps> = ({ tag, onClose }) 
             title: editedTagTitle,
             color: selectedColor
         }
-        request_updateTag(tag.id, updateTag).then((res) => {
-            if (res) {
-                const updatedTags = userTags.map((t) =>
-                    t.id === tag.id ? { ...t, title: editedTagTitle.trim(), color: selectedColor } : t
-                );
-                setUserTags(updatedTags);
-                fetchOriginEvents();
-                fetchOriginTasks();
-            }
-        })
+        if (tag) {
+            request_updateTag(tag.id, updateTag).then((res) => {
+                if (res) {
+                    const updatedTags = userTags.map((t) =>
+                        t.id === tag.id ? { ...t, title: editedTagTitle.trim(), color: selectedColor } : t
+                    );
+                    setUserTags(updatedTags);
+                    fetchOriginEvents();
+                    fetchOriginTasks();
+                }
+            });
+        }
         onClose();
     };
 
     const deleteTag = () => {
-        request_deleteTag(tag.id).then((res) => {
-            if (res) {
-                const updatedTags = userTags.filter((t) => t.id !== tag.id);
-                setUserTags(updatedTags);
-                fetchOriginEvents();
-                fetchOriginTasks();
-            }
-        });
+        if (tag) {
+            request_deleteTag(tag.id).then((res) => {
+                if (res) {
+                    const updatedTags = userTags.filter((t) => t.id !== tag.id);
+                    setUserTags(updatedTags);
+                    fetchOriginEvents();
+                    fetchOriginTasks();
+                }
+            });
+        }
         onClose(); // Close the dropdown after delete
     };
 

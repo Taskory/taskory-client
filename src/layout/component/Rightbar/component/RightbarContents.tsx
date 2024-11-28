@@ -1,13 +1,15 @@
-import React from "react";
+import React, {useState} from "react";
 import { useTagContext } from "../../../../context/data/TagContext";
-import { TagInputSection } from "./TagInputSection";
 import {TagItem} from "./TagItem";
+import {TagInfoDropbox} from "./TagInfoDropbox";
 
 export const RightbarContents = () => {
     const { userTags, setSelectedTagIds } = useTagContext();
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     const selectAllTags = () => setSelectedTagIds(userTags.map((tag) => tag.id));
     const clearAllTags = () => setSelectedTagIds([]);
+    const handleAddTag = () => setIsDropdownOpen(!isDropdownOpen);
 
     return (
         <>
@@ -20,10 +22,18 @@ export const RightbarContents = () => {
                     <button onClick={clearAllTags} className="btn btn-xs btn-secondary">
                         Clear All
                     </button>
-                </div>
+                    <div className="relative">
+                        <button onClick={handleAddTag} className="btn btn-xs btn-info">
+                            + Tag
+                        </button>
+                        {isDropdownOpen && (
+                            <TagInfoDropbox
+                                onClose={() => setIsDropdownOpen(false)}
+                            />
+                        )}
+                    </div>
 
-                {/* 2nd space - Tag Input Section */}
-                <TagInputSection/>
+                </div>
 
                 {/* 3rd space - Tag List Section */}
                 <div className="flex flex-col gap-1">
