@@ -11,15 +11,13 @@ export interface SaveTagRequest {
 
 
 export enum TagColor {
-    BLACK = "BLACK",
     RED = "RED",
-    GREEN = "GREEN",
-    BLUE = "BLUE",
-    YELLOW = "YELLOW",
     ORANGE = "ORANGE",
-    PURPLE = "PURPLE",
-    BROWN = "BROWN",
-    PINK = "PINK",
+    YELLOW = "YELLOW",
+    LIME = "LIME",
+    GREEN = "GREEN",
     CYAN = "CYAN",
-    NONE = "NONE"
+    BLUE = "BLUE",
+    PURPLE = "PURPLE",
+    PINK = "PINK",
 }
