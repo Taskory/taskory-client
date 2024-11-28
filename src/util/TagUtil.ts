@@ -60,25 +60,25 @@ export const getTagBGColor = (color: TagColor | null) => {
 export const getTagColorStyle = (tagColor: string) => {
     switch (tagColor) {
         case TagColor.RED:
-            return 'bg-red-100 text-red-600'; // 배경 연한 Red, 텍스트 진한 Red (600)
+            return 'bg-red-100 text-red-700'; // 배경 연한 Red, 텍스트 진한 Red (600)
         case TagColor.ORANGE:
-            return 'bg-orange-100 text-orange-400'; // 배경 연한 Orange, 텍스트 Orange (400)
+            return 'bg-orange-100 text-orange-500'; // 배경 연한 Orange, 텍스트 Orange (400)
         case TagColor.YELLOW:
-            return 'bg-yellow-100 text-yellow-300'; // 배경 연한 Yellow, 텍스트 Yellow (300)
+            return 'bg-yellow-100 text-yellow-400'; // 배경 연한 Yellow, 텍스트 Yellow (300)
         case TagColor.LIME:
-            return 'bg-lime-100 text-lime-300'; // 배경 연한 Lime, 텍스트 Lime (300)
+            return 'bg-lime-100 text-lime-400'; // 배경 연한 Lime, 텍스트 Lime (300)
         case TagColor.GREEN:
-            return 'bg-green-100 text-green-500'; // 배경 연한 Green, 텍스트 Green (500)
+            return 'bg-green-100 text-green-600'; // 배경 연한 Green, 텍스트 Green (500)
         case TagColor.CYAN:
-            return 'bg-cyan-100 text-cyan-300'; // 배경 연한 Cyan, 텍스트 Cyan (300)
+            return 'bg-cyan-100 text-cyan-400'; // 배경 연한 Cyan, 텍스트 Cyan (300)
         case TagColor.BLUE:
-            return 'bg-blue-100 text-blue-600'; // 배경 연한 Blue, 텍스트 Blue (600)
+            return 'bg-blue-100 text-blue-700'; // 배경 연한 Blue, 텍스트 Blue (600)
         case TagColor.PURPLE:
-            return 'bg-purple-100 text-purple-500'; // 배경 연한 Purple, 텍스트 Purple (500)
+            return 'bg-purple-100 text-purple-600'; // 배경 연한 Purple, 텍스트 Purple (500)
         case TagColor.PINK:
-            return 'bg-pink-100 text-pink-300'; // 배경 연한 Pink, 텍스트 Pink (300)
+            return 'bg-pink-100 text-pink-400'; // 배경 연한 Pink, 텍스트 Pink (300)
         default:
-            return 'bg-gray-100 text-gray-300'; // 기본 Gray 설정
+            return 'bg-gray-100 text-gray-400'; // 기본 Gray 설정
     }
 };
 
@@ -88,23 +88,23 @@ export const getTagCheckBoxColor = (color: string | TagColor | null) => {
             case TagColor.RED:
                 return 'bg-red-600 [--chkbg:theme(colors.red.600)] [--chkfg:white]';
             case TagColor.ORANGE:
-                return 'bg-orange-400 [--chkbg:theme(colors.orange.400)] [--chkfg:black]';
+                return 'bg-orange-400 [--chkbg:theme(colors.orange.400)] [--chkfg:white]';
             case TagColor.YELLOW:
-                return 'bg-yellow-300 [--chkbg:theme(colors.yellow.300)] [--chkfg:black]';
+                return 'bg-yellow-300 [--chkbg:theme(colors.yellow.300)] [--chkfg:white]';
             case TagColor.LIME:
-                return 'bg-lime-300 [--chkbg:theme(colors.lime.300)] [--chkfg:black]';
+                return 'bg-lime-300 [--chkbg:theme(colors.lime.300)] [--chkfg:white]';
             case TagColor.GREEN:
                 return 'bg-green-500 [--chkbg:theme(colors.green.500)] [--chkfg:white]';
             case TagColor.CYAN:
-                return 'bg-cyan-300 [--chkbg:theme(colors.cyan.300)] [--chkfg:black]';
+                return 'bg-cyan-300 [--chkbg:theme(colors.cyan.300)] [--chkfg:white]';
             case TagColor.BLUE:
                 return 'bg-blue-600 [--chkbg:theme(colors.blue.600)] [--chkfg:white]';
             case TagColor.PURPLE:
                 return 'bg-purple-500 [--chkbg:theme(colors.purple.500)] [--chkfg:white]';
             case TagColor.PINK:
-                return 'bg-pink-300 [--chkbg:theme(colors.pink.300)] [--chkfg:black]';
+                return 'bg-pink-300 [--chkbg:theme(colors.pink.300)] [--chkfg:white]';
             default:
-                return 'bg-gray-200 [--chkbg:theme(colors.gray.200)] [--chkfg:black]';
+                return 'bg-gray-200 [--chkbg:theme(colors.gray.200)] [--chkfg:white]';
         }
     }
     return 'bg-gray-200 [--chkbg:theme(colors.gray.200)] [--chkfg:black]';
