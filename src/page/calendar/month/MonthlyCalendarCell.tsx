@@ -3,6 +3,7 @@ import {DateInfo, EventSummary} from "../../../api/event/EventsTypes";
 import { useEventModal } from "../../../context/modal/EventModalContext";
 import { useEventContext } from "../../../context/data/EventContext";
 import {isEqual} from "lodash";
+import {TimeUtil} from "../../../util/TimeUtil";
 
 interface MonthCalendarCellProps {
     day: number;
@@ -37,6 +38,7 @@ export const MonthlyCalendarCell: React.FC<MonthCalendarCellProps> = ({day, even
             handleSelectDate({ date, events });
         }
     }, [date, events, handleSelectDate]);
+
     return (
         <div
             className={`border-b border-r h-full overflow-hidden relative flex flex-col ${
@@ -48,15 +50,21 @@ export const MonthlyCalendarCell: React.FC<MonthCalendarCellProps> = ({day, even
             <div className={`overflow-hidden flex flex-col mb-1 h-full`}>
                 {visibleEvents.map((event, idx) => {
                     const textColor = `text-${event.tagColor.toLowerCase()}-500`;
+                    const time = TimeUtil.calculateTimeDisplay(
+                        TimeUtil.stringToDate(event.startDateTime),
+                        TimeUtil.stringToDate(event.dueDateTime),
+                        new Date(date.year, date.month - 1, date.day)
+                    )
                     return (
                         <button
                             key={idx}
                             onClick={() => handleOpenModal(event.id)}
                             className={`flex justify-between whitespace-nowrap overflow-hidden text-ellipsis hover:bg-gray-200 hover:shadow-md hover:scale-105 transition-transform duration-150 ease-in-out rounded-md`}
                         >
-                            <span className={`text-sm px-1 font-semibold ${textColor}`}>
+                            <p className={`text-sm px-1 font-semibold ${textColor}`}>
                                 ●{event.title}
-                            </span>
+                            </p>
+                            <p className="text-xs text-gray-600">{time}</p>
                         </button>
                     );
                 })}

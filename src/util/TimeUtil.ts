@@ -77,4 +77,42 @@ export class TimeUtil {
 
         return { start, end};
     }
+
+    public static calculateTimeDisplay(startDateTime: Date, dueDateTime: Date, selectedDate: Date | null): string {
+        if (!selectedDate) return "";
+
+        const formatTime = (date: Date) =>
+            date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
+
+        if (
+            startDateTime < selectedDate &&
+            dueDateTime > new Date(selectedDate.getTime() + 24 * 60 * 60 * 1000 - 1)
+        ) {
+            // Case 1: Event spans the entire selected day
+            return "";
+        } else if (
+            startDateTime < selectedDate &&
+            dueDateTime >= selectedDate &&
+            dueDateTime < new Date(selectedDate.getTime() + 24 * 60 * 60 * 1000)
+        ) {
+            // Case 2: Event ends on the selected day
+            return `~${formatTime(dueDateTime)}`;
+        } else if (
+            startDateTime >= selectedDate &&
+            startDateTime < new Date(selectedDate.getTime() + 24 * 60 * 60 * 1000) &&
+            dueDateTime > new Date(selectedDate.getTime() + 24 * 60 * 60 * 1000 - 1)
+        ) {
+            // Case 3: Event starts on the selected day
+            return `${formatTime(startDateTime)}~`;
+        } else if (
+            startDateTime >= selectedDate &&
+            startDateTime < new Date(selectedDate.getTime() + 24 * 60 * 60 * 1000) &&
+            dueDateTime <= new Date(selectedDate.getTime() + 24 * 60 * 60 * 1000 - 1)
+        ) {
+            // Case 4: Event starts and ends on the selected day
+            return `${formatTime(startDateTime)} ~ ${formatTime(dueDateTime)}`;
+        }
+
+        return "";
+    };
 }
