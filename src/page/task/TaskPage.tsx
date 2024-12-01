@@ -2,13 +2,12 @@ import {TaskHeader} from "./component/TaskHeader";
 import {TaskBoard} from "./component/TaskBoard";
 import {TaskStatus} from "../../api/task/TaskTypes";
 import React from "react";
-import {TaskWrapper} from "./TaskWrapper";
 import {HTML5Backend} from "react-dnd-html5-backend";
 import { DndProvider } from "react-dnd";
 
 export const TaskPage: React.FC = () => {
     return (
-        <TaskWrapper>
+        <>
             <div className="flex flex-col h-full">
                 {/* TaskHeader Component */}
                 <TaskHeader/>
@@ -23,6 +22,6 @@ export const TaskPage: React.FC = () => {
                     </DndProvider>
                 </div>
             </div>
-        </TaskWrapper>
+        </>
     );
 };

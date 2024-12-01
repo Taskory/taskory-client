@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useCalendar } from './context/CalendarContext';
 import { useCalendarView } from './context/CalendarViewContext';
 import monthNames from '../../constants/calendar.json';
-import { useEventModal } from './context/EventModalContext';
+import { useEventModal } from '../../context/modal/EventModalContext';
 
 export const CalendarHeader: React.FC = React.memo(() => {
   const { view, setView } = useCalendarView();

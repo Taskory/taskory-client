@@ -5,7 +5,7 @@ import { request_createEvent, request_deleteEvent, request_getEventById, request
 import { SaveEventRequest, EventResponse } from "../../../api/event/EventsTypes";
 import { TimeUtil } from "../../../util/TimeUtil";
 import { HashtagResponse } from "../../../api/hashtag/HashtagTypes";
-import {useEventModal} from "../context/EventModalContext";
+import {useEventModal} from "../../../context/modal/EventModalContext";
 import { TagSelectBox } from '../../../component/TagSelectBox';
 import {useTagContext} from "../../../context/data/TagContext";
 import {TagResponse} from "../../../api/tag/TagTypes";

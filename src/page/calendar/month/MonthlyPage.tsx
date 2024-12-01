@@ -4,6 +4,7 @@ import { MonthlyCalendarCell } from "./MonthlyCalendarCell";
 import { MonthlyHeader } from "./MonthlyHeader";
 import { useCalendar } from "../context/CalendarContext";
 import { splitEventsPerDay } from "./MonthlyUtils";
+import {DateInfo} from "../../../api/event/EventsTypes";
 
 export const MonthlyPage: React.FC = () => {
     const { currentDate, monthlyEvents } = useCalendar();
@@ -32,13 +33,28 @@ export const MonthlyPage: React.FC = () => {
             const dayOfMonth = i - monthInfo.firstDayOfWeek + 1;
             if (i < monthInfo.firstDayOfWeek) {
                 // Previous month's days
-                cells.push(<MonthlyCalendarCell key={i} day={previousMonthDays - monthInfo.firstDayOfWeek + i + 1} isCurrentMonth={false} />);
+                const date: DateInfo= {
+                    year: currentDate.getFullYear(),
+                    month: currentDate.getMonth(),
+                    day: previousMonthDays - monthInfo.firstDayOfWeek + i + 1,
+                };
+                cells.push(<MonthlyCalendarCell key={i} day={previousMonthDays - monthInfo.firstDayOfWeek + i + 1} isCurrentMonth={false} date={date} />);
             } else if (dayOfMonth > monthInfo.daysInMonth) {
                 // Next month's days
-                cells.push(<MonthlyCalendarCell key={i} day={dayOfMonth - monthInfo.daysInMonth} isCurrentMonth={false} />);
+                const date: DateInfo = {
+                    year: currentDate.getFullYear(),
+                    month: currentDate.getMonth() + 2,
+                    day: dayOfMonth - monthInfo.daysInMonth,
+                }
+                cells.push(<MonthlyCalendarCell key={i} day={dayOfMonth - monthInfo.daysInMonth} isCurrentMonth={false} date={date} />);
             } else {
                 // Current month's days with events
-                cells.push(<MonthlyCalendarCell key={i} day={dayOfMonth} events={eventsPerDayArray[dayOfMonth - 1]} isCurrentMonth={true} />);
+                const date: DateInfo = {
+                    year: currentDate.getFullYear(),
+                    month: currentDate.getMonth() + 1,
+                    day: dayOfMonth,
+                };
+                cells.push(<MonthlyCalendarCell key={i} day={dayOfMonth} events={eventsPerDayArray[dayOfMonth - 1]} isCurrentMonth={true} date={date} />);
             }
         }
 

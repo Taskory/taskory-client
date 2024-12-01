@@ -1,5 +1,5 @@
 import React from "react";
-import {useTaskModal} from "../context/TaskModalContext";
+import {useTaskModal} from "../../../context/modal/TaskModalContext";
 import {TaskStatus} from "../../../api/task/TaskTypes";
 
 export const TaskBoardHeader: React.FC<{ taskStatus: TaskStatus }> = ({ taskStatus }) => {

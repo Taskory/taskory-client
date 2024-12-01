@@ -1,6 +1,6 @@
 // TaskModal.tsx
 import React, {useCallback, useEffect, useState} from 'react';
-import {useTaskModal} from "../context/TaskModalContext";
+import {useTaskModal} from "../../../context/modal/TaskModalContext";
 import {request_createTask, request_getTaskById, request_updateTask} from "../../../api/task/TaskApi";
 import {SaveTaskRequest, TaskResponse, TaskStatus} from "../../../api/task/TaskTypes";
 import {TagSelectBox} from '../../../component/TagSelectBox';

@@ -1,6 +1,6 @@
 import React from "react";
 import {TaskSummary} from "../../../api/task/TaskTypes";
-import { useTaskModal } from "../context/TaskModalContext";
+import { useTaskModal } from "../../../context/modal/TaskModalContext";
 import { useDrag } from "react-dnd";
 import { ItemType } from "../../../api/task/TaskApi";
 import {getTagColorStyle} from "../../../util/TagUtil";

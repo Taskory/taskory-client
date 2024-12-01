@@ -30,3 +30,14 @@ export interface SaveEventRequest {
     dueDateTime?: string;
     location?: string;
 }
+
+export type DateEventInfo = {
+    date: DateInfo | null
+    events: EventSummary[];
+}
+
+export type DateInfo = {
+    year: number;
+    month: number;
+    day: number;
+}

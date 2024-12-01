@@ -50,7 +50,7 @@ const calendarReducer = (state: { currentDate: Date; sumOfMonthAndYear: number; 
 
 // Modify CalendarProvider to include refetchEvents
 export const CalendarProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const {originEvents} = useEventContext();
+    const {originEvents, initSelectedDateEventInfo} = useEventContext();
     const [state, dispatch] = useReducer(calendarReducer, {
         currentDate: getInitialDate(),
         sumOfMonthAndYear: getInitialDate().getFullYear() + getInitialDate().getMonth()
@@ -93,6 +93,7 @@ export const CalendarProvider: React.FC<{ children: ReactNode }> = ({ children }
 
     const goToNext = useCallback((view: string) => {
         const newDate = new Date(state.currentDate);
+        initSelectedDateEventInfo();
         switch (view) {
             case 'year':
                 newDate.setFullYear(state.currentDate.getFullYear() + 1);
@@ -110,10 +111,11 @@ export const CalendarProvider: React.FC<{ children: ReactNode }> = ({ children }
                 break;
         }
         dispatch({ type: 'SET_DATE', payload: newDate });
-    }, [state.currentDate]);
+    }, [initSelectedDateEventInfo, state.currentDate]);
 
     const goToPrev = useCallback((view: string) => {
         const newDate = new Date(state.currentDate);
+        initSelectedDateEventInfo();
         switch (view) {
             case 'year':
                 newDate.setFullYear(state.currentDate.getFullYear() - 1);
@@ -131,7 +133,7 @@ export const CalendarProvider: React.FC<{ children: ReactNode }> = ({ children }
                 break;
         }
         dispatch({ type: 'SET_DATE', payload: newDate });
-    }, [state.currentDate]);
+    }, [initSelectedDateEventInfo, state.currentDate]);
 
     const goToToday = useCallback(() => {
         dispatch({ type: 'SET_DATE', payload: new Date() });

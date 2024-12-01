@@ -6,7 +6,6 @@ import { TagInfoDropbox } from "./TagInfoDropbox"; // Import the dropdown compon
 
 type TagItemProps = {
     tag: TagResponse;
-    index: number;
 };
 
 export const TagItem: React.FC<TagItemProps> = ({ tag }) => {

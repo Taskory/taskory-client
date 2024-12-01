@@ -1,35 +1,48 @@
-import React from 'react';
-import { EventSummary } from "../../../api/event/EventsTypes";
-import { useEventModal } from "../context/EventModalContext";
+import React, {useEffect, useRef} from 'react';
+import {DateInfo, EventSummary} from "../../../api/event/EventsTypes";
+import { useEventModal } from "../../../context/modal/EventModalContext";
+import { useEventContext } from "../../../context/data/EventContext";
+import {isEqual} from "lodash";
 
 interface MonthCalendarCellProps {
     day: number;
     events?: EventSummary[];
     isCurrentMonth: boolean;
+    date: DateInfo
 }
 
-export const MonthlyCalendarCell: React.FC<MonthCalendarCellProps> = ({ day, events = [], isCurrentMonth }) => {
-    const { openEventModal } = useEventModal();
+export const MonthlyCalendarCell: React.FC<MonthCalendarCellProps> = ({day, events = [], isCurrentMonth, date}) => {
+    /* Context */
+    const {openEventModal} = useEventModal();
+    const {handleSelectDate} = useEventContext();
 
+    /* Functions */
     const handleOpenModal = (id: number) => {
         if (id) {
             openEventModal(id);
         }
     };
 
-    const handleShowAllEvents = () => {
-        // 나머지 이벤트를 보여줄 수 있는 모달을 열거나 처리
-        console.log("Show all events for the day");
-    };
-
+    /* Variables */
     const visibleEvents = events.slice(0, 3); // 최대 3개의 이벤트만 표시
     const moreEventCount = events.length - visibleEvents.length;
 
+    const previousEventsRef = useRef(events);
+
+
+    /* useEffect */
+    useEffect(() => {
+        if (date && !isEqual(previousEventsRef.current, events)) {
+            previousEventsRef.current = events;
+            handleSelectDate({ date, events });
+        }
+    }, [date, events, handleSelectDate]);
     return (
         <div
             className={`border-b border-r h-full overflow-hidden relative flex flex-col ${
                 isCurrentMonth ? 'bg-white hover:bg-gray-100' : 'bg-gray-50 hover:bg-gray-200'
             } transition-colors duration-150 ease-in-out`}
+            onClick={() => handleSelectDate({date, events})}
         >
             <div className="text-left ml-2 mt-1">{day}</div>
             <div className={`overflow-hidden flex flex-col mb-1 h-full`}>
@@ -49,7 +62,6 @@ export const MonthlyCalendarCell: React.FC<MonthCalendarCellProps> = ({ day, eve
                 })}
                 {moreEventCount > 0 && (
                     <button
-                        onClick={handleShowAllEvents}
                         className="text-sm text-gray-500 mt-1"
                     >
                         +{moreEventCount} more

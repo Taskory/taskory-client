@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import {SaveTagRequest, TagColor, TagResponse} from "../../../../api/tag/TagTypes";
 import { useTagContext } from "../../../../context/data/TagContext";
-import {request_deleteTag, request_updateTag} from "../../../../api/tag/TagApi";
+import {request_createTag, request_deleteTag, request_updateTag} from "../../../../api/tag/TagApi";
 import { ColorSelectBox } from "../../../../component/ColorSelectBox";
 import {useEventContext} from "../../../../context/data/EventContext";
 import {useTaskContext} from "../../../../context/data/TaskContext";
@@ -16,7 +16,7 @@ export const TagInfoDropbox: React.FC<TagInfoDropboxProps> = ({ tag, onClose }) 
     const {fetchOriginTasks} = useTaskContext();
     const [editedTagTitle, setEditedTagTitle] = useState(tag?.title ?? "");
     const [selectedColor, setSelectedColor] = useState<TagColor>(tag?.color ?? TagColor.BLUE);
-    const { userTags, setUserTags } = useTagContext();
+    const { userTags, setUserTags, selectedTagIds, setSelectedTagIds } = useTagContext();
     const dropdownRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -35,17 +35,26 @@ export const TagInfoDropbox: React.FC<TagInfoDropboxProps> = ({ tag, onClose }) 
     }, [onClose]);
 
     const updateTag = () => {
-        const updateTag: SaveTagRequest = {
+        const saveTagRequest: SaveTagRequest = {
             title: editedTagTitle,
             color: selectedColor
         }
         if (tag) {
-            request_updateTag(tag.id, updateTag).then((res) => {
+            request_updateTag(tag.id, saveTagRequest).then((res) => {
                 if (res) {
                     const updatedTags = userTags.map((t) =>
-                        t.id === tag.id ? { ...t, title: editedTagTitle.trim(), color: selectedColor } : t
+                        t.id === tag.id ? {...t, title: editedTagTitle.trim(), color: selectedColor} : t
                     );
                     setUserTags(updatedTags);
+                    fetchOriginEvents();
+                    fetchOriginTasks();
+                }
+            });
+        } else {
+            request_createTag(saveTagRequest).then((res) => {
+                if (res) {
+                    setUserTags([...userTags, {id: res.id, title: editedTagTitle, color: selectedColor}]);
+                    setSelectedTagIds([...selectedTagIds, res.id]);
                     fetchOriginEvents();
                     fetchOriginTasks();
                 }
