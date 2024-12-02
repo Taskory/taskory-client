@@ -9,7 +9,6 @@ import {
 import axios, {AxiosResponse} from 'axios';
 import {getAuthCookie} from "../../util/CookieUtil";
 import {API_URL} from "../../constants";
-import qs from 'qs';
 
 // Creates a new task
 export const request_createTask = async (saveTaskRequest: SaveTaskRequest): Promise<TaskResponse> => {
