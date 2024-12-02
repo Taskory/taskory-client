@@ -9,6 +9,7 @@ import {
 import axios, {AxiosResponse} from 'axios';
 import {getAuthCookie} from "../../util/CookieUtil";
 import {API_URL} from "../../constants";
+import qs from 'qs';
 
 // Creates a new task
 export const request_createTask = async (saveTaskRequest: SaveTaskRequest): Promise<TaskResponse> => {
@@ -179,5 +180,32 @@ export const request_updateTaskStatus = async (taskId: number, taskStatus: TaskS
        return false;
     }
 };
+
+export async function request_getTasksByTags(tagIds: number[]) {
+    console.log("tagIds: ", tagIds);
+    const requestUrl = `${API_URL}/task/tags`
+
+    const authToken = getAuthCookie();  // Fetch the latest cookie value here
+    const requestOptions = {
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${authToken}`,
+        },
+    };
+
+    try {
+        const response: AxiosResponse<TaskSummary[]> = await axios.get(requestUrl, {
+            ...requestOptions,
+            params: {
+                tag_ids: tagIds.join(","), // Send tag IDs as query parameters
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching tasks:', error);
+        throw error;
+    }
+
+}
 
 export const ItemType = "TASK";

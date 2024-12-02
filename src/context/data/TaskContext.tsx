@@ -1,6 +1,7 @@
 import React, {createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState} from 'react';
 import {TaskStatus, TaskSummary} from "../../api/task/TaskTypes";
-import {request_getAllTasks, request_updateTaskStatus} from "../../api/task/TaskApi";
+import {request_getAllTasks, request_getTasksByTags, request_updateTaskStatus} from "../../api/task/TaskApi";
+import {useTagContext} from "./TagContext";
 
 interface TaskContextProps {
     TO_DO: TaskSummary[],
@@ -17,13 +18,15 @@ interface TaskContextProviderProps {
 }
 
 export const TaskContextProvider: React.FC<TaskContextProviderProps> = ({ children }) => {
+    const {selectedTagIds} = useTagContext();
     const [TO_DO, setTO_DO] = useState<TaskSummary[]>([]);
     const [IN_PROGRESS, setIN_PROGRESS] = useState<TaskSummary[]>([]);
     const [DONE, setDONE] = useState<TaskSummary[]>([]);
 
     const fetchOriginTasks = useCallback(async () => {
         try {
-            const taskData: TaskSummary[] = await request_getAllTasks(); // Fetch tasks using getAllTasks
+            // const taskData: TaskSummary[] = await request_getAllTasks(); // Fetch tasks using getAllTasks
+            const taskData: TaskSummary[] = await request_getTasksByTags(selectedTagIds);
 
             const toDoTasks: TaskSummary[] = [];
             const inProgressTasks: TaskSummary[] = [];
@@ -51,7 +54,7 @@ export const TaskContextProvider: React.FC<TaskContextProviderProps> = ({ childr
         } catch (error) {
             console.error('Error fetching Tasks:', error);
         }
-    }, []);
+    }, [selectedTagIds]);
 
     const moveTaskItem = async (taskItem: TaskSummary, toStatus: TaskStatus) => {
         if (taskItem.status === toStatus) return; // if status of task item equals toStatus not request
