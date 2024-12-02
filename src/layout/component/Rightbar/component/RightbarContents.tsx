@@ -27,6 +27,12 @@ export const RightbarContents = () => {
     const clearAllTags = () => setSelectedTagIds([]);
     const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
 
+    function formatDateInfo(dateInfo: DateInfo | null): string {
+        if (dateInfo) {
+            return `${dateInfo.year}-${dateInfo.month.toString().padStart(2, '0')}-${dateInfo.day.toString().padStart(2, '0')}`;
+        } else return "";
+    }
+
     return (
         <div className="p-2 bg-white rounded-lg shadow-lg">
             {/* Action Buttons */}
@@ -64,8 +70,8 @@ export const RightbarContents = () => {
                     <span>{isTagsOpen ? "-" : "+"}</span>
                 </button>
                 {isTagsOpen && (
-                    <div className="mt-2 space-y-2 border-b pb-3">
-                        {userTags.map((tag, index) => (
+                    <div className="mt-2 space-y-2 border-b pb-3 max-h-48 overflow-y-auto">
+                        {userTags.map((tag) => (
                             <TagItem key={tag.id} tag={tag} />
                         ))}
                     </div>
@@ -79,13 +85,12 @@ export const RightbarContents = () => {
                     className="w-full flex justify-between items-center py-2 px-3 bg-gray-100 text-sm font-semibold rounded-lg hover:bg-gray-200 focus:ring-2 focus:ring-gray-300"
                 >
                     <span>Events</span>
+                    <span>{formatDateInfo(dateInfo)}</span>
                     <span>{isEventsOpen ? "-" : "+"}</span>
                 </button>
                 {isEventsOpen && (
-                    <div className="space-y-3 mt-3">
-                        <h4 className="text-sm text-gray-500 font-medium mb-2">
-                            {dateInfo ? `${dateInfo.year}-${dateInfo.month.toString().padStart(2, '0')}-${dateInfo.day.toString().padStart(2, '0')}` : ""}
-                        </h4>
+                    <div
+                        className="mt-2 space-y-2 border-b pb-3 max-h-48 overflow-y-auto">
                         {events.map((event) => (
                             <MiniEventCard
                                 key={event.id}
