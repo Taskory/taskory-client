@@ -28,24 +28,24 @@ export const RightbarContents = () => {
     const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
 
     return (
-        <div className="p-4 bg-white rounded-lg shadow-lg">
+        <div className="p-2 bg-white rounded-lg shadow-lg">
             {/* Action Buttons */}
-            <div className="flex gap-2 mb-4">
+            <div className="flex gap-1 mb-2">
                 <button
                     onClick={selectAllTags}
-                    className="px-3 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium shadow hover:bg-blue-700 focus:ring-2 focus:ring-blue-500"
+                    className="p-1 bg-blue-600 text-white rounded-lg text-sm font-medium shadow hover:bg-blue-700 focus:ring-2 focus:ring-blue-500"
                 >
                     Select All
                 </button>
                 <button
                     onClick={clearAllTags}
-                    className="px-3 py-2 bg-gray-600 text-white rounded-lg text-sm font-medium shadow hover:bg-gray-700 focus:ring-2 focus:ring-gray-500"
+                    className="p-1 bg-gray-600 text-white rounded-lg text-sm font-medium shadow hover:bg-gray-700 focus:ring-2 focus:ring-gray-500"
                 >
                     Clear All
                 </button>
                 <button
                     onClick={toggleDropdown}
-                    className="px-3 py-2 bg-green-600 text-white rounded-lg text-sm font-medium shadow hover:bg-green-700 focus:ring-2 focus:ring-green-500"
+                    className="p-1 bg-green-600 text-white rounded-lg text-sm font-medium shadow hover:bg-green-700 focus:ring-2 focus:ring-green-500"
                 >
                     + Tag
                 </button>
