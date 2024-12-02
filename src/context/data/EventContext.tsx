@@ -8,7 +8,8 @@ import React, {
     useState,
 } from 'react';
 import {DateEventInfo, EventSummary} from '../../api/event/EventsTypes';
-import { request_getAllEvents } from '../../api/event/EventApi';
+import {request_getAllEvents, request_getEventsByTags} from '../../api/event/EventApi';
+import {useTagContext} from "./TagContext";
 
 interface EventContextProps {
     originEvents: EventSummary[];
@@ -25,6 +26,7 @@ interface EventContextProviderProps {
 }
 
 export const EventContextProvider: React.FC<EventContextProviderProps> = ({ children }) => {
+    const {selectedTagIds } = useTagContext()
     const [originEvents, setOriginEvents] = useState<EventSummary[]>([]);
     const [selectedDateEventInfo, setSelectedDateEventInfo] = useState<DateEventInfo>({date: null, events: []});
 
@@ -38,14 +40,11 @@ export const EventContextProvider: React.FC<EventContextProviderProps> = ({ chil
 
     const fetchOriginEvents = useCallback(async () => {
         try {
-            const res = await request_getAllEvents();
-            if (res) {
-                setOriginEvents(res.data);
-            }
+            setOriginEvents(await request_getEventsByTags(selectedTagIds));
         } catch (error) {
             console.error('Error fetching events:', error);
         }
-    }, []);
+    }, [selectedTagIds]);
 
     useEffect(() => {
         fetchOriginEvents();

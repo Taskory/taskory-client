@@ -4,6 +4,7 @@ import { EventResponse, EventSummary, SaveEventRequest } from './EventsTypes';
 import { API_URL } from "../../constants";
 import { getAuthCookie } from "../../util/CookieUtil";
 import {TimeUtil} from "../../util/TimeUtil";
+import {TaskSummary} from "../task/TaskTypes";
 
 // API 요청 함수들 정의
 export const request_getMonthlyEvents = async (date: string): Promise<AxiosResponse<EventSummary[]>> => {
@@ -94,3 +95,30 @@ export const request_getAllEvents = async (): Promise<AxiosResponse<EventSummary
         ...requestOptions,
     });
 };
+
+export async function request_getEventsByTags(tagIds: number[]) {
+    const requestUrl = `${API_URL}/event/tags`
+
+    const authToken = getAuthCookie();  // Fetch the latest cookie value here
+    const requestOptions = {
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${authToken}`,
+        },
+    };
+
+    try {
+        const response: AxiosResponse<EventSummary[]> = await axios.get(requestUrl, {
+            ...requestOptions,
+            params: {
+                tag_ids: tagIds.join(","), // Send tag IDs as query parameters
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching events:', error);
+        throw error;
+    }
+
+}
+
