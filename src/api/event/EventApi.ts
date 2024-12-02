@@ -4,7 +4,6 @@ import { EventResponse, EventSummary, SaveEventRequest } from './EventsTypes';
 import { API_URL } from "../../constants";
 import { getAuthCookie } from "../../util/CookieUtil";
 import {TimeUtil} from "../../util/TimeUtil";
-import {TaskSummary} from "../task/TaskTypes";
 
 // API 요청 함수들 정의
 export const request_getMonthlyEvents = async (date: string): Promise<AxiosResponse<EventSummary[]>> => {
