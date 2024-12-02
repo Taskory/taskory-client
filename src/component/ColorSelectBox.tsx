@@ -22,18 +22,26 @@ export const ColorSelectBox: React.FC<ColorSelectBoxProps> = ({ list, state, set
 
     return (
         <div className="relative">
-            <div onClick={toggleDropdown}>
-                <ColorBadge color={state} />
+            <div onClick={toggleDropdown} className="cursor-pointer">
+                <ColorBadge color={state}/>
             </div>
             {isDropdownOpen && (
-                <ul className="mb-1 rounded-box flex flex-col z-[1] shadow absolute bg-white">
+                <div
+                    className="rounded-lg shadow-lg grid grid-cols-5 w-28 absolute bg-white border border-gray-200 z-10 "
+                    onClick={(e) => e.stopPropagation()}
+                >
                     {list.map((option, index) => (
-                        <li key={`TagColor-${option}-${index}`} onClick={() => handleSelect(option)}>
-                            <ColorBadge color={option} />
-                        </li>
+                        <div
+                            key={`TagColor-${option}-${index}`}
+                            onClick={() => handleSelect(option)}
+                            className="flex items-center justify-center cursor-pointer p-1 hover:bg-gray-100 transition-all"
+                        >
+                            <ColorBadge color={option}/>
+                        </div>
                     ))}
-                </ul>
+                </div>
             )}
         </div>
+
     );
 };
