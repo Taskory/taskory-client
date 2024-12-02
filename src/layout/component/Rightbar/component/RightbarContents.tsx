@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useTagContext } from "../../../../context/data/TagContext";
 import { TagItem } from "./TagItem";
 import { TagInfoDropbox } from "./TagInfoDropbox";
@@ -17,9 +17,6 @@ export const RightbarContents = () => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isTagsOpen, setIsTagsOpen] = useState(true);
     const [isEventsOpen, setIsEventsOpen] = useState(true);
-
-    const tagRef = useRef<HTMLDivElement | null>(null);
-    const eventRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         setDateInfo(selectedDateEventInfo.date);
@@ -66,21 +63,13 @@ export const RightbarContents = () => {
                     <span>Tags</span>
                     <span>{isTagsOpen ? "-" : "+"}</span>
                 </button>
-                <div
-                    ref={tagRef}
-                    className="overflow-hidden transition-max-height duration-300 ease-in-out"
-                    style={{
-                        maxHeight: isTagsOpen
-                            ? `${tagRef.current?.scrollHeight || 0}px`
-                            : "0px",
-                    }}
-                >
+                {isTagsOpen && (
                     <div className="mt-2 space-y-2 border-b pb-3">
                         {userTags.map((tag, index) => (
-                            <TagItem key={index} tag={tag} />
+                            <TagItem key={tag.id} tag={tag} />
                         ))}
                     </div>
-                </div>
+                )}
             </div>
 
             {/* Events Section */}
@@ -92,18 +81,10 @@ export const RightbarContents = () => {
                     <span>Events</span>
                     <span>{isEventsOpen ? "-" : "+"}</span>
                 </button>
-                <div
-                    ref={eventRef}
-                    className="overflow-hidden transition-max-height duration-300 ease-in-out"
-                    style={{
-                        maxHeight: isEventsOpen
-                            ? `${eventRef.current?.scrollHeight || 0}px`
-                            : "0px",
-                    }}
-                >
+                {isEventsOpen && (
                     <div className="space-y-3 mt-3">
                         <h4 className="text-sm text-gray-500 font-medium mb-2">
-                            {dateInfo ? `${dateInfo.year}-${dateInfo.month}-${dateInfo.day}` : ""}
+                            {dateInfo ? `${dateInfo.year}-${dateInfo.month.toString().padStart(2, '0')}-${dateInfo.day.toString().padStart(2, '0')}` : ""}
                         </h4>
                         {events.map((event) => (
                             <MiniEventCard
@@ -114,7 +95,7 @@ export const RightbarContents = () => {
                             />
                         ))}
                     </div>
-                </div>
+                )}
             </div>
         </div>
     );
