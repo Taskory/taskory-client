@@ -82,7 +82,7 @@ export const TagInfoDropbox: React.FC<TagInfoDropboxProps> = ({ tag, onClose }) 
     return (
         <div
             ref={dropdownRef}
-            className="absolute right-0 mt-1 bg-white border rounded shadow-lg z-10 w-48 p-2"
+            className="absolute right-1 mt-10 bg-white border rounded shadow-lg z-10 w-48 p-2"
         >
             <div className="flex items-center gap-2 mb-2">
                 {/* Color Selection */}
@@ -107,6 +107,9 @@ export const TagInfoDropbox: React.FC<TagInfoDropboxProps> = ({ tag, onClose }) 
                 </button>
                 <button onClick={deleteTag} className="btn btn-xs btn-error">
                     Delete
+                </button>
+                <button onClick={() => onClose()} className="btn btn-xs">
+                    close
                 </button>
             </div>
         </div>

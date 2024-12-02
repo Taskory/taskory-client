@@ -36,21 +36,19 @@ export const TagItem: React.FC<TagItemProps> = ({ tag }) => {
                 </span>
             </div>
 
-            <div className="relative">
-                <button
-                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                    className="btn btn-xs btn-info"
-                >
-                    info
-                </button>
+            <button
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className="btn btn-xs btn-info"
+            >
+                info
+            </button>
 
-                {isDropdownOpen && (
-                    <TagInfoDropbox
-                        tag={tag}
-                        onClose={() => setIsDropdownOpen(false)}
-                    />
-                )}
-            </div>
+            {isDropdownOpen && (
+                <TagInfoDropbox
+                    tag={tag}
+                    onClose={() => setIsDropdownOpen(false)}
+                />
+            )}
         </div>
     );
 };
