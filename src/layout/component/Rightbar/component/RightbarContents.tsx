@@ -6,7 +6,6 @@ import { useEventContext } from "../../../../context/data/EventContext";
 import { DateInfo, EventSummary } from "../../../../api/event/EventsTypes";
 import { useEventModal } from "../../../../context/modal/EventModalContext";
 import { MiniEventCard } from "./MiniEventCard";
-import {getTagCheckBoxColor} from "../../../../util/TagUtil";
 
 export const RightbarContents = () => {
     const { userTags, setSelectedTagIds } = useTagContext();
@@ -26,7 +25,6 @@ export const RightbarContents = () => {
 
     const selectAllTags = () => setSelectedTagIds(userTags.map((tag) => tag.id));
     const clearAllTags = () => setSelectedTagIds([]);
-    const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
 
     function formatDateInfo(dateInfo: DateInfo | null): string {
         if (dateInfo) {
@@ -37,13 +35,13 @@ export const RightbarContents = () => {
     function renderTagBtnList() {
         return (
             <div className={`flex items-center justify-between group mt-2`}>
-                <div className="flex items-center gap-2 w-full">
+                <div className="flex items-center gap-1 w-full">
                     <button onClick={selectAllTags}
-                            className="p-1 bg-blue-600 text-white rounded-lg text-sm font-medium shadow hover:bg-blue-700 focus:ring-2 focus:ring-blue-500">
+                            className="p-1 bg-blue-600 text-white rounded-lg text-xs font-medium shadow hover:bg-blue-700 focus:ring-2 focus:ring-blue-500">
                         Select All
                     </button>
                     <button onClick={clearAllTags}
-                            className="p-1 bg-gray-600 text-white rounded-lg text-sm font-medium shadow hover:bg-gray-700 focus:ring-2 focus:ring-gray-500">
+                            className="p-1 bg-gray-600 text-white rounded-lg text-xs font-medium shadow hover:bg-gray-700 focus:ring-2 focus:ring-gray-500">
                         Clear All
                     </button>
                 </div>
