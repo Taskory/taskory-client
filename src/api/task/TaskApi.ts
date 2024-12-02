@@ -181,7 +181,6 @@ export const request_updateTaskStatus = async (taskId: number, taskStatus: TaskS
 };
 
 export async function request_getTasksByTags(tagIds: number[]) {
-    console.log("tagIds: ", tagIds);
     const requestUrl = `${API_URL}/task/tags`
 
     const authToken = getAuthCookie();  // Fetch the latest cookie value here
