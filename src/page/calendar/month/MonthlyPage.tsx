@@ -63,7 +63,6 @@ export const MonthlyPage: React.FC = () => {
 
     return (
         <div className="overflow-hidden h-full">
-            <MonthlyHeader />
             <div
                 className={`grid grid-cols-7 grid-rows-${weeksOfCurrentMonth} h-full w-full`}
                 style={{

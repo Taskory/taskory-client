@@ -1,24 +1,17 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {WeekInfoInterface} from "./WeeklyInterface";
 import {useCalendar} from "../context/CalendarContext";
 import {getEventDayIndex, getWeeklyEvents, initializeWeekInfo } from "./WeeklyUtils";
 import {EventSummary} from "../../../api/event/EventsTypes";
-import { WeeklyHeader } from './WeeklyHeader';
 import { WeeklyAllDayRow } from './WeeklyAllDayRow';
 import { WeeklyColumns } from './WeeklyColumns';
 import {TimeTableLayout} from "../common/TimeTableLayout";
 
 export const WeeklyPage: React.FC = () => {
     const { currentDate, processedEvents } = useCalendar();
-    const [weekInfo, setWeekInfo] = useState<WeekInfoInterface>(initializeWeekInfo(currentDate));
+    const [weekInfo ] = useState<WeekInfoInterface>(initializeWeekInfo(currentDate));
     const [under24hoursEvents, setUnder24hoursEvents] = useState<EventSummary[][]>([[], [], [], [], [], [], []]);
     const [over24hoursEvents, setOver24hoursEvents] = useState<EventSummary[][]>([[], [], [], [], [], [], []]);
-    const scrollContainerRef = useRef<HTMLDivElement>(null);
-    const [scrollBarWidth, setScrollBarWidth] = useState(0);
-
-    useEffect(() => {
-        setWeekInfo(initializeWeekInfo(currentDate));
-    }, [currentDate]);
 
     useEffect(() => {
         const startingTimeOfWeek = new Date(weekInfo.startSunday);
@@ -60,23 +53,15 @@ export const WeeklyPage: React.FC = () => {
     }, [processedEvents, weekInfo.startSunday]);
 
 
-    useEffect(() => {
-        if (scrollContainerRef.current) {
-            const scrollbarWidth = scrollContainerRef.current.offsetWidth - scrollContainerRef.current.clientWidth;
-            setScrollBarWidth(scrollbarWidth);
-        }
-    }, []);
+
 
     return (
         <div className="w-full flex-grow flex flex-col">
-            {/* Header Section */}
-            <WeeklyHeader scrollBarWidth={scrollBarWidth} startDate={weekInfo.startSunday}/>
-
             {/* All day events row */}
-            <WeeklyAllDayRow scrollBarWidth={scrollBarWidth} allDayEvents={over24hoursEvents} />
+            <WeeklyAllDayRow allDayEvents={over24hoursEvents} />
 
             {/* Main Content: Time Table */}
-            <TimeTableLayout containerRef={scrollContainerRef}>
+            <TimeTableLayout >
                 <WeeklyColumns under24hoursEvents={under24hoursEvents} />
             </TimeTableLayout>
         </div>

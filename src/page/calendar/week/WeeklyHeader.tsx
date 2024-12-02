@@ -1,13 +1,18 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import calendar from "../../../constants/calendar.json";
-
-interface WeeklyHeaderProps {
-    scrollBarWidth: number,
-    startDate: Date
-}
+import {initializeWeekInfo} from "./WeeklyUtils";
+import {useCalendar} from "../context/CalendarContext";
+import {useScrollBar} from "../context/ScrollBarContext";
 
 // Header common for weekday names
-export const WeeklyHeader: React.FC<WeeklyHeaderProps> = ({ scrollBarWidth, startDate }) => {
+export const WeeklyHeader: React.FC = () => {
+    const {currentDate} = useCalendar();
+    const {scrollBarWidth} = useScrollBar();
+    const [startDate, setStartDate] = useState<Date>(initializeWeekInfo(currentDate).startSunday);
+
+    useEffect(() => {
+        setStartDate(initializeWeekInfo(currentDate).startSunday);
+    }, [currentDate]);
     return (
         <div className="sticky top-[4rem] z-10 bg-white grid grid-cols-timetable border-b" style={{ paddingRight: scrollBarWidth }}>
             <div className="border-r" />

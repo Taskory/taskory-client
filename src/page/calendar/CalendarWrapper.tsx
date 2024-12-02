@@ -1,5 +1,7 @@
 import {CalendarProvider} from "./context/CalendarContext";
 import React from "react";
+import { CalendarViewProvider } from "./context/CalendarViewContext";
+import {ScrollBarContextProvider} from "./context/ScrollBarContext";
 
 interface CalendarWrapperProps {
     children: React.ReactNode;
@@ -7,8 +9,12 @@ interface CalendarWrapperProps {
 
 export const CalendarWrapper: React.FC<CalendarWrapperProps> = ({children}) => {
     return (
-        <CalendarProvider>
-            {children}
-        </CalendarProvider>
+        <ScrollBarContextProvider>
+            <CalendarViewProvider>
+                <CalendarProvider>
+                    {children}
+                </CalendarProvider>
+            </CalendarViewProvider>
+        </ScrollBarContextProvider>
     );
 };

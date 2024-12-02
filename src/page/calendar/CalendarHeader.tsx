@@ -4,6 +4,9 @@ import { useCalendar } from './context/CalendarContext';
 import { useCalendarView } from './context/CalendarViewContext';
 import monthNames from '../../constants/calendar.json';
 import { useEventModal } from '../../context/modal/EventModalContext';
+import {MonthlyHeader} from "./month/MonthlyHeader";
+import {WeeklyHeader} from "./week/WeeklyHeader";
+import {DailyHeader} from "./day/DailyHedaer";
 
 export const CalendarHeader: React.FC = React.memo(() => {
   const { view, setView } = useCalendarView();
@@ -75,78 +78,96 @@ export const CalendarHeader: React.FC = React.memo(() => {
       []
   );
 
-  return (
-      <div className="w-full flex justify-between items-center border-r p-4 sticky top-0 z-20 bg-white border-b">
-        {/* Date Input Controls */}
-        <div className="flex space-x-1">
-          {/* View Selector */}
-          <div className="flex space-x-2 items-center">
-            <select className="select select-sm" onChange={(e) => setView(e.target.value)} value={view}>
-              <option value="year">Year</option>
-              <option value="month">Month</option>
-              <option value="week">Week</option>
-              <option value="day">Day</option>
-            </select>
-          </div>
 
-          {/* Year Input */}
-          <input
-              type="number"
-              value={inputYear}
-              onChange={handleYearChange}
-              className="w-20 text-center font-semibold text-lg"
-              placeholder="Year"
-          />
 
-          {/* Conditionally render Month and Day Inputs */}
-          {view !== 'year' && (
-              <select
-                  value={selectedMonth}
-                  onChange={handleMonthChange}
-                  className="select select-sm font-semibold text-lg"
-              >
-                {monthNames.monthNames.map((month, index) => (
-                    <option key={index} value={index}>
-                      {month}
-                    </option>
-                ))}
-              </select>
-          )}
+    function renderCalendarHeader() {
+        switch(view) {
+            case 'year':
+                return <></>;
+            case 'month':
+                return <MonthlyHeader />;
+            case 'week':
+                return <WeeklyHeader />;
+            case 'day':
+                return <DailyHeader />;
+        }
+    }
 
-          {(view === 'day' || view === 'week') && (
-              <select
-                  value={selectedDay}
-                  onChange={handleDayChange}
-                  className="select select-sm font-semibold text-lg"
-              >
-                {Array.from(
-                    { length: getDaysInMonth(parseInt(inputYear), parseInt(selectedMonth)) },
-                    (_, i) => i + 1
-                ).map((day) => (
-                    <option key={day} value={day}>
-                      {day}
-                    </option>
-                ))}
-              </select>
-          )}
-        </div>
+    return (
+        <>
+            <div className="w-full flex justify-between items-center border-r p-4 sticky top-0 z-20 bg-white border-b">
+                {/* Date Input Controls */}
+                <div className="flex space-x-1">
+                    {/* View Selector */}
+                    <div className="flex space-x-2 items-center">
+                        <select className="select select-sm" onChange={(e) => setView(e.target.value)} value={view}>
+                            <option value="year">Year</option>
+                            <option value="month">Month</option>
+                            <option value="week">Week</option>
+                            <option value="day">Day</option>
+                        </select>
+                    </div>
 
-        {/* Navigation Controls */}
-        <div className="flex space-x-2 items-center">
-          <button className="btn btn-sm" onClick={() => goToPrev(view)}>
-            {'<'}
-          </button>
-          <button className="btn btn-sm" onClick={goToToday}>
-            Today
-          </button>
-          <button className="btn btn-sm" onClick={() => goToNext(view)}>
-            {'>'}
-          </button>
+                    {/* Year Input */}
+                    <input
+                        type="number"
+                        value={inputYear}
+                        onChange={handleYearChange}
+                        className="w-20 text-center font-semibold text-lg"
+                        placeholder="Year"
+                    />
 
-          <button className="btn btn-sm bg-blue-500 text-white" onClick={() => openEventModal()}>
-            + Event
-          </button>
-        </div>
-      </div>
-  );
+                    {/* Conditionally render Month and Day Inputs */}
+                    {view !== 'year' && (
+                        <select
+                            value={selectedMonth}
+                            onChange={handleMonthChange}
+                            className="select select-sm font-semibold text-lg"
+                        >
+                            {monthNames.monthNames.map((month, index) => (
+                                <option key={index} value={index}>
+                                    {month}
+                                </option>
+                            ))}
+                        </select>
+                    )}
+
+                    {(view === 'day' || view === 'week') && (
+                        <select
+                            value={selectedDay}
+                            onChange={handleDayChange}
+                            className="select select-sm font-semibold text-lg"
+                        >
+                            {Array.from(
+                                {length: getDaysInMonth(parseInt(inputYear), parseInt(selectedMonth))},
+                                (_, i) => i + 1
+                            ).map((day) => (
+                                <option key={day} value={day}>
+                                    {day}
+                                </option>
+                            ))}
+                        </select>
+                    )}
+                </div>
+
+                {/* Navigation Controls */}
+                <div className="flex space-x-2 items-center">
+                    <button className="btn btn-sm" onClick={() => goToPrev(view)}>
+                        {'<'}
+                    </button>
+                    <button className="btn btn-sm" onClick={goToToday}>
+                        Today
+                    </button>
+                    <button className="btn btn-sm" onClick={() => goToNext(view)}>
+                        {'>'}
+                    </button>
+
+                    <button className="btn btn-sm bg-blue-500 text-white" onClick={() => openEventModal()}>
+                        + Event
+                    </button>
+                </div>
+            </div>
+            {renderCalendarHeader()}
+        </>
+    );
 });

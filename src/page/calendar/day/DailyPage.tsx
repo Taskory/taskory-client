@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState } from "react";
+import React, {useEffect, useState } from "react";
 import {useCalendar} from "../context/CalendarContext";
 import {EventSummary} from "../../../api/event/EventsTypes";
 import {getEventsForDate} from "./DailyUtils";
@@ -11,8 +11,6 @@ export const DailyPage: React.FC = () => {
     const { currentDate, processedEvents } = useCalendar();
     const [eventsUnder24, setEventsUnder24] = useState<EventSummary[]>(getEventsForDate(processedEvents.eventsUnder24, currentDate));
     const [eventsOver24, setEventsOver24] = useState<EventSummary[]>(getEventsForDate(processedEvents.eventsOver24, currentDate));
-    const scrollContainerRef = useRef<HTMLDivElement>(null);
-    const [scrollBarWidth ] = useState(0);
 
     useEffect(() => {
         setEventsUnder24(getEventsForDate(processedEvents.eventsUnder24, currentDate));
@@ -21,14 +19,11 @@ export const DailyPage: React.FC = () => {
 
     return (
         <div className="w-full flex-grow flex flex-col">
-            {/* Header Section */}
-            <DailyHeader scrollBarWidth={scrollBarWidth}/>
-
             {/* All day events row */}
-            <DailyAllDayRow scrollBarWidth={scrollBarWidth} events={eventsOver24}/>
+            <DailyAllDayRow events={eventsOver24}/>
 
             {/* Main Content: Time Table */}
-            <TimeTableLayout containerRef={scrollContainerRef}>
+            <TimeTableLayout >
                 <DailyColumn events={eventsUnder24} />
             </TimeTableLayout>
         </div>

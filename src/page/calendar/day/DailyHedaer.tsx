@@ -1,14 +1,13 @@
 import React from "react";
 import { useCalendar } from "../context/CalendarContext";
 import calendar from "../../../constants/calendar.json"
+import {useScrollBar} from "../context/ScrollBarContext";
 
-interface DailyHeaderProps {
-    scrollBarWidth: number;
-}
 
 // Header common for weekday names
-export const DailyHeader: React.FC<DailyHeaderProps> = ({ scrollBarWidth }) => {
+export const DailyHeader: React.FC = () => {
     const { currentDate } = useCalendar();
+    const {scrollBarWidth} = useScrollBar();
 
     // Extract day of the week (0 = Sunday, 6 = Saturday)
     const dayOfWeek = currentDate.getDay();
