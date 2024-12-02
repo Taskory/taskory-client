@@ -2,7 +2,6 @@ import React, {useEffect, useState } from "react";
 import {useCalendar} from "../context/CalendarContext";
 import {EventSummary} from "../../../api/event/EventsTypes";
 import {getEventsForDate} from "./DailyUtils";
-import {DailyHeader} from "./DailyHedaer";
 import {DailyAllDayRow} from "./DailyAllDayRow";
 import {DailyColumn} from "./DailyColumn";
 import {TimeTableLayout} from "../common/TimeTableLayout";

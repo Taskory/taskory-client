@@ -4,11 +4,11 @@ import { useCalendar } from './context/CalendarContext';
 import { useCalendarView } from './context/CalendarViewContext';
 import monthNames from '../../constants/calendar.json';
 import { useEventModal } from '../../context/modal/EventModalContext';
-import {MonthlyHeader} from "./month/MonthlyHeader";
-import {WeeklyHeader} from "./week/WeeklyHeader";
-import {DailyHeader} from "./day/DailyHedaer";
+import {MonthlyTopBar} from "./month/MonthlyTopBar";
+import {WeeklyTopBar} from "./week/WeeklyTopBar";
+import {DailyTopBar} from "./day/DailyHedaer";
 
-export const CalendarHeader: React.FC = React.memo(() => {
+export const CalendarTopBar: React.FC = React.memo(() => {
   const { view, setView } = useCalendarView();
   const { currentDate, setCurrentDate, goToNext, goToPrev, goToToday } = useCalendar();
   const { openEventModal } = useEventModal();
@@ -80,16 +80,16 @@ export const CalendarHeader: React.FC = React.memo(() => {
 
 
 
-    function renderCalendarHeader() {
+    function renderCalendarTopBar() {
         switch(view) {
             case 'year':
                 return <></>;
             case 'month':
-                return <MonthlyHeader />;
+                return <MonthlyTopBar />;
             case 'week':
-                return <WeeklyHeader />;
+                return <WeeklyTopBar />;
             case 'day':
-                return <DailyHeader />;
+                return <DailyTopBar />;
         }
     }
 
@@ -167,7 +167,7 @@ export const CalendarHeader: React.FC = React.memo(() => {
                     </button>
                 </div>
             </div>
-            {renderCalendarHeader()}
+            {renderCalendarTopBar()}
         </>
     );
 });

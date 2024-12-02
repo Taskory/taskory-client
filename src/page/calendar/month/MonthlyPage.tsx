@@ -1,7 +1,6 @@
 // MonthlyPage.tsx
 import React, { useEffect, useState } from "react";
 import { MonthlyCalendarCell } from "./MonthlyCalendarCell";
-import { MonthlyHeader } from "./MonthlyHeader";
 import { useCalendar } from "../context/CalendarContext";
 import { splitEventsPerDay } from "./MonthlyUtils";
 import {DateInfo} from "../../../api/event/EventsTypes";

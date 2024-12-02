@@ -1,5 +1,5 @@
 import React from "react";
-import { CalendarHeader } from "./CalendarHeader";
+import { CalendarTopBar } from "./CalendarTopBar";
 import {CalendarWrapper} from "./CalendarWrapper";
 import { CalendarBody } from "./CalendarBody";
 
@@ -8,8 +8,9 @@ export const CalendarPage = () => {
     return (
         <CalendarWrapper>
             <div className="flex flex-col h-full">
-                <CalendarHeader/>
+                <CalendarTopBar/>
                 <CalendarBody />
+
             </div>
         </CalendarWrapper>
     );

@@ -5,7 +5,7 @@ import {useCalendar} from "../context/CalendarContext";
 import {useScrollBar} from "../context/ScrollBarContext";
 
 // Header common for weekday names
-export const WeeklyHeader: React.FC = () => {
+export const WeeklyTopBar: React.FC = () => {
     const {currentDate} = useCalendar();
     const {scrollBarWidth} = useScrollBar();
     const [startDate, setStartDate] = useState<Date>(initializeWeekInfo(currentDate).startSunday);

@@ -5,7 +5,7 @@ import {useScrollBar} from "../context/ScrollBarContext";
 
 
 // Header common for weekday names
-export const DailyHeader: React.FC = () => {
+export const DailyTopBar: React.FC = () => {
     const { currentDate } = useCalendar();
     const {scrollBarWidth} = useScrollBar();
 
