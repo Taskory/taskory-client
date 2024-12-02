@@ -6,6 +6,7 @@ import { useEventContext } from "../../../../context/data/EventContext";
 import { DateInfo, EventSummary } from "../../../../api/event/EventsTypes";
 import { useEventModal } from "../../../../context/modal/EventModalContext";
 import { MiniEventCard } from "./MiniEventCard";
+import {getTagCheckBoxColor} from "../../../../util/TagUtil";
 
 export const RightbarContents = () => {
     const { userTags, setSelectedTagIds } = useTagContext();
@@ -33,33 +34,37 @@ export const RightbarContents = () => {
         } else return "";
     }
 
-    return (
-        <div className="p-2 bg-white rounded-lg shadow-lg">
-            {/* Action Buttons */}
-            <div className="flex gap-1 mb-2">
-                <button
-                    onClick={selectAllTags}
-                    className="p-1 bg-blue-600 text-white rounded-lg text-sm font-medium shadow hover:bg-blue-700 focus:ring-2 focus:ring-blue-500"
-                >
-                    Select All
+    function renderTagBtnList() {
+        return (
+            <div className={`flex items-center justify-between group mt-2`}>
+                <div className="flex items-center gap-2 w-full">
+                    <button onClick={selectAllTags}
+                            className="p-1 bg-blue-600 text-white rounded-lg text-sm font-medium shadow hover:bg-blue-700 focus:ring-2 focus:ring-blue-500">
+                        Select All
+                    </button>
+                    <button onClick={clearAllTags}
+                            className="p-1 bg-gray-600 text-white rounded-lg text-sm font-medium shadow hover:bg-gray-700 focus:ring-2 focus:ring-gray-500">
+                        Clear All
+                    </button>
+                </div>
+
+                <button onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                        className="btn btn-xs bg-green-600">
+                    +
                 </button>
-                <button
-                    onClick={clearAllTags}
-                    className="p-1 bg-gray-600 text-white rounded-lg text-sm font-medium shadow hover:bg-gray-700 focus:ring-2 focus:ring-gray-500"
-                >
-                    Clear All
-                </button>
-                <button
-                    onClick={toggleDropdown}
-                    className="p-1 bg-green-600 text-white rounded-lg text-sm font-medium shadow hover:bg-green-700 focus:ring-2 focus:ring-green-500"
-                >
-                    + Tag
-                </button>
+
                 {isDropdownOpen && (
-                    <TagInfoDropbox onClose={() => setIsDropdownOpen(false)} />
+                    <TagInfoDropbox
+                        onClose={() => setIsDropdownOpen(false)}
+                    />
                 )}
             </div>
 
+        );
+    }
+
+    return (
+        <div className="p-2 bg-white rounded-lg shadow-lg">
             {/* Tags Section */}
             <div>
                 <button
@@ -70,11 +75,17 @@ export const RightbarContents = () => {
                     <span>{isTagsOpen ? "-" : "+"}</span>
                 </button>
                 {isTagsOpen && (
-                    <div className="mt-2 space-y-2 border-b pb-3 max-h-48 overflow-y-auto">
-                        {userTags.map((tag) => (
-                            <TagItem key={tag.id} tag={tag} />
-                        ))}
-                    </div>
+                    <>
+                        {/* Action Buttons */}
+                        {renderTagBtnList()}
+
+                        {/* Render tag list */}
+                        <div className="mt-2 space-y-2 border-b pb-3 max-h-48 overflow-y-auto">
+                            {userTags.map((tag) => (
+                                <TagItem key={tag.id} tag={tag}/>
+                            ))}
+                        </div>
+                    </>
                 )}
             </div>
 
@@ -104,4 +115,4 @@ export const RightbarContents = () => {
             </div>
         </div>
     );
-};
+            };
