@@ -4,9 +4,9 @@ import {HashtagResponse} from "../hashtag/HashtagTypes";
 import {TagResponse} from "../tag/TagTypes";
 
 export interface TaskResponse {
-    id: number;
+    id: number | null;
     title: string;
-    event: EventSummary | undefined;
+    event: EventSummary | null;
     tag: TagResponse;
     hashtags: HashtagResponse[];
     description: string;
@@ -17,8 +17,8 @@ export interface TaskResponse {
 // Interface for SaveTaskRequest
 export interface SaveTaskRequest {
     title: string;
-    eventId: number | undefined;
-    tagId: number | undefined;
+    eventId: number | null;
+    tagId: number | null;
     hashtagIds: number[];
     description: string;
     status: string;
