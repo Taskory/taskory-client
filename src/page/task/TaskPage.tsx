@@ -1,9 +1,6 @@
 import {TaskHeader} from "./component/TaskHeader";
-import {TaskBoard} from "./component/TaskBoard";
-import {TaskStatus} from "../../api/task/TaskTypes";
 import React from "react";
-import {HTML5Backend} from "react-dnd-html5-backend";
-import { DndProvider } from "react-dnd";
+import {TaskBoard} from "./component/taskBoard/TaskBoard";
 
 export const TaskPage: React.FC = () => {
     return (
@@ -13,14 +10,7 @@ export const TaskPage: React.FC = () => {
                 <TaskHeader/>
 
                 {/* Boards Section */}
-                <div className="flex gap-2 p-2">
-                    <DndProvider backend={HTML5Backend}>
-                        {/* Filter tasks into boards based on their status */}
-                        <TaskBoard taskStatus={TaskStatus.TO_DO}/>
-                        <TaskBoard taskStatus={TaskStatus.IN_PROGRESS}/>
-                        <TaskBoard taskStatus={TaskStatus.DONE}/>
-                    </DndProvider>
-                </div>
+                <TaskBoard />
             </div>
         </>
     );

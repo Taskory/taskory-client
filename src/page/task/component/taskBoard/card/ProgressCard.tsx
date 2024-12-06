@@ -1,24 +1,16 @@
 import React from "react";
-import { TaskSummary } from "../../../api/task/TaskTypes";
-import { useTaskModal } from "../../../context/modal/TaskModalContext";
-import { useDrag } from "react-dnd";
-import { ItemType } from "../../../api/task/TaskApi";
-import { getTagColorStyle } from "../../../util/TagUtil";
-import { getStatusStyle } from "../../../util/StatusUtil";
+import { useTaskModal } from "../../../../../context/modal/TaskModalContext";
+import { getTagColorStyle } from "../../../../../util/TagUtil";
+import { getStatusStyle } from "../../../../../util/StatusUtil";
+import {CardType} from "../../../../../api/task/TaskTypes";
+import {useTaskDragDrop} from "../../../context/TaskDragDropContext";
 
-interface TaskItemProps {
-    task: TaskSummary;
-}
-
-export const TaskCard: React.FC<TaskItemProps> = ({ task }) => {
+export const ProgressCard: React.FC<CardType> = ({ task }) => {
     const { openTaskModal } = useTaskModal();
 
-    const [, drag] = useDrag(() => ({
-        type: ItemType,
-        item: () => ({
-            ...task,
-        }),
-    }), [task]);
+    const {useTaskDrag} = useTaskDragDrop();
+
+    const [, drag] = useTaskDrag(task);
 
     // 모달이 열릴 때 클릭 중복 방지
     const handleCardClick = (e: React.MouseEvent) => {

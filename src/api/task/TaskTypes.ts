@@ -45,7 +45,13 @@ export interface TaskSummary {
 }
 
 export enum TaskStatus {
-    TO_DO = "TO_DO",
-    IN_PROGRESS = "IN_PROGRESS",
-    DONE = "DONE"
+    BACKLOG = "BACKLOG",
+    TODO = "TODO",
+    PROGRESS = "PROGRESS",
+    DONE = "DONE",
 }
+
+export type CardType = {
+    task: TaskSummary;
+}
+

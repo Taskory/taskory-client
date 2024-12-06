@@ -156,8 +156,8 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
                                                 type="radio"
                                                 name="status"
                                                 className="hidden"
-                                                value={TaskStatus.TO_DO}
-                                                checked={task.status === TaskStatus.TO_DO}
+                                                value={TaskStatus.BACKLOG}
+                                                checked={task.status === TaskStatus.BACKLOG}
                                                 onChange={(e) => setTask({
                                                     ...task,
                                                     status: e.target.value as TaskStatus
@@ -165,7 +165,27 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
                                             />
                                             <div
                                                 className={`w-full text-center py-2 border-2 rounded-lg text-sm transition-colors ${
-                                                    task.status === TaskStatus.TO_DO ? 'bg-red-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                                    task.status === TaskStatus.BACKLOG ? 'bg-red-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                                }`}
+                                            >
+                                                BACKLOG
+                                            </div>
+                                        </label>
+                                        <label className="cursor-pointer flex-1">
+                                            <input
+                                                type="radio"
+                                                name="status"
+                                                className="hidden"
+                                                value={TaskStatus.TODO}
+                                                checked={task.status === TaskStatus.TODO}
+                                                onChange={(e) => setTask({
+                                                    ...task,
+                                                    status: e.target.value as TaskStatus
+                                                })}
+                                            />
+                                            <div
+                                                className={`w-full text-center py-2 border-2 rounded-lg text-sm transition-colors ${
+                                                    task.status === TaskStatus.TODO ? 'bg-red-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                                 }`}
                                             >
                                                 To Do
@@ -176,8 +196,8 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
                                                 type="radio"
                                                 name="status"
                                                 className="hidden"
-                                                value={TaskStatus.IN_PROGRESS}
-                                                checked={task.status === TaskStatus.IN_PROGRESS}
+                                                value={TaskStatus.PROGRESS}
+                                                checked={task.status === TaskStatus.PROGRESS}
                                                 onChange={(e) => setTask({
                                                     ...task,
                                                     status: e.target.value as TaskStatus
@@ -185,7 +205,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
                                             />
                                             <div
                                                 className={`w-full text-center py-2 border-2 rounded-lg text-sm transition-colors ${
-                                                    task.status === TaskStatus.IN_PROGRESS ? 'bg-yellow-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                                    task.status === TaskStatus.PROGRESS ? 'bg-yellow-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                                 }`}
                                             >
                                                 In Progress

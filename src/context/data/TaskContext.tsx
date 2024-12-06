@@ -4,8 +4,9 @@ import {request_getTasksByTags, request_updateTaskStatus} from "../../api/task/T
 import {useTagContext} from "./TagContext";
 
 interface TaskContextProps {
-    TO_DO: TaskSummary[],
-    IN_PROGRESS: TaskSummary[],
+    BACKLOG: TaskSummary[],
+    TODO: TaskSummary[],
+    PROGRESS: TaskSummary[],
     DONE: TaskSummary[],
     fetchOriginTasks: () => void;
     moveTaskItem: (taskItem: TaskSummary, toContainerId: TaskStatus) => void;
@@ -19,25 +20,30 @@ interface TaskContextProviderProps {
 
 export const TaskContextProvider: React.FC<TaskContextProviderProps> = ({ children }) => {
     const {selectedTagIds} = useTagContext();
-    const [TO_DO, setTO_DO] = useState<TaskSummary[]>([]);
-    const [IN_PROGRESS, setIN_PROGRESS] = useState<TaskSummary[]>([]);
+    const [TODO, setTODO] = useState<TaskSummary[]>([]);
+    const [PROGRESS, setPROGRESS] = useState<TaskSummary[]>([]);
     const [DONE, setDONE] = useState<TaskSummary[]>([]);
+    const [BACKLOG, setBACKLOG] = useState<TaskSummary[]>([]);
 
     const fetchOriginTasks = useCallback(async () => {
         try {
             // const taskData: TaskSummary[] = await request_getAllTasks(); // Fetch tasks using getAllTasks
             const taskData: TaskSummary[] = await request_getTasksByTags(selectedTagIds);
 
+            const backlogTasks: TaskSummary[] = [];
             const toDoTasks: TaskSummary[] = [];
             const inProgressTasks: TaskSummary[] = [];
             const doneTasks: TaskSummary[] = [];
 
             taskData.forEach(task => {
                 switch (task.status) {
-                    case TaskStatus.TO_DO:
+                    case TaskStatus.BACKLOG:
+                        backlogTasks.push(task);
+                        break;
+                    case TaskStatus.TODO:
                         toDoTasks.push(task);
                         break;
-                    case TaskStatus.IN_PROGRESS:
+                    case TaskStatus.PROGRESS:
                         inProgressTasks.push(task);
                         break;
                     case TaskStatus.DONE:
@@ -48,8 +54,9 @@ export const TaskContextProvider: React.FC<TaskContextProviderProps> = ({ childr
                 }
             });
 
-            setTO_DO(toDoTasks);
-            setIN_PROGRESS(inProgressTasks);
+            setBACKLOG(backlogTasks);
+            setTODO(toDoTasks);
+            setPROGRESS(inProgressTasks);
             setDONE(doneTasks);
         } catch (error) {
             console.error('Error fetching Tasks:', error);
@@ -63,11 +70,14 @@ export const TaskContextProvider: React.FC<TaskContextProviderProps> = ({ childr
             const result = await request_updateTaskStatus(taskItem.id, toStatus);
             if (result) {
                 switch (taskItem.status) {
-                    case TaskStatus.TO_DO:
-                        setTO_DO(prevTO_DO => prevTO_DO.filter(task => task.id !== taskItem.id));
+                    case TaskStatus.BACKLOG:
+                        setBACKLOG(prevBACKLOG => prevBACKLOG.filter(task => task.id !== taskItem.id));
                         break;
-                    case TaskStatus.IN_PROGRESS:
-                        setIN_PROGRESS(prevIN_PROGRESS => prevIN_PROGRESS.filter(task => task.id !== taskItem.id));
+                    case TaskStatus.TODO:
+                        setTODO(prevTO_DO => prevTO_DO.filter(task => task.id !== taskItem.id));
+                        break;
+                    case TaskStatus.PROGRESS:
+                        setPROGRESS(prevPROGRESS => prevPROGRESS.filter(task => task.id !== taskItem.id));
                         break;
                     case TaskStatus.DONE:
                         setDONE(prevDONE => prevDONE.filter(task => task.id !== taskItem.id));
@@ -76,11 +86,14 @@ export const TaskContextProvider: React.FC<TaskContextProviderProps> = ({ childr
 
                 taskItem.status = toStatus;
                 switch (toStatus) {
-                    case TaskStatus.TO_DO:
-                        setTO_DO(prevTO_DO => [...prevTO_DO, taskItem]);
+                    case TaskStatus.BACKLOG:
+                        setBACKLOG(prevBACKLOG => [...prevBACKLOG, taskItem]);
                         break;
-                    case TaskStatus.IN_PROGRESS:
-                        setIN_PROGRESS(prevIN_PROGRESS => [...prevIN_PROGRESS, taskItem]);
+                    case TaskStatus.TODO:
+                        setTODO(prevTODO => [...prevTODO, taskItem]);
+                        break;
+                    case TaskStatus.PROGRESS:
+                        setPROGRESS(prevPROGRESS => [...prevPROGRESS, taskItem]);
                         break;
                     case TaskStatus.DONE:
                         setDONE(prevDONE => [...prevDONE, taskItem]);
@@ -97,12 +110,13 @@ export const TaskContextProvider: React.FC<TaskContextProviderProps> = ({ childr
     }, [fetchOriginTasks]);
 
     const contextValue: TaskContextProps = useMemo(() => ({
-        TO_DO,
-        IN_PROGRESS,
+        BACKLOG,
+        TODO,
+        PROGRESS,
         DONE,
         fetchOriginTasks,
         moveTaskItem
-    }), [TO_DO, IN_PROGRESS, DONE, fetchOriginTasks]);
+    }), [BACKLOG, TODO, PROGRESS, DONE, fetchOriginTasks]);
 
     return (
         <TaskContext.Provider value={contextValue}>
