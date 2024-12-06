@@ -43,10 +43,6 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
     });
     const [taskItems, setTaskItems] = useState<TaskItemDto[]>([]);
 
-    useEffect(() => {
-        console.log(taskItems);
-    }, [taskItems]);
-
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     /* variables and functions */

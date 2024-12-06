@@ -65,7 +65,6 @@ export const request_updateTask = async (taskId: number, saveTaskRequest: SaveTa
             "Authorization": `Bearer ${authToken}`,
         },
     };
-    console.log(saveTaskRequest);
 
     const response = await axios.put<TaskResponse>(`${API_URL}/task/${taskId}`, saveTaskRequest, requestOptions);
     return response.data;
