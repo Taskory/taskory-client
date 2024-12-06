@@ -2,17 +2,29 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {useTaskModal} from "../../../context/modal/TaskModalContext";
 import {request_createTask, request_getTaskById, request_updateTask} from "../../../api/task/TaskApi";
-import {SaveTaskRequest, TaskResponse, TaskStatus, TaskItemResponse} from "../../../api/task/TaskTypes";
+import {SaveTaskRequest, TaskItemDto, TaskResponse, TaskStatus} from "../../../api/task/TaskTypes";
 import {TagSelectBox} from '../../../component/TagSelectBox';
 import {useTagContext} from "../../../context/data/TagContext";
-import { TaskItemCard } from './TaskItemCard';
+import {EventSummary} from "../../../api/event/EventsTypes";
+import {TagResponse} from "../../../api/tag/TagTypes";
+import {HashtagResponse} from "../../../api/hashtag/HashtagTypes";
+import {TaskItemSection} from "./TaskItemSection";
 
 interface TaskModalProps {
-    loading: boolean;
-    selectedStatus: TaskStatus | null;
+    selectedStatus: TaskStatus;
 }
 
-export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus }) => {
+type TaskModalState = {
+    id: number | null;
+    title: string;
+    event: EventSummary | null;
+    tag: TagResponse;
+    hashtags: HashtagResponse[];
+    description: string;
+    status: string;
+}
+
+export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
     /* Context */
     const { isModalOpen, selectedTaskId, closeTaskModal } = useTaskModal();
     const { userTags } = useTagContext();
@@ -20,35 +32,24 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus })
     const tagOptions = useMemo(() => userTags, [userTags]);
 
     /* useState */
-    const [task, setTask] = useState<TaskResponse>({
+    const [task, setTask] = useState<TaskModalState>({
         id: null,
         title: '',
         event: null,
         tag: tagOptions[0],
         hashtags: [],
         description: '',
-        status: TaskStatus.TO_DO,
-        items: [],
+        status: selectedStatus,
     });
+    const [taskItems, setTaskItems] = useState<TaskItemDto[]>([]);
 
-    const [newTaskItemTitle, setNewTaskItemTitle] = useState<string>('');
-    const [isSaving, setIsSaving] = useState<boolean>(false);
+    useEffect(() => {
+        console.log(taskItems);
+    }, [taskItems]);
+
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     /* variables and functions */
-    const resetTaskStatus = useCallback((): void => {
-        setTask({
-            id: null,
-            title: '',
-            event: null,
-            tag: tagOptions[0],
-            hashtags: [],
-            description: '',
-            status: TaskStatus.TO_DO,
-            items: [],
-        });
-    }, [tagOptions]);
-
     const fetchTask = useCallback(async (taskId: number): Promise<void> => {
         setIsLoading(true);
         try {
@@ -61,8 +62,8 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus })
                 hashtags: response.hashtags,
                 description: response.description,
                 status: response.status as TaskStatus,
-                items: response.items,
             });
+            setTaskItems(response.items);
         } catch (e) {
             console.error('Failed to fetch task:', e);
         } finally {
@@ -71,7 +72,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus })
     }, []);
 
     const handleSave = useCallback(async () => {
-        setIsSaving(true);
+        setIsLoading(true);
         const saveTaskRequest: SaveTaskRequest = {
             title: task.title,
             eventId: task.event?.id ?? null,
@@ -79,6 +80,8 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus })
             hashtagIds: task.hashtags.map(hashtag => hashtag.id),
             description: task.description,
             status: task.status,
+            items: taskItems.map((item) =>
+                item.id && item.id < 0 ? {...item, id: null} : item),
         };
 
         try {
@@ -91,61 +94,22 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus })
         } catch (error) {
             console.error('Error saving task:', error);
         } finally {
-            setIsSaving(false);
+            setIsLoading(false);
         }
-    }, [task, selectedTaskId, closeTaskModal]);
+    }, [task, selectedTaskId, taskItems, closeTaskModal]);
 
-    const handleAddTaskItem = useCallback(() => {
-        if (newTaskItemTitle.trim() !== '') {
-            const newTaskItem: TaskItemResponse = {
-                id: Date.now(), // Temporary ID
-                title: newTaskItemTitle,
-                completed: false,
-                taskId: task.id ?? -1,
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString(),
-            };
-            setTask((prevTask) => ({
-                ...prevTask,
-                items: [...prevTask.items, newTaskItem],
-            }));
-            setNewTaskItemTitle('');
-        }
-    }, [newTaskItemTitle, task.id]);
 
-    const handleKeyPress = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            handleAddTaskItem();
-        }
-    }, [handleAddTaskItem]);
-
-    const handleEditTaskItem = useCallback((itemId: number, newTitle: string) => {
-        setTask((prevTask) => ({
-            ...prevTask,
-            items: prevTask.items.map((item) =>
-                item.id === itemId ? { ...item, title: newTitle } : item
-            ),
-        }));
-    }, []);
 
     /* useEffect */
     useEffect(() => {
         if (isModalOpen) {
             if (selectedTaskId) {
                 fetchTask(selectedTaskId);
-            } else {
-                resetTaskStatus();
             }
         }
-    }, [isModalOpen, fetchTask, resetTaskStatus, selectedStatus, selectedTaskId]);
+    }, [fetchTask, isModalOpen, selectedTaskId]);
 
-    /* Progress Calculation */
-    const calculateProgress = useMemo((): number => {
-        if (task.items.length === 0) return 0;
-        const completedItems = task.items.filter(item => item.completed).length;
-        return Math.round((completedItems / task.items.length) * 100);
-    }, [task.items]);
+
 
     const LoadingSpinner = () => (
         <div className="flex justify-center items-center h-32">
@@ -154,13 +118,17 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus })
     );
 
     return (
-        <div className={`fixed inset-0 z-50 ${isModalOpen ? 'flex' : 'hidden'} items-center justify-center bg-black bg-opacity-50`}>
+        <div
+            className={`fixed inset-0 z-50 ${isModalOpen ? 'flex' : 'hidden'} items-center justify-center bg-black bg-opacity-50`}>
             <dialog open={isModalOpen} className="modal max-h-screen max-w-screen">
                 <div className="modal-box max-w-lg p-6 rounded-lg shadow-xl">
-                    {(loading || isLoading || isSaving) ? (
-                        <LoadingSpinner />
+                    {(isLoading) ? (
+                        <LoadingSpinner/>
                     ) : (
-                        <form onSubmit={(e) => { e.preventDefault(); handleSave(); }}>
+                        <form onSubmit={(e) => {
+                            e.preventDefault();
+                            handleSave();
+                        }}>
                             <div className="grid grid-cols-4 gap-4">
                                 <div className="col-span-3">
                                     <input
@@ -168,7 +136,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus })
                                         className="input input-ghost w-full text-lg font-semibold border-b-2 focus:outline-none focus:border-blue-500"
                                         value={task.title}
                                         placeholder="Enter Task Title"
-                                        onChange={(e) => setTask({ ...task, title: e.target.value })}
+                                        onChange={(e) => setTask({...task, title: e.target.value})}
                                     />
                                 </div>
                                 <div className="col-span-1 content-center">
@@ -178,8 +146,8 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus })
                                         setTagState={(valueOrUpdater) =>
                                             setTask((prevTask) =>
                                                 typeof valueOrUpdater === 'function'
-                                                    ? { ...prevTask, tag: valueOrUpdater(prevTask.tag) }
-                                                    : { ...prevTask, tag: valueOrUpdater }
+                                                    ? {...prevTask, tag: valueOrUpdater(prevTask.tag)}
+                                                    : {...prevTask, tag: valueOrUpdater}
                                             )
                                         }
                                     />
@@ -194,7 +162,10 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus })
                                                 className="hidden"
                                                 value={TaskStatus.TO_DO}
                                                 checked={task.status === TaskStatus.TO_DO}
-                                                onChange={(e) => setTask({...task, status: e.target.value as TaskStatus})}
+                                                onChange={(e) => setTask({
+                                                    ...task,
+                                                    status: e.target.value as TaskStatus
+                                                })}
                                             />
                                             <div
                                                 className={`w-full text-center py-2 border-2 rounded-lg text-sm transition-colors ${
@@ -211,7 +182,10 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus })
                                                 className="hidden"
                                                 value={TaskStatus.IN_PROGRESS}
                                                 checked={task.status === TaskStatus.IN_PROGRESS}
-                                                onChange={(e) => setTask({...task, status: e.target.value as TaskStatus})}
+                                                onChange={(e) => setTask({
+                                                    ...task,
+                                                    status: e.target.value as TaskStatus
+                                                })}
                                             />
                                             <div
                                                 className={`w-full text-center py-2 border-2 rounded-lg text-sm transition-colors ${
@@ -228,7 +202,10 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus })
                                                 className="hidden"
                                                 value={TaskStatus.DONE}
                                                 checked={task.status === TaskStatus.DONE}
-                                                onChange={(e) => setTask({...task, status: e.target.value as TaskStatus})}
+                                                onChange={(e) => setTask({
+                                                    ...task,
+                                                    status: e.target.value as TaskStatus
+                                                })}
                                             />
                                             <div
                                                 className={`w-full text-center py-2 border-2 rounded-lg text-sm transition-colors ${
@@ -252,59 +229,15 @@ export const TaskModal: React.FC<TaskModalProps> = ({ loading, selectedStatus })
                                     rows={3}
                                     placeholder="Enter Task Description"
                                 />
-                                <label className="col-span-1 text-sm text-right mt-2 mr-1">Checklist</label>
-                                <div className="col-span-3 flex items-center gap-2">
-                                    <input
-                                        type="text"
-                                        className="input input-bordered input-sm flex-1 focus:outline-none focus:border-blue-500"
-                                        placeholder="New checklist item"
-                                        value={newTaskItemTitle}
-                                        onChange={(e) => setNewTaskItemTitle(e.target.value)}
-                                        onKeyDown={handleKeyPress}
-                                    />
-                                    <button type="button" className="btn btn-primary btn-sm" onClick={handleAddTaskItem}>
-                                        Add
-                                    </button>
-                                </div>
-                                <div className="col-span-4 mt-4">
-                                    <div className="w-full bg-gray-200 rounded-full h-4">
-                                        <div
-                                            className="bg-blue-600 h-4 rounded-full text-xs font-medium text-center text-white"
-                                            style={{ width: `${calculateProgress}%` }}
-                                        >
-                                            {calculateProgress}%
-                                        </div>
-                                    </div>
-                                </div>
-                                <ul className="col-span-4 space-y-2 h-52 overflow-y-auto mt-2">
-                                    {task.items.map((item) => (
-                                        <TaskItemCard
-                                            key={item.id}
-                                            item={item}
-                                            onToggle={() =>
-                                                setTask((prevTask) => ({
-                                                    ...prevTask,
-                                                    items: prevTask.items.map((i) =>
-                                                        i.id === item.id ? { ...i, completed: !i.completed } : i
-                                                    ),
-                                                }))
-                                            }
-                                            onDelete={() =>
-                                                setTask((prevTask) => ({
-                                                    ...prevTask,
-                                                    items: prevTask.items.filter((i) => i.id !== item.id),
-                                                }))
-                                            }
-                                            onEdit={(newTitle) => handleEditTaskItem(item.id, newTitle)}
-                                        />
-                                    ))}
-                                </ul>
+                                <TaskItemSection items={taskItems} setItems={setTaskItems}/>
                             </div>
                             <div className="flex gap-4 justify-end mt-6">
                                 <button type="submit" className="btn btn-primary btn-md">
                                     {selectedTaskId ? 'Update Task' : 'Save Task'}
                                 </button>
-                                <button type="button" className="btn btn-outline btn-md" onClick={closeTaskModal}>Cancel</button>
+                                <button type="button" className="btn btn-outline btn-md"
+                                        onClick={closeTaskModal}>Cancel
+                                </button>
                             </div>
                         </form>
                     )}

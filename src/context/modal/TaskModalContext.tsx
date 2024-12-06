@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useMemo, useCallback, ReactNode, useState } from 'react';
-import { TaskModal } from '../../page/task/component/TaskModal';
-import { useTaskContext } from "../data/TaskContext";
+import React, {createContext, ReactNode, useCallback, useContext, useMemo, useState} from 'react';
+import {TaskModal} from '../../page/task/component/TaskModal';
+import {useTaskContext} from "../data/TaskContext";
 import {TaskStatus} from "../../api/task/TaskTypes";
 
 interface TaskModalContextType {
@@ -16,7 +16,7 @@ export const TaskModalProvider: React.FC<{ children: ReactNode }> = ({ children 
     const { fetchOriginTasks } = useTaskContext();
     const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedStatus, setSelectedStatus] = useState<TaskStatus | null>(null);
+    const [selectedStatus, setSelectedStatus] = useState<TaskStatus>(TaskStatus.TO_DO);
 
     const closeTaskModal = useCallback(() => {
         setIsModalOpen(false);
@@ -51,7 +51,6 @@ export const TaskModalProvider: React.FC<{ children: ReactNode }> = ({ children 
             {children}
             {isModalOpen && (
                 <TaskModal
-                    loading={false}
                     selectedStatus={selectedStatus}
                 />
             )}

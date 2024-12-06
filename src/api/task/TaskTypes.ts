@@ -11,7 +11,7 @@ export interface TaskResponse {
     hashtags: HashtagResponse[];
     description: string;
     status: string;
-    items: TaskItemResponse[];
+    items: TaskItemDto[];
 }
 
 // Interface for SaveTaskRequest
@@ -22,24 +22,14 @@ export interface SaveTaskRequest {
     hashtagIds: number[];
     description: string;
     status: string;
+    items: TaskItemDto[]
 }
 
-
-// Interface for TaskItemResponse
-export interface TaskItemResponse {
-    id: number;
+export interface TaskItemDto {
+    id: number | null;
+    taskId: number | null;
     title: string;
     completed: boolean;
-    taskId: number;
-    createdAt: string;
-    updatedAt: string;
-}
-
-// Interface for SaveTaskItemRequest
-export interface SaveTaskItemRequest {
-    title: string;
-    taskId: number;
-    completed?: boolean;  // Optional field
 }
 
 // Interface for TaskSummary
@@ -51,6 +41,7 @@ export interface TaskSummary {
     tagColor: string;
     hashtags: HashtagResponse[];
     status: TaskStatus;
+    progressRate: number;
 }
 
 export enum TaskStatus {
