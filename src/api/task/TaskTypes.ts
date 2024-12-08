@@ -41,7 +41,8 @@ export interface TaskSummary {
     tagColor: string;
     hashtags: HashtagResponse[];
     status: TaskStatus;
-    progressRate: number;
+    itemsCount: number;
+    completedItemsCount: number;
 }
 
 export enum TaskStatus {

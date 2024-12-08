@@ -64,17 +64,18 @@ export const TaskContextProvider: React.FC<TaskContextProviderProps> = ({ childr
     }, [selectedTagIds]);
 
     const moveTaskItem = async (taskItem: TaskSummary, toStatus: TaskStatus) => {
-        if (taskItem.status === toStatus) return; // if status of task item equals toStatus not request
+        if (taskItem.status === toStatus) return; // 기존 상태와 동일하면 요청하지 않음
 
         try {
-            const result = await request_updateTaskStatus(taskItem.id, toStatus);
-            if (result) {
+            const updatedTask = await request_updateTaskStatus(taskItem.id, toStatus); // 업데이트된 TaskSummary 반환
+            if (updatedTask) {
+                // 기존 상태에서 task 제거
                 switch (taskItem.status) {
                     case TaskStatus.BACKLOG:
                         setBACKLOG(prevBACKLOG => prevBACKLOG.filter(task => task.id !== taskItem.id));
                         break;
                     case TaskStatus.TODO:
-                        setTODO(prevTO_DO => prevTO_DO.filter(task => task.id !== taskItem.id));
+                        setTODO(prevTODO => prevTODO.filter(task => task.id !== taskItem.id));
                         break;
                     case TaskStatus.PROGRESS:
                         setPROGRESS(prevPROGRESS => prevPROGRESS.filter(task => task.id !== taskItem.id));
@@ -84,19 +85,19 @@ export const TaskContextProvider: React.FC<TaskContextProviderProps> = ({ childr
                         break;
                 }
 
-                taskItem.status = toStatus;
+                // 상태 변경 후 updatedTask로 리스트에 추가
                 switch (toStatus) {
                     case TaskStatus.BACKLOG:
-                        setBACKLOG(prevBACKLOG => [...prevBACKLOG, taskItem]);
+                        setBACKLOG(prevBACKLOG => [...prevBACKLOG, updatedTask]);
                         break;
                     case TaskStatus.TODO:
-                        setTODO(prevTODO => [...prevTODO, taskItem]);
+                        setTODO(prevTODO => [...prevTODO, updatedTask]);
                         break;
                     case TaskStatus.PROGRESS:
-                        setPROGRESS(prevPROGRESS => [...prevPROGRESS, taskItem]);
+                        setPROGRESS(prevPROGRESS => [...prevPROGRESS, updatedTask]);
                         break;
                     case TaskStatus.DONE:
-                        setDONE(prevDONE => [...prevDONE, taskItem]);
+                        setDONE(prevDONE => [...prevDONE, updatedTask]);
                         break;
                 }
             }
@@ -104,6 +105,7 @@ export const TaskContextProvider: React.FC<TaskContextProviderProps> = ({ childr
             console.error('Error updating task status:', error);
         }
     };
+
 
     useEffect(() => {
         fetchOriginTasks();

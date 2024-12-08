@@ -83,76 +83,7 @@ export const request_deleteTask = async (taskId: number): Promise<void> => {
     await axios.delete(`${API_URL}/task/${taskId}`, requestOptions);
 };
 
-// Adds a new task item to an existing task
-// export const request_createTaskItem = async (saveTaskItemRequest: SaveTaskItemRequest): Promise<TaskItemResponse> => {
-//     const authToken = getAuthCookie();  // Fetch the latest cookie value here
-//     const requestOptions = {
-//         headers: {
-//             "Content-Type": "application/json",
-//             "Authorization": `Bearer ${authToken}`,
-//         },
-//     };
-//
-//     const response = await axios.post<TaskItemResponse>(`${API_URL}/task/items`, saveTaskItemRequest, requestOptions);
-//     return response.data;
-// };
-
-// Retrieves a task item by ID
-// export const request_getTaskItemById = async (taskItemId: number): Promise<TaskItemResponse> => {
-//     const authToken = getAuthCookie();  // Fetch the latest cookie value here
-//     const requestOptions = {
-//         headers: {
-//             "Content-Type": "application/json",
-//             "Authorization": `Bearer ${authToken}`,
-//         },
-//     };
-//
-//     const response = await axios.get<TaskItemResponse>(`${API_URL}/task/items/${taskItemId}`, requestOptions);
-//     return response.data;
-// };
-
-// Updates the title of a task item by ID
-// export const request_updateTaskItemTitle = async (taskItemId: number, newTitle: string): Promise<TaskItemResponse> => {
-//     const authToken = getAuthCookie();  // Fetch the latest cookie value here
-//     const requestOptions = {
-//         headers: {
-//             "Content-Type": "application/json",
-//             "Authorization": `Bearer ${authToken}`,
-//         },
-//     };
-//
-//     const response = await axios.patch<TaskItemResponse>(`${API_URL}/task/items/${taskItemId}/title`, { newTitle }, requestOptions);
-//     return response.data;
-// };
-
-// Updates the completion status of a task item by ID
-// export const request_setTaskItemCompleted = async (taskItemId: number, completed: boolean): Promise<TaskItemResponse> => {
-//     const authToken = getAuthCookie();  // Fetch the latest cookie value here
-//     const requestOptions = {
-//         headers: {
-//             "Content-Type": "application/json",
-//             "Authorization": `Bearer ${authToken}`,
-//         },
-//     };
-//
-//     const response = await axios.patch<TaskItemResponse>(`${API_URL}/task/items/${taskItemId}/completed`, { completed }, requestOptions);
-//     return response.data;
-// };
-
-// Deletes a task item by ID
-// export const request_deleteTaskItem = async (taskItemId: number): Promise<void> => {
-//     const authToken = getAuthCookie();  // Fetch the latest cookie value here
-//     const requestOptions = {
-//         headers: {
-//             "Content-Type": "application/json",
-//             "Authorization": `Bearer ${authToken}`,
-//         },
-//     };
-//
-//     await axios.delete(`${API_URL}/task/items/${taskItemId}`, requestOptions);
-// };
-
-export const request_updateTaskStatus = async (taskId: number, taskStatus: TaskStatus): Promise<boolean> => {
+export const request_updateTaskStatus = async (taskId: number, taskStatus: TaskStatus): Promise<TaskSummary> => {
     const requestUrl = `${API_URL}/task/status/${taskId}`
 
     const authToken = getAuthCookie();  // Fetch the latest cookie value here
@@ -164,18 +95,13 @@ export const request_updateTaskStatus = async (taskId: number, taskStatus: TaskS
     };
 
 
-    try {
-        await axios.patch(requestUrl, null, {
-            ...requestOptions,
-            params: {
-                status: taskStatus.toString(),
-            },
-        });
-
-        return true;
-    } catch (error) {
-       return false;
-    }
+    const response = await axios.patch<TaskSummary>(requestUrl, null, {
+        ...requestOptions,
+        params: {
+            status: taskStatus.toString(),
+        },
+    });
+    return response.data;
 };
 
 export async function request_getTasksByTags(tagIds: number[]) {
