@@ -21,26 +21,33 @@ export const VerticalBoard: React.FC<{taskStatus: TaskStatus}> = ({taskStatus}) 
     const [, drop] = useTaskDrop(taskStatus);
 
     return (
-        <>
-            <div
-                className="w-full bg-gray-50 shadow-lg rounded-lg p-4 border border-gray-300 flex flex-col"
-                ref={drop}
-            >
-                <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-lg font-semibold text-gray-700">{taskStatus}</h2>
-                    <button className="px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
-                            onClick={() => openTaskModal(taskStatus)}>+
-                    </button>
+        <div
+            className="w-full bg-gray-50 shadow rounded-md p-2 border border-gray-300 flex flex-col"
+            ref={drop}
+        >
+            {/* Header */}
+            <div className="flex justify-between items-center p-2">
+                <div className="flex items-center gap-2">
+                    <h2 className="text-sm font-bold text-gray-700">{taskStatus}</h2>
                 </div>
-                <div className="flex flex-col overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 gap-2">
-                    {/* Render the Task component for each task in the tasks array */}
-                    {tasks.length > 0 ? (
-                        tasks.map((task) => <MultiLineTaskCard key={`${task.status}-${task.id}`} task={task}/>)
-                    ) : (
-                        <p className="text-xs text-gray-500 text-center">No tasks</p> // Handle case where no tasks are available
-                    )}
-                </div>
+                <button
+                    className="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+                    onClick={() => openTaskModal(taskStatus)}
+                >
+                    + Add
+                </button>
             </div>
-        </>
+
+            {/* Contents */}
+            <div className="grid gap-2">
+                {/* Render the Task component for each task in the tasks array */}
+                {tasks.length > 0 ? (
+                    tasks.map((task) => <MultiLineTaskCard key={`${task.status}-${task.id}`} task={task}/>)
+                ) : (
+                    <p className="text-xs text-gray-500 text-center">No tasks</p> // Handle case where no tasks are available
+                )}
+            </div>
+        </div>
+
     );
 };

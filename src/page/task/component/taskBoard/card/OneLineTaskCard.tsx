@@ -4,7 +4,7 @@ import { getTagColorStyle } from "../../../../../util/TagUtil";
 import { getStatusStyle } from "../../../../../util/StatusUtil";
 import { CardType } from "../../../../../api/task/TaskTypes";
 import { useTaskDragDrop } from "../../../context/TaskDragDropContext";
-import {calculateProgressRate} from "../../../../../util/TaskUtil";
+import { calculateProgressRate } from "../../../../../util/TaskUtil";
 
 export const OneLineTaskCard: React.FC<CardType> = ({ task }) => {
     const { openTaskModal } = useTaskModal();
@@ -12,7 +12,6 @@ export const OneLineTaskCard: React.FC<CardType> = ({ task }) => {
 
     const [, drag] = useTaskDrag(task);
 
-    // 모달이 열릴 때 클릭 중복 방지
     const handleCardClick = (e: React.MouseEvent) => {
         e.stopPropagation();
         openTaskModal(task.id);
@@ -22,43 +21,62 @@ export const OneLineTaskCard: React.FC<CardType> = ({ task }) => {
 
     return (
         <div
-            className="bg-white p-2 rounded-lg shadow border border-gray-300 hover:shadow-md transition-all duration-300 cursor-pointer flex items-center gap-2"
+            className="bg-white p-2 rounded-md shadow-sm border border-gray-200 hover:border-gray-400 transition-shadow duration-200 cursor-pointer flex items-center gap-4"
             onClick={handleCardClick}
             ref={drag}
-            aria-label={`Task card for ${task.title}`} // 접근성 향상
+            aria-label={`Task card for ${task.title}`}
         >
-            <p
-                className="text-gray-900 font-medium truncate text-sm flex-1"
+            {/* Task Title */}
+            <h3
+                className="text-gray-900 font-bold text-sm truncate flex-1"
                 title={task.title}
             >
                 {task.title}
+            </h3>
+
+            {/* Event Title */}
+            <p className="text-gray-600 text-xs truncate flex-none w-1/4">
+                {task.event ? task.event.title : "No event"}
             </p>
+            {/* Hashtags */}
+            <div className="flex flex-wrap gap-1">
+                {task.hashtags.length > 0 ? (
+                    task.hashtags.map((hashtag) => (
+                        <span key={hashtag.id}
+                              className="bg-gray-100 text-gray-600 rounded px-2 py-0.5 text-xs">
+                            #{hashtag.title}
+                        </span>
+                    ))
+                ) : (
+                    <span className="bg-gray-100 text-gray-600 rounded px-2 py-0.5 text-xs">
+                        No Hashtags
+                    </span>
+                )}
+            </div>
+            {/* Tag */}
             <div
-                className={`rounded-full px-2 py-0.5 text-xs font-semibold truncate w-20 ${getTagColorStyle(
+                className={`rounded-full px-2 py-0.5 text-xs font-semibold truncate ${getTagColorStyle(
                     task.tagColor ?? ""
-                )}`}
+                )} flex-none`}
                 title={task.tagTitle ?? ""}
             >
                 {task.tagTitle ?? ""}
             </div>
-            {task.event?.title && (
-                <p
-                    className="text-gray-600 text-xs truncate flex-1"
-                    title={task.event?.title}
-                >
-                    {task.event?.title}
-                </p>
-            )}
+
+            {/* Status */}
             <div
-                className={`px-2 py-0.5 text-xs font-semibold rounded-full ${getStatusStyle(task.status)}`}
-                aria-label={`Status: ${task.status}`} // 접근성 향상
+                className={`px-2 py-0.5 text-xs font-semibold rounded-full ${getStatusStyle(
+                    task.status
+                )} flex-none`}
+                aria-label={`Status: ${task.status}`}
             >
                 {task.status}
             </div>
-            <div className="flex-1 flex items-center gap-2">
-                 {/*Progress Bar*/}
+
+            {/* Progress */}
+            <div className="flex items-center gap-2 flex-none">
                 <progress
-                    className="progress progress-primary w-full"
+                    className="progress progress-primary w-16"
                     value={progressRate}
                     max={100}
                     aria-label={`Task progress: ${progressRate}%`}
