@@ -4,35 +4,39 @@ import {useTaskContext} from "../../../../../context/data/TaskContext";
 import {useTaskDragDrop} from "../../../context/TaskDragDropContext";
 import {useTaskModal} from "../../../../../context/modal/TaskModalContext";
 import {MultiLineTaskCard} from "../card/MultiLineTaskCard";
+import {getDropStyle} from "../../../../../util/TaskUtil";
 
-export const VerticalBoard: React.FC<{taskStatus: TaskStatus}> = ({taskStatus}) => {
+
+
+export const VerticalBoard: React.FC<{boardStatus: TaskStatus}> = ({boardStatus}) => {
     const { TODO, PROGRESS } = useTaskContext();
     const {openTaskModal} = useTaskModal();
+    const {useTaskDrop, renderDropDisplay} = useTaskDragDrop();
 
     const [tasks, setTasks] = useState<TaskSummary[]>([]);
 
     useEffect(() => {
-        if (taskStatus === TaskStatus.TODO) setTasks(TODO);
-        else if (taskStatus === TaskStatus.PROGRESS) setTasks(PROGRESS);
-    }, [PROGRESS, TODO, taskStatus]);
+        if (boardStatus === TaskStatus.TODO) setTasks(TODO);
+        else if (boardStatus === TaskStatus.PROGRESS) setTasks(PROGRESS);
+    }, [PROGRESS, TODO, boardStatus]);
 
-    const {useTaskDrop} = useTaskDragDrop();
-
-    const [, drop] = useTaskDrop(taskStatus);
+    const [collectedProps, drop] = useTaskDrop(boardStatus);
 
     return (
         <div
-            className="w-full bg-gray-50 shadow rounded-md p-2 border border-gray-300 flex flex-col"
+            className={`relative w-full bg-gray-50 hover:bg-gray-100 shadow-sm rounded-md p-3 border flex flex-col 
+            ${getDropStyle(collectedProps)}`}
             ref={drop}
         >
+            {renderDropDisplay(collectedProps, boardStatus)}
             {/* Header */}
             <div className="flex justify-between items-center p-2">
                 <div className="flex items-center gap-2">
-                    <h2 className="text-sm font-bold text-gray-700">{taskStatus}</h2>
+                    <h2 className="text-sm font-bold text-gray-700">{boardStatus}</h2>
                 </div>
                 <button
                     className="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 transition"
-                    onClick={() => openTaskModal(taskStatus)}
+                    onClick={() => openTaskModal(boardStatus)}
                 >
                     + Add
                 </button>
@@ -50,4 +54,4 @@ export const VerticalBoard: React.FC<{taskStatus: TaskStatus}> = ({taskStatus}) 
         </div>
 
     );
-};
+            };

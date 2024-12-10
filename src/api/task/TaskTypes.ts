@@ -36,7 +36,7 @@ export interface TaskItemDto {
 export interface TaskSummary {
     id: number;
     title: string;
-    event: EventSummary | undefined;
+    event: EventSummary | null;
     tagTitle: string;
     tagColor: string;
     hashtags: HashtagResponse[];

@@ -4,30 +4,35 @@ import { useTaskContext } from "../../../../../context/data/TaskContext";
 import { useTaskDragDrop } from "../../../context/TaskDragDropContext";
 import { OneLineTaskCard } from "../card/OneLineTaskCard";
 import { useTaskModal } from "../../../../../context/modal/TaskModalContext";
+import {getDropStyle} from "../../../../../util/TaskUtil";
 
-export const HorizonBoard: React.FC<{ taskStatus: TaskStatus }> = ({ taskStatus }) => {
+export const HorizonBoard: React.FC<{ boardStatus: TaskStatus }> = ({ boardStatus }) => {
+    const { useTaskDrop, renderDropDisplay } = useTaskDragDrop();
+    const { openTaskModal } = useTaskModal();
     const { BACKLOG, DONE } = useTaskContext();
+
     const [tasks, setTasks] = useState<TaskSummary[]>([]);
+
     const contentRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        if (taskStatus === TaskStatus.DONE) setTasks(DONE);
-        else if (taskStatus === TaskStatus.BACKLOG) setTasks(BACKLOG);
-    }, [BACKLOG, DONE, taskStatus]);
+        if (boardStatus === TaskStatus.DONE) setTasks(DONE);
+        else if (boardStatus === TaskStatus.BACKLOG) setTasks(BACKLOG);
+    }, [BACKLOG, DONE, boardStatus]);
 
-    const { useTaskDrop } = useTaskDragDrop();
-    const { openTaskModal } = useTaskModal();
-
-    const [, drop] = useTaskDrop(taskStatus);
+    const [collectedProps, drop] = useTaskDrop(boardStatus);
 
     const [isOpen, setIsOpen] = useState(true);
     const toggleBoard = () => setIsOpen((prev) => !prev);
 
     return (
         <div
-            className="w-full bg-gray-50 shadow rounded-md p-3 border border-gray-300 grid transition-all duration-300"
+            className={`relative w-full bg-gray-50 hover:bg-gray-100 shadow-sm rounded-md p-3 border grid transition-all duration-300 ${
+                (getDropStyle(collectedProps))
+            }`}
             ref={drop}
         >
+            {renderDropDisplay(collectedProps, boardStatus)}
             {/* 보드 헤더 */}
             <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
@@ -38,11 +43,11 @@ export const HorizonBoard: React.FC<{ taskStatus: TaskStatus }> = ({ taskStatus 
                     >
                         {isOpen ? "▼" : "▶"}
                     </button>
-                    <h2 className="text-sm font-bold text-gray-700">{taskStatus}</h2>
+                    <h2 className="text-sm font-bold text-gray-700">{boardStatus}</h2>
                 </div>
                 <button
                     className="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 transition"
-                    onClick={() => openTaskModal(taskStatus)}
+                    onClick={() => openTaskModal(boardStatus)}
                 >
                     + Add
                 </button>
@@ -58,7 +63,7 @@ export const HorizonBoard: React.FC<{ taskStatus: TaskStatus }> = ({ taskStatus 
                 <div className="mt-2 flex flex-col gap-1">
                     {tasks.length > 0 ? (
                         tasks.map((task) => (
-                            <OneLineTaskCard key={`${task.status}-${task.id}`} task={task} />
+                            <OneLineTaskCard key={`${task.status}-${task.id}`} task={task}/>
                         ))
                     ) : (
                         <p className="text-xs text-gray-500 text-center">No tasks</p>

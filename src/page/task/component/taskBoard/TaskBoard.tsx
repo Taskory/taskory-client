@@ -11,17 +11,17 @@ export const TaskBoard: React.FC = () => {
                 {/* Top container: Vertical Boards */}
                 <div className="flex gap-2 p-2 min-h-[50%]">
                     <div className="flex-1 flex items-stretch">
-                        <VerticalBoard taskStatus={TaskStatus.TODO}/>
+                        <VerticalBoard boardStatus={TaskStatus.TODO}/>
                     </div>
                     <div className="flex-[2] flex items-stretch ">
-                        <VerticalBoard taskStatus={TaskStatus.PROGRESS}/>
+                        <VerticalBoard boardStatus={TaskStatus.PROGRESS}/>
                     </div>
                 </div>
 
                 {/* Bottom container: Horizon Boards */}
                 <div className="grid gap-2 p-2">
-                    <HorizonBoard taskStatus={TaskStatus.BACKLOG}/>
-                    <HorizonBoard taskStatus={TaskStatus.DONE}/>
+                    <HorizonBoard boardStatus={TaskStatus.BACKLOG}/>
+                    <HorizonBoard boardStatus={TaskStatus.DONE}/>
                 </div>
 
                 {/* Footer Blank*/}

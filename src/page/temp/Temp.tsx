@@ -1,18 +1,15 @@
 import React, {useState} from 'react';
-import {useDrag, useDragLayer, DndProvider, useDrop} from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import {DndProvider, useDrag, useDragLayer, useDrop} from 'react-dnd';
+import {HTML5Backend} from 'react-dnd-html5-backend';
+import {TaskStatus, TaskSummary} from "../../api/task/TaskTypes";
+import {TagColor} from "../../api/tag/TagTypes";
 
-// 타입 정의
-interface DragItem {
-    id: string;
-    text: string;
-}
 
 // DraggableItem 컴포넌트
-export const DraggableItem: React.FC<{ id: string; text: string }> = ({ id, text }) => {
+export const DraggableItem: React.FC<{task: TaskSummary}> = ({task}) => {
     const [, drag] = useDrag(() => ({
         type: 'ITEM',
-        item: { id, text },
+        item: { ...task },
         collect: (monitor) => ({
             isDragging: monitor.isDragging(),
         }),
@@ -24,7 +21,7 @@ export const DraggableItem: React.FC<{ id: string; text: string }> = ({ id, text
                 <button
                     className={`w-full h-full bg-blue-500 text-white rounded-lg opacity-100  duration-300 `}
                 >
-                    {text}
+                    {task.title}
                 </button>
 
                 <button ref={drag} className={`absolute top-0 left-0 w-full h-full opacity-0`}/>
@@ -36,7 +33,7 @@ export const DraggableItem: React.FC<{ id: string; text: string }> = ({ id, text
 // CustomDragLayer 컴포넌트
 export const CustomDragLayer: React.FC = () => {
     const {item, isDragging, currentOffset} = useDragLayer((monitor) => ({
-        item: monitor.getItem() as DragItem,
+        item: monitor.getItem() as TaskSummary,
         isDragging: monitor.isDragging(),
         currentOffset: monitor.getSourceClientOffset(),
     }));
@@ -54,17 +51,17 @@ export const CustomDragLayer: React.FC = () => {
     return (
         <div style={layerStyle}>
             <div className="bg-blue-500 text-white p-2 rounded shadow-lg">
-                Dragging: {item.text}
+                Dragging: {item.title}
             </div>
         </div>
     );
 };
 
 // Dropzone 컴포넌트
-export const Dropzone: React.FC<{ onDrop: (item: DragItem) => void }> = ({ onDrop }) => {
+export const Dropzone: React.FC<{ onDrop: (item: TaskSummary) => void }> = ({ onDrop }) => {
     const [{ isOver, canDrop }, drop] = useDrop(() => ({
         accept: 'ITEM',
-        drop: (item: DragItem) => {
+        drop: (item: TaskSummary) => {
             onDrop(item);
         },
         collect: (monitor) => ({
@@ -90,11 +87,36 @@ export const Dropzone: React.FC<{ onDrop: (item: DragItem) => void }> = ({ onDro
 };
 // Temp 컴포넌트
 export const Temp: React.FC = () => {
-    const [droppedItems, setDroppedItems] = useState<DragItem[]>([]);
+    const [droppedItems, setDroppedItems] = useState<TaskSummary[]>([]);
 
-    const handleDrop = (item: DragItem) => {
+    const handleDrop = (item: TaskSummary) => {
         setDroppedItems((prevItems) => [...prevItems, item]);
     };
+
+    const mockData: TaskSummary[] = [
+        {
+            id: 1,
+            title: 'Complete project documentation',
+            event: null,
+            tagTitle: 'Work',
+            tagColor: TagColor.BLUE,
+            hashtags: [],
+            status: TaskStatus.PROGRESS,
+            itemsCount: 10,
+            completedItemsCount: 5,
+        },
+        {
+            id: 2,
+            title: 'documentation',
+            event: null,
+            tagTitle: 'Work',
+            tagColor: TagColor.BLUE,
+            hashtags: [],
+            status: TaskStatus.PROGRESS,
+            itemsCount: 10,
+            completedItemsCount: 5,
+        },
+    ];
 
     return (
         <DndProvider backend={HTML5Backend}>
@@ -103,9 +125,8 @@ export const Temp: React.FC = () => {
 
                 {/* Draggable Items */}
                 <div className="flex space-x-4">
-                    <DraggableItem id="1" text="Item 1" />
-                    <DraggableItem id="2" text="Item 2" />
-                    <DraggableItem id="3" text="Item 3" />
+                    <DraggableItem  task={mockData[0]}/>
+                    <DraggableItem  task={mockData[1]}/>
                 </div>
 
                 {/* Dropzone */}
@@ -117,7 +138,7 @@ export const Temp: React.FC = () => {
                     <ul>
                         {droppedItems.map((item) => (
                             <li key={item.id} className="text-gray-700">
-                                {item.text}
+                                {item.title}
                             </li>
                         ))}
                     </ul>
