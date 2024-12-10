@@ -1,57 +1,131 @@
-import React from 'react';
+import React, {useState} from 'react';
+import {useDrag, useDragLayer, DndProvider, useDrop} from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
-const ACard: React.FC = () => {
-    return <div className="border p-2 rounded bg-white mb-2">A Card</div>;
-};
+// 타입 정의
+interface DragItem {
+    id: string;
+    text: string;
+}
 
-const BCard: React.FC = () => {
-    return <div className="border p-2 rounded bg-white mb-2">B Card</div>;
-};
+// DraggableItem 컴포넌트
+export const DraggableItem: React.FC<{ id: string; text: string }> = ({ id, text }) => {
+    const [, drag] = useDrag(() => ({
+        type: 'ITEM',
+        item: { id, text },
+        collect: (monitor) => ({
+            isDragging: monitor.isDragging(),
+        }),
+    }));
 
-const ABoard: React.FC<{ cardsCount: number }> = ({ cardsCount = 20 }) => {
     return (
-        <div className="overflow-auto border rounded-lg p-4 bg-base-200 max-h-full flex flex-col w-full">
-            {Array.from({ length: cardsCount }, (_, index) => (
-                <ACard key={index} />
-            ))}
+        <>
+            <div className="relative w-32 h-12">
+                <button
+                    className={`w-full h-full bg-blue-500 text-white rounded-lg opacity-100  duration-300 `}
+                >
+                    {text}
+                </button>
+
+                <button ref={drag} className={`absolute top-0 left-0 w-full h-full opacity-0`}/>
+            </div>
+        </>
+    );
+};
+
+// CustomDragLayer 컴포넌트
+export const CustomDragLayer: React.FC = () => {
+    const {item, isDragging, currentOffset} = useDragLayer((monitor) => ({
+        item: monitor.getItem() as DragItem,
+        isDragging: monitor.isDragging(),
+        currentOffset: monitor.getSourceClientOffset(),
+    }));
+
+    if (!isDragging || !currentOffset) return null;
+
+    const layerStyle: React.CSSProperties = {
+        position: 'fixed',
+        pointerEvents: 'none',
+        left: currentOffset.x,
+        top: currentOffset.y,
+        zIndex: 1000,
+    };
+
+    return (
+        <div style={layerStyle}>
+            <div className="bg-blue-500 text-white p-2 rounded shadow-lg">
+                Dragging: {item.text}
+            </div>
         </div>
     );
 };
 
-const BBoard: React.FC = () => {
+// Dropzone 컴포넌트
+export const Dropzone: React.FC<{ onDrop: (item: DragItem) => void }> = ({ onDrop }) => {
+    const [{ isOver, canDrop }, drop] = useDrop(() => ({
+        accept: 'ITEM',
+        drop: (item: DragItem) => {
+            onDrop(item);
+        },
+        collect: (monitor) => ({
+            isOver: monitor.isOver(),
+            canDrop: monitor.canDrop(),
+        }),
+    }));
+
     return (
-        <div className="overflow-auto border rounded-lg p-4 bg-base-200 max-h-full">
-            {Array.from({ length: 5 }, (_, index) => (
-                <BCard key={index} />
-            ))}
+        <div
+            ref={drop}
+            className={`w-64 h-32 border-2 rounded-lg flex items-center justify-center transition-colors duration-300 ${
+                isOver
+                    ? canDrop
+                        ? 'bg-green-200 border-green-500'
+                        : 'bg-red-200 border-red-500'
+                    : 'bg-gray-100 border-gray-300'
+            }`}
+        >
+            {isOver ? (canDrop ? 'Release to drop' : 'Cannot drop here') : 'Drop items here'}
         </div>
     );
 };
-
+// Temp 컴포넌트
 export const Temp: React.FC = () => {
+    const [droppedItems, setDroppedItems] = useState<DragItem[]>([]);
+
+    const handleDrop = (item: DragItem) => {
+        setDroppedItems((prevItems) => [...prevItems, item]);
+    };
+
     return (
-        <div className="overflow-auto h-screen p-4">
-            {/* 상단 컨테이너 */}
-            <div className="flex gap-4 mb-4" style={{ minHeight: '50vh', maxHeight: '66.6667vh' }}>
-                {/* 왼쪽 a 보드 */}
-                <div className="flex-1 flex items-stretch min-w-0">
-                    <ABoard cardsCount={3} />
+        <DndProvider backend={HTML5Backend}>
+            <div className="flex flex-col items-center p-4 space-y-4">
+                <h1 className="text-2xl font-bold mb-4">Drag and Drop with Custom DragLayer</h1>
+
+                {/* Draggable Items */}
+                <div className="flex space-x-4">
+                    <DraggableItem id="1" text="Item 1" />
+                    <DraggableItem id="2" text="Item 2" />
+                    <DraggableItem id="3" text="Item 3" />
                 </div>
 
-                {/* 오른쪽 a 보드 (왼쪽의 2배 가로폭) */}
-                <div className="flex-[2] flex items-stretch min-w-0">
-                    <ABoard cardsCount={20}/>
+                {/* Dropzone */}
+                <Dropzone onDrop={handleDrop} />
+
+                {/* Dropped Items */}
+                <div className="mt-4">
+                    <h2 className="text-lg font-semibold">Dropped Items:</h2>
+                    <ul>
+                        {droppedItems.map((item) => (
+                            <li key={item.id} className="text-gray-700">
+                                {item.text}
+                            </li>
+                        ))}
+                    </ul>
                 </div>
-            </div>
 
-            {/* 하단 컨테이너 */}
-            <div className="space-y-4">
-                {/* 첫 번째 b 보드 */}
-                <BBoard />
-
-                {/* 두 번째 b 보드 */}
-                <BBoard />
+                {/* Custom Drag Layer */}
+                <CustomDragLayer />
             </div>
-        </div>
+        </DndProvider>
     );
 };
