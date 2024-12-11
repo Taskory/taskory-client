@@ -16,7 +16,7 @@ export const TaskModalProvider: React.FC<{ children: ReactNode }> = ({ children 
     const { fetchOriginTasks } = useTaskContext();
     const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedStatus, setSelectedStatus] = useState<TaskStatus>(TaskStatus.TODO);
+    const [selectedStatus, setSelectedStatus] = useState<TaskStatus>(TaskStatus.BACKLOG);
 
     const closeTaskModal = useCallback(() => {
         setIsModalOpen(false);
