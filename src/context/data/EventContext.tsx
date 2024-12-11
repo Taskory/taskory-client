@@ -8,7 +8,7 @@ import React, {
     useState,
 } from 'react';
 import { DateEventInfo, EventSummary } from '../../api/event/EventsTypes';
-import { request_getEventsByTags } from '../../api/event/EventApi';
+import {request_getEventsByTags} from '../../api/event/EventApi';
 import { useTagContext } from './TagContext';
 import { useSidebarStateContext } from '../SidebarStateContext';
 

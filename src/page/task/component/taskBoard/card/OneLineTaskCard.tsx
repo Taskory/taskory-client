@@ -1,10 +1,11 @@
 import React from "react";
 import { useTaskModal } from "../../../../../context/modal/TaskModalContext";
-import { getTagColorStyle } from "../../../../../util/TagUtil";
 import { getStatusStyle } from "../../../../../util/StatusUtil";
 import { CardType } from "../../../../../api/task/TaskTypes";
 import { useTaskDragDrop } from "../../../context/TaskDragDropContext";
 import { calculateProgressRate } from "../../../../../util/TaskUtil";
+import {TagBadge} from "../../../../../component/TagBadge";
+
 
 export const OneLineTaskCard: React.FC<CardType> = ({ task }) => {
     const { openTaskModal } = useTaskModal();
@@ -53,14 +54,7 @@ export const OneLineTaskCard: React.FC<CardType> = ({ task }) => {
                     )}
                 </div>
                 {/* Tag */}
-                <div
-                    className={`rounded-full px-2 py-0.5 text-xs font-semibold truncate ${getTagColorStyle(
-                        task.tagColor ?? ""
-                    )} flex-none`}
-                    title={task.tagTitle ?? ""}
-                >
-                    {task.tagTitle ?? ""}
-                </div>
+                <TagBadge tagColor={task.tagColor} tagTitle={task.tagTitle}/>
 
                 {/* Status */}
                 <div

@@ -1,19 +1,22 @@
 // TaskModal.tsx
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useTaskModal } from "../../../context/modal/TaskModalContext";
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import {useTaskModal} from "../../../context/modal/TaskModalContext";
 import {
     request_createTask,
     request_deleteTask,
     request_getTaskById,
     request_updateTask
 } from "../../../api/task/TaskApi";
-import { SaveTaskRequest, TaskItemDto, TaskResponse, TaskStatus } from "../../../api/task/TaskTypes";
-import { TagSelectBox } from '../../../component/TagSelectBox';
-import { useTagContext } from "../../../context/data/TagContext";
-import { EventSummary } from "../../../api/event/EventsTypes";
-import { TagResponse } from "../../../api/tag/TagTypes";
-import { HashtagResponse } from "../../../api/hashtag/HashtagTypes";
-import { TaskItemSection } from "./TaskItemSection";
+import {SaveTaskRequest, TaskItemDto, TaskResponse, TaskStatus} from "../../../api/task/TaskTypes";
+import {TagSelectBox} from '../../../component/TagSelectBox';
+import {useTagContext} from "../../../context/data/TagContext";
+import {EventSummary} from "../../../api/event/EventsTypes";
+import {TagResponse} from "../../../api/tag/TagTypes";
+import {HashtagResponse} from "../../../api/hashtag/HashtagTypes";
+import {TaskItemSection} from "./TaskItemSection";
+import {request_getUpcomingEvents} from "../../../api/event/EventApi";
+import {TimeUtil} from "../../../util/TimeUtil";
+import { EventSelectBox } from '../../../component/EventSelectBox';
 
 interface TaskModalProps {
     selectedStatus: TaskStatus; // Preselected status for the modal
@@ -49,6 +52,8 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
     });
     const [taskItems, setTaskItems] = useState<TaskItemDto[]>([]);
     const [isLoading, setIsLoading] = useState(false); // Tracks loading state
+    const [upcomingEvents, setUpcomingEvents] = useState<EventSummary[]>([]);
+    const [selectedEvent, setSelectedEvent] = useState<EventSummary | null>(null);
 
     /* Fetch Task - Retrieves task details if editing */
     const fetchTask = useCallback(async (taskId: number): Promise<void> => {
@@ -77,7 +82,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
         setIsLoading(true);
         const saveTaskRequest: SaveTaskRequest = {
             title: task.title,
-            eventId: task.event?.id ?? null,
+            eventId: selectedEvent?.id ?? null,
             tagId: task.tag?.id ?? null,
             hashtagIds: task.hashtags.map((hashtag) => hashtag.id),
             description: task.description,
@@ -101,7 +106,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
         } finally {
             setIsLoading(false);
         }
-    }, [task, selectedTaskId, taskItems, closeTaskModal]);
+    }, [selectedEvent, task, selectedTaskId, taskItems, closeTaskModal]);
 
     /* Delete Task - Deletes an existing task */
     const handleDelete = useCallback(async () => {
@@ -121,6 +126,17 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
             fetchTask(selectedTaskId);
         }
     }, [isModalOpen, selectedTaskId, fetchTask]);
+
+    /* On Modal Open - Fetch upcoming events */
+    useEffect(() => {
+        fetchUpcomingEvents();
+    }, []);
+
+    /* Fetch for get upcoming events */
+    const fetchUpcomingEvents =  async () => {
+        const res = await request_getUpcomingEvents(TimeUtil.dateToString(new Date()));
+        setUpcomingEvents(res);
+    }
 
     /* Loading Spinner */
     const LoadingSpinner = () => (
@@ -207,6 +223,11 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
                                 <label className="col-span-1 text-sm text-right mt-2">Status</label>
                                 <div className="col-span-3 flex space-x-2">
                                     {renderStatusOptions(statusOptions)}
+                                </div>
+                                {/* Event Selector */}
+                                <label className="col-span-1 text-sm text-right mt-2">Event</label>
+                                <div className="col-span-3 flex space-x-2">
+                                    <EventSelectBox eventList={upcomingEvents} event={selectedEvent} setEvent={setSelectedEvent} />
                                 </div>
                                 {/* Description Input */}
                                 <label className="col-span-1 text-sm text-right mt-2">Description</label>

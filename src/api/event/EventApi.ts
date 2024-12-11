@@ -121,3 +121,29 @@ export async function request_getEventsByTags(tagIds: number[]) {
 
 }
 
+export async function request_getUpcomingEvents(dateString: string) {
+    const requestUrl = `${API_URL}/event/upcoming`
+
+    const authToken = getAuthCookie();  // Fetch the latest cookie value here
+    const requestOptions = {
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${authToken}`,
+        },
+    };
+
+    try {
+        const response: AxiosResponse<EventSummary[]> = await axios.get(requestUrl, {
+            ...requestOptions,
+            params: {
+                date: dateString
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching events:', error);
+        throw error;
+    }
+
+}
+
