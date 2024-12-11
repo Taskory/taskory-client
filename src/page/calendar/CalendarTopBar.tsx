@@ -95,7 +95,7 @@ export const CalendarTopBar: React.FC = React.memo(() => {
 
     return (
         <>
-            <div className="w-full flex justify-between items-center border-r p-4 sticky top-0 z-20 bg-white border-b">
+            <div className="w-full flex justify-between items-center border-r p-4 sticky top-0 bg-white border-b">
                 {/* Date Input Controls */}
                 <div className="flex space-x-1">
                     {/* View Selector */}
