@@ -107,7 +107,7 @@ const CustomDragLayer: React.FC = () => {
 
     return (
         <div
-            className="fixed pointer-events-none z-[1000] w-64 h-16"
+            className="fixed pointer-events-none z-[1000] w-64 h-12"
             style={{
                 top: currentOffset.y - 16,
                 left: currentOffset.x - 128,
