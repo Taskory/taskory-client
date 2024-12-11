@@ -195,93 +195,95 @@ const EventModal: React.FC = () => {
     if (!isModalOpen) return null;
 
     return (
-        <dialog open={isModalOpen} className="modal max-h-screen max-w-screen">
-            <div className="modal-box max-w-md p-2">
-                {loading ? (
-                    <div className="flex justify-center items-center h-32">
-                        <span className="loading loading-spinner"></span>
-                    </div>
-                ) : (
-                    <>
-                        <div className="grid grid-cols-4">  {/* Updated: Create a 2-column grid layout */}
-                            <div className="col-span-3 py-2">
-                                <input
-                                    type="text"
-                                    className="input input-ghost w-full font-bold"
-                                    value={title}
-                                    placeholder={"Type a title"}
-                                    onChange={(e) => setTitle(e.target.value)}
-                                />
-                            </div>
-                            <div className="col-span-1 content-center">
-                                {/* TODO: set new TagSelectBox */}
-                                <TagSelectBox list={userTags} tagState={tag} setTagState={setTag} />
-                            </div>
-                            <div className="col-span-1">
-                                <label className="label text-sm justify-end mr-1">Date & Time</label>
-                            </div>
-                            <div className="col-span-3 space-y-1 py-1">
-                                <input
-                                    type="datetime-local"
-                                    className="input input-bordered input-sm w-full"
-                                    value={startDateTime}
-                                    onChange={(e) => handleStartDateTimeChange(e.target.value)}
-                                />
-                                <input
-                                    type="datetime-local"
-                                    className="input input-bordered input-sm w-full"
-                                    value={dueDateTime}
-                                    onChange={(e) => handleDueDateTimeChange(e.target.value)}
-                                />
-                            </div>
-                            <div className="col-span-1">
-                                <label className="label text-sm justify-end mr-1">Hashtags</label>
-                            </div>
-                            <div className="col-span-3">
-                                <div>
+        <div
+            className={`fixed inset-0 z-50 ${isModalOpen ? 'flex' : 'hidden'} items-center justify-center bg-black bg-opacity-50`}>
+            <dialog open={isModalOpen} className="modal max-h-screen max-w-screen">
+                <div className="modal-box max-w-md p-2">
+                    {loading ? (
+                        <div className="flex justify-center items-center h-32">
+                            <span className="loading loading-spinner"></span>
+                        </div>
+                    ) : (
+                        <>
+                            <div className="grid grid-cols-4">  {/* Updated: Create a 2-column grid layout */}
+                                <div className="col-span-3 py-2">
                                     <input
                                         type="text"
-                                        placeholder="Type hashtag and press Enter"
-                                        className="input input-bordered input-sm w-full"
-                                        value={hashtagTitle}
-                                        onChange={(e) => setHashtagTitle(e.target.value)}
-                                        onKeyDown={handleHashtagKeyPress}
+                                        className="input input-ghost w-full font-bold"
+                                        value={title}
+                                        placeholder={"Type a title"}
+                                        onChange={(e) => setTitle(e.target.value)}
                                     />
-                                    <div className="mt-1 flex flex-wrap">
-                                        {hashtags.map(hashtag => (
-                                            <span key={hashtag.id} className="badge badge-secondary m-1">
+                                </div>
+                                <div className="col-span-1 content-center">
+                                    {/* TODO: set new TagSelectBox */}
+                                    <TagSelectBox list={userTags} tagState={tag} setTagState={setTag}/>
+                                </div>
+                                <div className="col-span-1">
+                                    <label className="label text-sm justify-end mr-1">Date & Time</label>
+                                </div>
+                                <div className="col-span-3 space-y-1 py-1">
+                                    <input
+                                        type="datetime-local"
+                                        className="input input-bordered input-sm w-full"
+                                        value={startDateTime}
+                                        onChange={(e) => handleStartDateTimeChange(e.target.value)}
+                                    />
+                                    <input
+                                        type="datetime-local"
+                                        className="input input-bordered input-sm w-full"
+                                        value={dueDateTime}
+                                        onChange={(e) => handleDueDateTimeChange(e.target.value)}
+                                    />
+                                </div>
+                                <div className="col-span-1">
+                                    <label className="label text-sm justify-end mr-1">Hashtags</label>
+                                </div>
+                                <div className="col-span-3">
+                                    <div>
+                                        <input
+                                            type="text"
+                                            placeholder="Type hashtag and press Enter"
+                                            className="input input-bordered input-sm w-full"
+                                            value={hashtagTitle}
+                                            onChange={(e) => setHashtagTitle(e.target.value)}
+                                            onKeyDown={handleHashtagKeyPress}
+                                        />
+                                        <div className="mt-1 flex flex-wrap">
+                                            {hashtags.map(hashtag => (
+                                                <span key={hashtag.id} className="badge badge-secondary m-1">
                                     #{hashtag.title}
                                 </span>
-                                        ))}
+                                            ))}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="col-span-4">
+                                <div className="col-span-4">
 
-                                {dateError && (
-                                    <div className="col-span-3 text-red-500 text-xs">
-                                        {dateError}
-                                    </div>
-                                )}
-                            </div>
-                            <div className="col-span-1">
+                                    {dateError && (
+                                        <div className="col-span-3 text-red-500 text-xs">
+                                            {dateError}
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="col-span-1">
 
-                                <label className="label text-sm justify-end mr-1">Location</label>
-                            </div>
-                            <div className="col-span-3">
+                                    <label className="label text-sm justify-end mr-1">Location</label>
+                                </div>
+                                <div className="col-span-3">
 
-                                <input
-                                    type="text"
-                                    className="input input-bordered input-sm w-full"
-                                    value={location}
-                                    onChange={(e) => setLocation(e.target.value)}
-                                />
-                            </div>
-                            <div className="col-span-1">
+                                    <input
+                                        type="text"
+                                        className="input input-bordered input-sm w-full"
+                                        value={location}
+                                        onChange={(e) => setLocation(e.target.value)}
+                                    />
+                                </div>
+                                <div className="col-span-1">
 
-                                <label className="label text-sm justify-end mr-1">Description</label>
-                            </div>
-                            <div className="col-span-3">
+                                    <label className="label text-sm justify-end mr-1">Description</label>
+                                </div>
+                                <div className="col-span-3">
 
                                 <textarea
                                     className="textarea textarea-bordered textarea-sm w-full"
@@ -289,21 +291,22 @@ const EventModal: React.FC = () => {
                                     onChange={(e) => setDescription(e.target.value)}
                                     rows={2}
                                 />
+                                </div>
                             </div>
-                        </div>
-                        <div className="flex gap-2 justify-end">
-                            <button className="btn btn-primary btn-sm" onClick={handleSave}>
-                                {selectedEventId ? 'Update' : 'Save'}
-                            </button>
-                            {selectedEventId && (
-                                <button className="btn btn-error btn-sm" onClick={handleDelete}>Delete</button>
-                            )}
-                            <button className="btn btn-outline btn-sm" onClick={handleClose}>Cancel</button>
-                        </div>
-                    </>
-                )}
-            </div>
-        </dialog>
+                            <div className="flex gap-2 justify-end">
+                                <button className="btn btn-primary btn-sm" onClick={handleSave}>
+                                    {selectedEventId ? 'Update' : 'Save'}
+                                </button>
+                                {selectedEventId && (
+                                    <button className="btn btn-error btn-sm" onClick={handleDelete}>Delete</button>
+                                )}
+                                <button className="btn btn-outline btn-sm" onClick={handleClose}>Cancel</button>
+                            </div>
+                        </>
+                    )}
+                </div>
+            </dialog>
+        </div>
     );
 };
 
