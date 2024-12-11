@@ -1,6 +1,6 @@
 import React from "react";
-import {EventModalProvider} from "../../context/modal/EventModalContext";
-import {TaskModalProvider} from "../../context/modal/TaskModalContext";
+import {EventModalProvider} from "../../modal/context/EventModalContext";
+import {TaskModalProvider} from "../../modal/context/TaskModalContext";
 
 interface ModalWrapperProps {
     children: React.ReactNode;

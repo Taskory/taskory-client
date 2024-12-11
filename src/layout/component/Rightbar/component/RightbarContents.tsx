@@ -4,7 +4,7 @@ import { TagItem } from "./TagItem";
 import { TagInfoBox } from "./TagInfoBox";
 import { useEventContext } from "../../../../context/data/EventContext";
 import { DateInfo, EventSummary } from "../../../../api/event/EventsTypes";
-import { useEventModal } from "../../../../context/modal/EventModalContext";
+import { useEventModal } from "../../../../modal/context/EventModalContext";
 import { MiniEventCard } from "./MiniEventCard";
 
 export const RightbarContents = () => {

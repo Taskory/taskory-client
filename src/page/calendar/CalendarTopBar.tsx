@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useCalendar } from './context/CalendarContext';
 import { useCalendarView } from './context/CalendarViewContext';
 import monthNames from '../../constants/calendar.json';
-import { useEventModal } from '../../context/modal/EventModalContext';
+import { useEventModal } from '../../modal/context/EventModalContext';
 import {MonthlyTopBar} from "./month/MonthlyTopBar";
 import {WeeklyTopBar} from "./week/WeeklyTopBar";
 import {DailyTopBar} from "./day/DailyHedaer";

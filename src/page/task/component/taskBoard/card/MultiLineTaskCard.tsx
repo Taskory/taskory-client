@@ -1,5 +1,5 @@
 import React from "react";
-import { useTaskModal } from "../../../../../context/modal/TaskModalContext";
+import { useTaskModal } from "../../../../../modal/context/TaskModalContext";
 import { getStatusStyle } from "../../../../../util/StatusUtil";
 import { CardType } from "../../../../../api/task/TaskTypes";
 import { useTaskDragDrop } from "../../../context/TaskDragDropContext";

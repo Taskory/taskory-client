@@ -1,6 +1,6 @@
 import React, {useEffect, useRef} from 'react';
 import {DateInfo, EventSummary} from "../../../api/event/EventsTypes";
-import { useEventModal } from "../../../context/modal/EventModalContext";
+import { useEventModal } from "../../../modal/context/EventModalContext";
 import { useEventContext } from "../../../context/data/EventContext";
 import {isEqual} from "lodash";
 import {TimeUtil} from "../../../util/TimeUtil";

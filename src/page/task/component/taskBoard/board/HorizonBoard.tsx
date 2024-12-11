@@ -3,7 +3,7 @@ import { TaskStatus, TaskSummary } from "../../../../../api/task/TaskTypes";
 import { useTaskContext } from "../../../../../context/data/TaskContext";
 import { useTaskDragDrop } from "../../../context/TaskDragDropContext";
 import { OneLineTaskCard } from "../card/OneLineTaskCard";
-import { useTaskModal } from "../../../../../context/modal/TaskModalContext";
+import { useTaskModal } from "../../../../../modal/context/TaskModalContext";
 import {getDropStyle} from "../../../../../util/TaskUtil";
 
 export const HorizonBoard: React.FC<{ boardStatus: TaskStatus }> = ({ boardStatus }) => {

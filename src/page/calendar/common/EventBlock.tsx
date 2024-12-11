@@ -1,6 +1,6 @@
 import React from "react";
 import { StylesForEachEventInterface } from "../week/WeeklyInterface";
-import { useEventModal } from "../../../context/modal/EventModalContext";
+import { useEventModal } from "../../../modal/context/EventModalContext";
 
 export const EventBlock: React.FC<StylesForEachEventInterface> = ({ top, bottom, left, color, title, id }) => {
     const { openEventModal } = useEventModal();
