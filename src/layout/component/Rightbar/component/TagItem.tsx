@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { TagResponse } from "../../../../api/tag/TagTypes";
 import { getTagCheckBoxColor } from "../../../../util/TagUtil";
 import { useTagContext } from "../../../../context/data/TagContext";
-import { TagInfoDropbox } from "./TagInfoDropbox"; // Import the dropdown component
+import { TagInfoBox } from "./TagInfoBox"; // Import the dropdown component
 
 type TagItemProps = {
     tag: TagResponse;
@@ -44,7 +44,7 @@ export const TagItem: React.FC<TagItemProps> = ({ tag }) => {
             </button>
 
             {isDropdownOpen && (
-                <TagInfoDropbox
+                <TagInfoBox
                     tag={tag}
                     onClose={() => setIsDropdownOpen(false)}
                 />

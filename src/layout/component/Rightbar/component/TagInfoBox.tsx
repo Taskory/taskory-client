@@ -11,7 +11,7 @@ type TagInfoDropboxProps = {
     onClose: () => void; // Close dropdown callback
 };
 
-export const TagInfoDropbox: React.FC<TagInfoDropboxProps> = ({ tag, onClose }) => {
+export const TagInfoBox: React.FC<TagInfoDropboxProps> = ({ tag, onClose }) => {
     const {fetchOriginEvents} = useEventContext();
     const {fetchOriginTasks} = useTaskContext();
     const [editedTagTitle, setEditedTagTitle] = useState(tag?.title ?? "");

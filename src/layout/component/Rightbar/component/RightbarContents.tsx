@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useTagContext } from "../../../../context/data/TagContext";
 import { TagItem } from "./TagItem";
-import { TagInfoDropbox } from "./TagInfoDropbox";
+import { TagInfoBox } from "./TagInfoBox";
 import { useEventContext } from "../../../../context/data/EventContext";
 import { DateInfo, EventSummary } from "../../../../api/event/EventsTypes";
 import { useEventModal } from "../../../../context/modal/EventModalContext";
@@ -52,7 +52,7 @@ export const RightbarContents = () => {
                 </button>
 
                 {isDropdownOpen && (
-                    <TagInfoDropbox
+                    <TagInfoBox
                         onClose={() => setIsDropdownOpen(false)}
                     />
                 )}
