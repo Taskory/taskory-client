@@ -62,7 +62,7 @@ export const RightbarContents = () => {
     }
 
     return (
-        <div className="p-2 bg-white rounded-lg shadow-lg">
+        <div className="p-2 bg-white rounded-lg shadow-lg overflow-x-hidden">
             {/* Tags Section */}
             <div>
                 <button
@@ -78,7 +78,7 @@ export const RightbarContents = () => {
                         {renderTagBtnList()}
 
                         {/* Render tag list */}
-                        <div className="mt-2 space-y-2 border-b pb-3 max-h-48 overflow-y-auto">
+                        <div className="mt-2 space-y-2 border-b pb-3 max-h-48 overflow-y-auto overflow-x-hidden">
                             {userTags.map((tag) => (
                                 <TagItem key={tag.id} tag={tag}/>
                             ))}
