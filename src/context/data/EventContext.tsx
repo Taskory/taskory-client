@@ -7,14 +7,14 @@ import React, {
     useMemo,
     useState,
 } from 'react';
-import {DateEventInfo, EventSummary} from '../../api/event/EventsTypes';
-import {request_getEventsByTags} from '../../api/event/EventApi';
-import {useTagContext} from "./TagContext";
-import {useSidebarStateContext} from "../SidebarStateContext";
+import { DateEventInfo, EventSummary } from '../../api/event/EventsTypes';
+import { request_getEventsByTags } from '../../api/event/EventApi';
+import { useTagContext } from './TagContext';
+import { useSidebarStateContext } from '../SidebarStateContext';
 
 interface EventContextProps {
     originEvents: EventSummary[];
-    fetchOriginEvents: () => void;
+    fetchOriginEvents: () => Promise<void>;
     selectedDateEventInfo: DateEventInfo;
     handleSelectDate: (dateEventInfo: DateEventInfo) => void;
     initSelectedDateEventInfo: () => void;
@@ -27,35 +27,56 @@ interface EventContextProviderProps {
 }
 
 export const EventContextProvider: React.FC<EventContextProviderProps> = ({ children }) => {
-    const {selectedTagIds } = useTagContext()
-    const {isRightbarOpened, toggleRightbar} = useSidebarStateContext();
+    const { selectedTagIds } = useTagContext();
+    const { isRightbarOpened, toggleRightbar } = useSidebarStateContext();
     const [originEvents, setOriginEvents] = useState<EventSummary[]>([]);
-    const [selectedDateEventInfo, setSelectedDateEventInfo] = useState<DateEventInfo>({date: null, events: []});
+    const [selectedDateEventInfo, setSelectedDateEventInfo] = useState<DateEventInfo>({
+        date: null,
+        events: [],
+    });
 
-    const initSelectedDateEventInfo = () => {
-        setSelectedDateEventInfo({date: null, events: []});
-    }
+    // Reset selectedDateEventInfo to its initial state
+    const initSelectedDateEventInfo = useCallback(() => {
+        setSelectedDateEventInfo({ date: null, events: [] });
+    }, []);
 
-    const handleSelectDate = useCallback((dateEventInfo: DateEventInfo) => {
-        setSelectedDateEventInfo(dateEventInfo);
-        if (!isRightbarOpened) {
-            toggleRightbar();
-        }
-    }, [isRightbarOpened, toggleRightbar]);
+    // Update selectedDateEventInfo and ensure rightbar is toggled open if not already
+    const handleSelectDate = useCallback(
+        (dateEventInfo: DateEventInfo) => {
+            // Avoid unnecessary state updates if the new state is the same as the current state
+            if (
+                selectedDateEventInfo.date !== dateEventInfo.date ||
+                selectedDateEventInfo.events !== dateEventInfo.events
+            ) {
+                setSelectedDateEventInfo(dateEventInfo);
+            }
+            if (!isRightbarOpened) {
+                toggleRightbar();
+            }
+        },
+        [isRightbarOpened, toggleRightbar, selectedDateEventInfo]
+    );
 
+    // Fetch events by tags and only update state if data has changed
     const fetchOriginEvents = useCallback(async () => {
         try {
-            setOriginEvents(await request_getEventsByTags(selectedTagIds));
+            const events = await request_getEventsByTags(selectedTagIds);
+            // Compare new events with the current state to avoid redundant updates
+            setOriginEvents((prevEvents) =>
+                JSON.stringify(prevEvents) !== JSON.stringify(events) ? events : prevEvents
+            );
         } catch (error) {
             console.error('Error fetching events:', error);
         }
     }, [selectedTagIds]);
 
+    // Fetch events when dependencies change
     useEffect(() => {
         fetchOriginEvents();
     }, [fetchOriginEvents]);
 
-    const contextValue: EventContextProps = useMemo(
+    // Memoize the context value to prevent unnecessary re-renders
+    const contextValue = useMemo(
         () => ({
             originEvents,
             fetchOriginEvents,
@@ -63,16 +84,13 @@ export const EventContextProvider: React.FC<EventContextProviderProps> = ({ chil
             handleSelectDate,
             initSelectedDateEventInfo,
         }),
-        [fetchOriginEvents, handleSelectDate, originEvents, selectedDateEventInfo]
+        [originEvents, fetchOriginEvents, selectedDateEventInfo, handleSelectDate, initSelectedDateEventInfo]
     );
 
-    return (
-        <EventContext.Provider value={contextValue}>
-            {children}
-        </EventContext.Provider>
-    );
+    return <EventContext.Provider value={contextValue}>{children}</EventContext.Provider>;
 };
 
+// Ensure context is used only within its provider
 export const useEventContext = (): EventContextProps => {
     const context = useContext(EventContext);
     if (!context) {
