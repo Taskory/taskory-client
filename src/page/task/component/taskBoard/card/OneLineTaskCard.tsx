@@ -23,8 +23,6 @@ export const OneLineTaskCard: React.FC<CardType> = ({ task }) => {
         <div className="relative w-full h-full">
             <div
                 className="bg-white p-2 rounded-md shadow-sm border border-gray-200 hover:border-gray-400 transition-shadow duration-200 cursor-pointer flex items-center gap-4 w-full h-full"
-                onClick={handleCardClick}
-                // ref={drag}
                 aria-label={`Task card for ${task.title}`}
             >
                 {/* Task Title */}
@@ -90,7 +88,8 @@ export const OneLineTaskCard: React.FC<CardType> = ({ task }) => {
                 </span>
                 </div>
             </div>
-            <button ref={drag} className={`absolute top-0 left-0 w-full h-full opacity-0`}/>
+            <button ref={drag} className={`absolute top-0 left-0 w-full h-full opacity-0`}
+                    onClick={handleCardClick}/>
         </div>
     );
 };
