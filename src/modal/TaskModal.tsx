@@ -69,6 +69,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
                 description: response.description,
                 status: response.status as TaskStatus,
             });
+            setSelectedEvent(response.event);
             setTaskItems(response.items);
         } catch (e) {
             console.error('Failed to fetch task:', e); // Error handling for failed fetch
