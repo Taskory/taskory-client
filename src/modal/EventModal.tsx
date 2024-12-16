@@ -1,4 +1,4 @@
-import React, { useState, useEffect, KeyboardEvent } from 'react';
+import React, {useState, useEffect, KeyboardEvent, useCallback} from 'react';
 import { API_URL } from "../constants";
 import { format, addHours, isBefore } from 'date-fns';
 import { request_createEvent, request_getEventById, request_updateEvent } from "../api/event/EventApi";
@@ -12,7 +12,7 @@ import {TagResponse} from "../api/tag/TagTypes";
 import {useEventContext} from "../context/data/EventContext";
 import {EventDeleteWarningModal} from "./EventDeleteWarningModal";
 
-const EventModal: React.FC = () => {
+export const EventModal: React.FC = () => {
     /* Context */
     const {fetchOriginEvents} = useEventContext();
     const {userTags} = useTagContext();
@@ -32,6 +32,55 @@ const EventModal: React.FC = () => {
     const [dateError, setDateError] = useState('');
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
+    /* useCallback */
+    const handleSave = useCallback(async (): Promise<void> => {
+        if (title && startDateTime && dueDateTime && !dateError) {
+            const formattedStartDateTime = TimeUtil.dateToString(new Date(startDateTime));
+            const formattedDueDateTime = TimeUtil.dateToString(new Date(dueDateTime));
+            const eventPayload: SaveEventRequest = {
+                title,
+                tagId: tag?.id,
+                hashtagIds,
+                description,
+                startDateTime: formattedStartDateTime,
+                dueDateTime: formattedDueDateTime,
+                location,
+            };
+
+            try {
+                if (selectedEventId) {
+                    const response = await request_updateEvent(selectedEventId, eventPayload);
+                    if (response.status === 200) {
+                        console.log('Event successfully updated');
+                        await fetchOriginEvents();
+                        closeEventModal();
+                    } else {
+                        console.error('Failed to update event');
+                    }
+                } else {
+                    const response = await request_createEvent(eventPayload);
+                    if (response.status === 200) {
+                        await fetchOriginEvents();
+                        closeEventModal();
+                    } else {
+                        console.error('Failed to create event');
+                    }
+                }
+            } catch (error) {
+                console.error('Error saving event:', error);
+            }
+
+        } else {
+            console.error('Missing required fields or invalid dates');
+        }
+    }, [closeEventModal, dateError, description, dueDateTime, fetchOriginEvents, hashtagIds, location, selectedEventId, startDateTime, tag?.id, title]);
+
+    const handleClose = useCallback(async (): Promise<void> => {
+        await fetchOriginEvents();
+        closeEventModal();
+    }, [closeEventModal, fetchOriginEvents]);
+
+
     /* useEffect */
     useEffect(() => {
         if (isModalOpen) {
@@ -49,6 +98,21 @@ const EventModal: React.FC = () => {
             }
         }
     }, [isModalOpen, selectedEventId]);
+
+    useEffect(() => {
+        const handleKeyDown = (event: globalThis.KeyboardEvent): void => {
+            if (event.key === 'Enter') {
+                handleSave();
+            } else if (event.key === 'Escape') {
+                handleClose();
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [title, startDateTime, dueDateTime, dateError, handleSave, handleClose]);
 
     /* functions */
     const fetchEvent = async (eventId: number): Promise<void> => {
@@ -74,8 +138,8 @@ const EventModal: React.FC = () => {
             setLoading(false);
         }
     };
-
     const handleStartDateTimeChange = (value: string): void => {
+
         setStartDateTime(value);
         const start = new Date(value);
         const due = addHours(start, 1);
@@ -83,8 +147,8 @@ const EventModal: React.FC = () => {
         setDueDateTime(formattedDueDateTime);
         setDateError('');
     };
-
     const handleDueDateTimeChange = (value: string): void => {
+
         const dueDate = new Date(value);
         const startDate = new Date(startDateTime);
         if (isBefore(dueDate, startDate)) {
@@ -94,8 +158,8 @@ const EventModal: React.FC = () => {
             setDateError('');
         }
     };
-
     const handleHashtagKeyPress = async (event: KeyboardEvent<HTMLInputElement>): Promise<void> => {
+
         if (event.key === 'Enter' && hashtagTitle.trim() !== '') {
             event.preventDefault();
             try {
@@ -123,57 +187,10 @@ const EventModal: React.FC = () => {
             }
         }
     };
-
     const addHashtagToList = (hashtag: HashtagResponse): void => {
+
         setHashtags((prev) => [...prev, hashtag]);
         setHashtagIds((prev) => [...prev, hashtag.id]);
-    };
-
-    const handleSave = async (): Promise<void> => {
-        if (title && startDateTime && dueDateTime && !dateError) {
-            const formattedStartDateTime = TimeUtil.dateToString(new Date(startDateTime));
-            const formattedDueDateTime = TimeUtil.dateToString(new Date(dueDateTime));
-
-            const eventPayload: SaveEventRequest = {
-                title,
-                tagId: tag?.id,
-                hashtagIds,
-                description,
-                startDateTime: formattedStartDateTime,
-                dueDateTime: formattedDueDateTime,
-                location,
-            };
-
-            try {
-                if (selectedEventId) {
-                    const response = await request_updateEvent(selectedEventId, eventPayload);
-                    if (response.status === 200) {
-                        console.log('Event successfully updated');
-                        fetchOriginEvents();
-                        closeEventModal();
-                    } else {
-                        console.error('Failed to update event');
-                    }
-                } else {
-                    const response = await request_createEvent(eventPayload);
-                    if (response.status === 200) {
-                        fetchOriginEvents();
-                        closeEventModal();
-                    } else {
-                        console.error('Failed to create event');
-                    }
-                }
-            } catch (error) {
-                console.error('Error saving event:', error);
-            }
-        } else {
-            console.error('Missing required fields or invalid dates');
-        }
-    };
-
-    const handleClose = (): void => {
-        fetchOriginEvents();
-        closeEventModal();
     };
 
 
@@ -311,5 +328,3 @@ const EventModal: React.FC = () => {
         </>
     );
 };
-
-export default EventModal;
