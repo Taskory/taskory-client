@@ -49,7 +49,7 @@ export const MonthlyCalendarCell: React.FC<MonthCalendarCellProps> = ({day, even
             <div className="text-left ml-2 mt-1">{day}</div>
             <div className={`overflow-hidden flex flex-col mb-1 h-full`}>
                 {visibleEvents.map((event, idx) => {
-                    const textColor = `text-${event.tagColor.toLowerCase()}-500`;
+                    const textColor = `text-${event.tag.color.toLowerCase() as string}-500`;
                     const time = TimeUtil.calculateTimeDisplay(
                         TimeUtil.stringToDate(event.startDateTime),
                         TimeUtil.stringToDate(event.dueDateTime),

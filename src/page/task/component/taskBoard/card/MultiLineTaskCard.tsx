@@ -5,6 +5,7 @@ import { CardType } from "../../../../../api/task/TaskTypes";
 import { useTaskDragDrop } from "../../../context/TaskDragDropContext";
 import { calculateProgressRate } from "../../../../../util/TaskUtil";
 import {TagBadge} from "../../../../../component/TagBadge";
+import {TagColor} from "../../../../../api/tag/TagTypes";
 
 export const MultiLineTaskCard: React.FC<CardType> = ({task}) => {
     const {openTaskModal} = useTaskModal();
@@ -33,7 +34,7 @@ export const MultiLineTaskCard: React.FC<CardType> = ({task}) => {
                         {task.title}
                     </h3>
                     <div className="flex items-center gap-1">
-                        <TagBadge tagColor={task.tagColor} tagTitle={task.tagTitle}/>
+                        <TagBadge tagColor={task.tagColor as TagColor} tagTitle={task.tagTitle}/>
                         <span
                             className={`inline-block px-2 py-0.5 text-xs font-medium rounded-full ${getStatusStyle(task.status)}`}
                             aria-label={`Status: ${task.status}`}

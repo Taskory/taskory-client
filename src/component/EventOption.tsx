@@ -27,8 +27,8 @@ export const EventOption: React.FC<{ event: EventSummary }> = ({event}) => {
 
     return (
         <div className="grid grid-cols-2 items-center h-7 w-full">
-            <div className={`${getTagStringColor(event.tagColor)} flex items-center gap-2`}>
-                <TagBadge tagColor={event.tagColor} tagTitle={event.tagTitle}/>
+            <div className={`${getTagStringColor(event.tag.color)} flex items-center gap-2`}>
+                <TagBadge tagColor={event.tag.color} tagTitle={event.tag.title}/>
                 <p className="overflow-hidden truncate">{event.title}</p>
             </div>
             <div className="flex justify-end">

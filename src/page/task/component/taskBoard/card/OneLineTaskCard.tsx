@@ -5,6 +5,7 @@ import { CardType } from "../../../../../api/task/TaskTypes";
 import { useTaskDragDrop } from "../../../context/TaskDragDropContext";
 import { calculateProgressRate } from "../../../../../util/TaskUtil";
 import {TagBadge} from "../../../../../component/TagBadge";
+import {TagColor} from "../../../../../api/tag/TagTypes";
 
 
 export const OneLineTaskCard: React.FC<CardType> = ({ task }) => {
@@ -54,7 +55,7 @@ export const OneLineTaskCard: React.FC<CardType> = ({ task }) => {
                     )}
                 </div>
                 {/* Tag */}
-                <TagBadge tagColor={task.tagColor} tagTitle={task.tagTitle}/>
+                <TagBadge tagColor={task.tagColor as TagColor} tagTitle={task.tagTitle}/>
 
                 {/* Status */}
                 <div

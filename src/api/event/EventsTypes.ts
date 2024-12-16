@@ -15,8 +15,7 @@ export interface EventResponse {
 export interface EventSummary {
     id: number;
     title: string;
-    tagTitle: string;
-    tagColor: string;
+    tag: TagResponse;
     startDateTime: string;
     dueDateTime: string;
 }

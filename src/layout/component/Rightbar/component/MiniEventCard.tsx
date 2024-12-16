@@ -28,7 +28,7 @@ export const MiniEventCard: React.FC<MiniEventCardProps> = ({
         >
             {/* Event Title with Colored Tag */}
             <p
-                className={`font-semibold text-${event.tagColor.toLowerCase()}-600 truncate`}
+                className={`font-semibold text-${event.tag.color.toLowerCase() as string}-600 truncate`}
                 title={event.title}
             >
                 ● {event.title}

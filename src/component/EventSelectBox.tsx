@@ -1,11 +1,11 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
-import { EventSummary } from "../api/event/EventsTypes";
+import React, {useState} from "react";
+import {EventSummary} from "../api/event/EventsTypes";
 import {EventOption} from "./EventOption";
 
 interface EventSelectBoxProps {
-    eventList: EventSummary[];
-    event: EventSummary | null;
-    setEvent: Dispatch<SetStateAction<EventSummary | null>>;
+    eventList: EventSummary[],
+    event: EventSummary | null,
+    setEvent: (event: EventSummary | null) => void
 }
 
 export const EventSelectBox: React.FC<EventSelectBoxProps> = ({eventList, event, setEvent}) => {

@@ -1,6 +1,6 @@
 import {TagColor} from "../api/tag/TagTypes";
 
-export const getTagStringColor = (color: string | TagColor | null) => {
+export const getTagStringColor = (color: TagColor | null) => {
     if (color) {
         switch (color) {
             case TagColor.RED:
@@ -57,8 +57,8 @@ export const getTagBGColor = (color: TagColor | null) => {
     return 'bg-gray-200'; // 기본 값 (null)
 };
 
-export const getTagColorStyle = (tagColor: string) => {
-    switch (tagColor) {
+export const getTagColorStyle = (color: TagColor) => {
+    switch (color) {
         case TagColor.RED:
             return 'bg-red-100 text-red-700'; // 배경 연한 Red, 텍스트 진한 Red (600)
         case TagColor.ORANGE:
@@ -82,7 +82,7 @@ export const getTagColorStyle = (tagColor: string) => {
     }
 };
 
-export const getTagCheckBoxColor = (color: string | TagColor | null) => {
+export const getTagCheckBoxColor = (color: TagColor | null) => {
     if (color) {
         switch (color) {
             case TagColor.RED:

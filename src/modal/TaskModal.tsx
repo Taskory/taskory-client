@@ -1,12 +1,7 @@
 // TaskModal.tsx
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {useTaskModal} from "./context/TaskModalContext";
-import {
-    request_createTask,
-    request_deleteTask,
-    request_getTaskById,
-    request_updateTask
-} from "../api/task/TaskApi";
+import {request_createTask, request_deleteTask, request_getTaskById, request_updateTask} from "../api/task/TaskApi";
 import {SaveTaskRequest, TaskItemDto, TaskResponse, TaskStatus} from "../api/task/TaskTypes";
 import {TagSelectBox} from '../component/TagSelectBox';
 import {useTagContext} from "../context/data/TagContext";
@@ -16,21 +11,12 @@ import {HashtagResponse} from "../api/hashtag/HashtagTypes";
 import {TaskItemSection} from "../page/task/component/TaskItemSection";
 import {request_getUpcomingEvents} from "../api/event/EventApi";
 import {TimeUtil} from "../util/TimeUtil";
-import { EventSelectBox } from '../component/EventSelectBox';
+import {EventSelectBox} from '../component/EventSelectBox';
 
 interface TaskModalProps {
     selectedStatus: TaskStatus; // Preselected status for the modal
 }
 
-type TaskModalState = {
-    id: number | null; // Holds the current task's ID or null for new tasks
-    title: string; // Title of the task
-    event: EventSummary | null; // Associated event or null if none
-    tag: TagResponse; // Selected tag
-    hashtags: HashtagResponse[]; // List of hashtags for the task
-    description: string; // Task description
-    status: string; // Task status (BACKLOG, TODO, etc.)
-};
 
 export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
     /* Contexts to manage modal state and user tags */
@@ -41,35 +27,29 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
     const tagOptions = useMemo(() => userTags, [userTags]);
 
     /* State management */
-    const [task, setTask] = useState<TaskModalState>({
-        id: null,
-        title: '',
-        event: null,
-        tag: tagOptions[0],
-        hashtags: [],
-        description: '',
-        status: selectedStatus, // Initialize status with the preselected value
-    });
+    const [id, setId] = useState<number | null>(selectedTaskId);
+    const [title, setTitle] = useState<string>("");
+    const [event, setEvent] = useState<EventSummary | null>(null);
+    const [tag, setTag] = useState<TagResponse>(tagOptions[0]);
+    const [hashtags, setHashtags] = useState<HashtagResponse[]>([]);
+    const [description, setDescription] = useState<string>("");
+    const [status, setStatus] = useState<TaskStatus>(selectedStatus)
     const [taskItems, setTaskItems] = useState<TaskItemDto[]>([]);
     const [isLoading, setIsLoading] = useState(false); // Tracks loading state
     const [upcomingEvents, setUpcomingEvents] = useState<EventSummary[]>([]);
-    const [selectedEvent, setSelectedEvent] = useState<EventSummary | null>(null);
 
     /* Fetch Task - Retrieves task details if editing */
     const fetchTask = useCallback(async (taskId: number): Promise<void> => {
         setIsLoading(true);
         try {
             const response: TaskResponse = await request_getTaskById(taskId);
-            setTask({
-                id: response.id,
-                title: response.title,
-                event: response.event ?? null,
-                tag: response.tag,
-                hashtags: response.hashtags,
-                description: response.description,
-                status: response.status as TaskStatus,
-            });
-            setSelectedEvent(response.event);
+            setId(response.id);
+            setTitle(response.title);
+            setEvent(response.event);
+            setTag(response.tag);
+            setHashtags(response.hashtags);
+            setDescription(response.description);
+            setStatus(response.status as TaskStatus);
             setTaskItems(response.items);
         } catch (e) {
             console.error('Failed to fetch task:', e); // Error handling for failed fetch
@@ -82,21 +62,21 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
     const handleSave = useCallback(async () => {
         setIsLoading(true);
         const saveTaskRequest: SaveTaskRequest = {
-            title: task.title,
-            eventId: selectedEvent?.id ?? null,
-            tagId: task.tag?.id ?? null,
-            hashtagIds: task.hashtags.map((hashtag) => hashtag.id),
-            description: task.description,
-            status: task.status,
+            title: title,
+            eventId: event?.id ?? null,
+            tagId: tag?.id ?? null,
+            hashtagIds: hashtags.map((hashtag) => hashtag.id),
+            description: description,
+            status: status,
             items: taskItems.map((item) =>
                 item.id && item.id < 0 ? { ...item, id: null } : item // Ensure valid IDs for new items
             ),
         };
 
         try {
-            if (selectedTaskId) {
+            if (id) {
                 // Update if task exists
-                await request_updateTask(selectedTaskId, saveTaskRequest);
+                await request_updateTask(id, saveTaskRequest);
             } else {
                 // Create new task if none exists
                 await request_createTask(saveTaskRequest);
@@ -107,7 +87,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
         } finally {
             setIsLoading(false);
         }
-    }, [selectedEvent, task, selectedTaskId, taskItems, closeTaskModal]);
+    }, [title, event?.id, tag?.id, hashtags, description, status, taskItems, id, closeTaskModal]);
 
     /* Delete Task - Deletes an existing task */
     const handleDelete = useCallback(async () => {
@@ -121,17 +101,6 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
         }
     }, [selectedTaskId, closeTaskModal]);
 
-    /* On Modal Open - Fetch task details if editing */
-    useEffect(() => {
-        if (isModalOpen && selectedTaskId) {
-            fetchTask(selectedTaskId);
-        }
-    }, [isModalOpen, selectedTaskId, fetchTask]);
-
-    /* On Modal Open - Fetch upcoming events */
-    useEffect(() => {
-        fetchUpcomingEvents();
-    }, []);
 
     /* Fetch for get upcoming events */
     const fetchUpcomingEvents =  async () => {
@@ -141,8 +110,8 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
 
     /* Loading Spinner */
     const LoadingSpinner = () => (
-        <div className="flex justify-center items-center h-32">
-            <span className="loading loading-spinner"></span>
+    <div className="flex justify-center items-center h-32">
+        <span className="loading loading-spinner"></span>
         </div>
     );
 
@@ -156,28 +125,47 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
                         name="status"
                         className="hidden"
                         value={value}
-                        checked={task.status === value}
-                        onChange={() => setTask({ ...task, status: value })}
+                        checked={status === value}
+                        onChange={() => setStatus(value)}
                     />
                     <div
                         className={`w-full text-center py-2 border-2 rounded-lg text-sm transition-colors ${
-                            task.status === value ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                            status === value ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                         }`}
                     >
                         {label}
                     </div>
                 </label>
             )),
-        [task]
+        [status]
     );
+
+    const handleSelectEvent = (event: EventSummary | null) => {
+        setEvent(event);
+        if (event) setTag(event.tag);
+    }
+
+
 
     /* Status Options Array */
     const statusOptions = [
         { value: TaskStatus.BACKLOG, label: 'BACKLOG' },
-        { value: TaskStatus.TODO, label: 'To Do' },
-        { value: TaskStatus.PROGRESS, label: 'In Progress' },
-        { value: TaskStatus.DONE, label: 'Done' },
+        { value: TaskStatus.TODO, label: 'TO DO' },
+        { value: TaskStatus.PROGRESS, label: 'IN PROGRESS' },
+        { value: TaskStatus.DONE, label: 'DONE' },
     ];
+
+    /* On Modal Open - Fetch task details if editing */
+    useEffect(() => {
+        if (isModalOpen && selectedTaskId) {
+            fetchTask(selectedTaskId);
+        }
+    }, [isModalOpen, selectedTaskId, fetchTask]);
+
+    /* On Modal Open - Fetch upcoming events */
+    useEffect(() => {
+        fetchUpcomingEvents();
+    }, []);
 
     /* Modal Render */
     return (
@@ -201,23 +189,17 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
                                     <input
                                         type="text"
                                         className="input input-ghost w-full text-lg font-semibold border-b-2 focus:outline-none focus:border-blue-500"
-                                        value={task.title}
+                                        value={title}
                                         placeholder="Enter Task Title"
-                                        onChange={(e) => setTask({...task, title: e.target.value})}
+                                        onChange={(e) => setTitle(e.target.value)}
                                     />
                                 </div>
                                 <div className="col-span-1">
                                     {/* Tag Selector */}
                                     <TagSelectBox
                                         list={tagOptions}
-                                        tagState={task.tag}
-                                        setTagState={(valueOrUpdater) =>
-                                            setTask((prevTask) =>
-                                                typeof valueOrUpdater === 'function'
-                                                    ? {...prevTask, tag: valueOrUpdater(prevTask.tag)}
-                                                    : {...prevTask, tag: valueOrUpdater}
-                                            )
-                                        }
+                                        tagState={tag}
+                                        setTagState={(value) => setTag(value)}
                                     />
                                 </div>
                                 {/* Status Selector */}
@@ -228,14 +210,14 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
                                 {/* Event Selector */}
                                 <label className="col-span-1 text-sm text-right mt-2">Event</label>
                                 <div className="col-span-3 flex space-x-2">
-                                    <EventSelectBox eventList={upcomingEvents} event={selectedEvent} setEvent={setSelectedEvent} />
+                                    <EventSelectBox eventList={upcomingEvents} event={event} setEvent={handleSelectEvent} />
                                 </div>
                                 {/* Description Input */}
                                 <label className="col-span-1 text-sm text-right mt-2">Description</label>
                                 <textarea
                                     className="col-span-3 textarea textarea-bordered textarea-sm w-full resize-none"
-                                    value={task.description}
-                                    onChange={(e) => setTask({...task, description: e.target.value})}
+                                    value={description}
+                                    onChange={(e) => setDescription(e.target.value)}
                                     rows={3}
                                     placeholder="Enter Task Description"
                                 />

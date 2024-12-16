@@ -5,6 +5,7 @@ import { TaskStatus, TaskSummary } from "../../../api/task/TaskTypes";
 import { useTaskContext } from "../../../context/data/TaskContext";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import {getTagColorStyle} from "../../../util/TagUtil";
+import {TagColor} from "../../../api/tag/TagTypes";
 
 interface TaskDragDropContextType {
     useTaskDrag: (task: TaskSummary) => ReturnType<typeof useDrag>;
@@ -122,7 +123,7 @@ const CustomDragLayer: React.FC = () => {
                     </span>
                 </div>
                 <span
-                    className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium truncate ${getTagColorStyle(item.tagColor ?? "")}`}
+                    className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium truncate ${getTagColorStyle(item.tagColor as TagColor ?? "")}`}
                     title={item.tagTitle ?? ""}
                 >
                         {item.tagTitle ?? "No Tag"}
