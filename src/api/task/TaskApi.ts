@@ -127,7 +127,31 @@ export async function request_getTasksByTags(tagIds: number[]) {
         console.error('Error fetching tasks:', error);
         throw error;
     }
+}
 
+export async function request_getTasksByEvent(eventId: number) {
+    const requestUrl = `${API_URL}/task/filter`
+
+    const authToken = getAuthCookie();  // Fetch the latest cookie value here
+    const requestOptions = {
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${authToken}`,
+        },
+    };
+
+    try {
+        const response: AxiosResponse<TaskSummary[]> = await axios.get(requestUrl, {
+            ...requestOptions,
+            params: {
+                eventId: eventId, // Send tag IDs as query parameters
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching tasks:', error);
+        throw error;
+    }
 }
 
 export const ItemType = "TASK";

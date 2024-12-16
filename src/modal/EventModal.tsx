@@ -1,7 +1,7 @@
 import React, { useState, useEffect, KeyboardEvent } from 'react';
 import { API_URL } from "../constants";
 import { format, addHours, isBefore } from 'date-fns';
-import { request_createEvent, request_deleteEvent, request_getEventById, request_updateEvent } from "../api/event/EventApi";
+import { request_createEvent, request_getEventById, request_updateEvent } from "../api/event/EventApi";
 import { SaveEventRequest, EventResponse } from "../api/event/EventsTypes";
 import { TimeUtil } from "../util/TimeUtil";
 import { HashtagResponse } from "../api/hashtag/HashtagTypes";
@@ -10,6 +10,7 @@ import { TagSelectBox } from '../component/TagSelectBox';
 import {useTagContext} from "../context/data/TagContext";
 import {TagResponse} from "../api/tag/TagTypes";
 import {useEventContext} from "../context/data/EventContext";
+import {EventDeleteWarningModal} from "./EventDeleteWarningModal";
 
 const EventModal: React.FC = () => {
     /* Context */
@@ -29,6 +30,7 @@ const EventModal: React.FC = () => {
     const [location, setLocation] = useState('');
     const [loading, setLoading] = useState(false);
     const [dateError, setDateError] = useState('');
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
 
     /* useEffect */
     useEffect(() => {
@@ -174,30 +176,13 @@ const EventModal: React.FC = () => {
         closeEventModal();
     };
 
-    const handleDelete = async (): Promise<void> => {
-        if (selectedEventId) {
-            try {
-                const response = await request_deleteEvent(selectedEventId);
-                if (response.status === 200) {
-                    fetchOriginEvents();
-                    closeEventModal();
-                } else {
-                    console.error('Failed to delete event');
-                }
-            } catch (error) {
-                console.error('Error deleting event:', error);
-            }
-        } else {
-            console.error('Missing required id');
-        }
-    };
+
 
     if (!isModalOpen) return null;
 
     return (
-        <div
-            className={`fixed inset-0 z-50 ${isModalOpen ? 'flex' : 'hidden'} items-center justify-center bg-black bg-opacity-50`}>
-            <dialog open={isModalOpen} className="modal max-h-screen max-w-screen">
+        <>
+            <dialog open={isModalOpen} className="modal modal-open max-h-screen max-w-screen">
                 <div className="modal-box max-w-md p-2">
                     {loading ? (
                         <div className="flex justify-center items-center h-32">
@@ -298,7 +283,7 @@ const EventModal: React.FC = () => {
                                     {selectedEventId ? 'Update' : 'Save'}
                                 </button>
                                 {selectedEventId && (
-                                    <button className="btn btn-error btn-sm" onClick={handleDelete}>Delete</button>
+                                    <button className="btn btn-error btn-sm" onClick={() => setIsDeleteModalOpen(true)}>Delete</button>
                                 )}
                                 <button className="btn btn-outline btn-sm" onClick={handleClose}>Cancel</button>
                             </div>
@@ -306,7 +291,24 @@ const EventModal: React.FC = () => {
                     )}
                 </div>
             </dialog>
-        </div>
+            {selectedEventId && isDeleteModalOpen && (
+                <EventDeleteWarningModal
+                    event={{
+                        id: selectedEventId,
+                        title,
+                        tag: {
+                            id: tag.id,
+                            title: tag.title,
+                            color: tag.color
+                        },
+                        startDateTime,
+                        dueDateTime,
+                    }}
+                    isModalOpen={isDeleteModalOpen}
+                    closeDeleteModal={() => setIsDeleteModalOpen(false)}
+                />
+            )}
+        </>
     );
 };
 

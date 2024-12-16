@@ -5,6 +5,7 @@ import {TaskSummary} from "../api/task/TaskTypes";
 import {TagColor} from "../api/tag/TagTypes";
 
 export const TaskOption: React.FC<{ task: TaskSummary }> = ({task}) => {
+    console.log(task);
     return (
         <div className="grid grid-cols-2 items-center h-7 w-full">
             <div className={`${getTagStringColor(task.tagColor as TagColor)} flex items-center gap-2`}>
