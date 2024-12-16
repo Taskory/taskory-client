@@ -27,37 +27,24 @@ export const TaskContextProvider: React.FC<TaskContextProviderProps> = ({ childr
 
     const fetchOriginTasks = useCallback(async () => {
         try {
-            // const taskData: TaskSummary[] = await request_getAllTasks(); // Fetch tasks using getAllTasks
             const taskData: TaskSummary[] = await request_getTasksByTags(selectedTagIds);
 
-            const backlogTasks: TaskSummary[] = [];
-            const toDoTasks: TaskSummary[] = [];
-            const inProgressTasks: TaskSummary[] = [];
-            const doneTasks: TaskSummary[] = [];
+            const categorizedTasks = {
+                BACKLOG: [] as TaskSummary[],
+                TODO: [] as TaskSummary[],
+                PROGRESS: [] as TaskSummary[],
+                DONE: [] as TaskSummary[],
+            };
 
             taskData.forEach(task => {
-                switch (task.status) {
-                    case TaskStatus.BACKLOG:
-                        backlogTasks.push(task);
-                        break;
-                    case TaskStatus.TODO:
-                        toDoTasks.push(task);
-                        break;
-                    case TaskStatus.PROGRESS:
-                        inProgressTasks.push(task);
-                        break;
-                    case TaskStatus.DONE:
-                        doneTasks.push(task);
-                        break;
-                    default:
-                        console.warn(`Unknown status: ${task.status}`);
-                }
+                categorizedTasks[task.status]?.push(task);
             });
 
-            setBACKLOG(backlogTasks);
-            setTODO(toDoTasks);
-            setPROGRESS(inProgressTasks);
-            setDONE(doneTasks);
+            // 한 번에 상태 업데이트
+            setBACKLOG(categorizedTasks.BACKLOG);
+            setTODO(categorizedTasks.TODO);
+            setPROGRESS(categorizedTasks.PROGRESS);
+            setDONE(categorizedTasks.DONE);
         } catch (error) {
             console.error('Error fetching Tasks:', error);
         }
