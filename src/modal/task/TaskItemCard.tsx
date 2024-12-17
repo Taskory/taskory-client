@@ -1,6 +1,6 @@
 // TaskItem.tsx
 import React, {useState, useCallback, SetStateAction} from 'react';
-import { TaskItemDto } from "../../../api/task/TaskTypes";
+import { TaskItemDto } from "../../api/task/TaskTypes";
 
 interface TaskItemProps {
     item: TaskItemDto;
