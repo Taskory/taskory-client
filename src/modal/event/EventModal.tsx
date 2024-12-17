@@ -1,15 +1,15 @@
 import React, {useState, useEffect, KeyboardEvent, useCallback} from 'react';
-import { API_URL } from "../constants";
+import { API_URL } from "../../constants";
 import { format, addHours, isBefore } from 'date-fns';
-import { request_createEvent, request_getEventById, request_updateEvent } from "../api/event/EventApi";
-import { SaveEventRequest, EventResponse } from "../api/event/EventsTypes";
-import { TimeUtil } from "../util/TimeUtil";
-import { HashtagResponse } from "../api/hashtag/HashtagTypes";
-import {useEventModal} from "./context/EventModalContext";
-import { TagSelectBox } from '../component/TagSelectBox';
-import {useTagContext} from "../context/data/TagContext";
-import {TagResponse} from "../api/tag/TagTypes";
-import {useEventContext} from "../context/data/EventContext";
+import { request_createEvent, request_getEventById, request_updateEvent } from "../../api/event/EventApi";
+import { SaveEventRequest, EventResponse } from "../../api/event/EventsTypes";
+import { TimeUtil } from "../../util/TimeUtil";
+import { HashtagResponse } from "../../api/hashtag/HashtagTypes";
+import {useEventModal} from "../context/EventModalContext";
+import { TagSelectBox } from '../../component/TagSelectBox';
+import {useTagContext} from "../../context/data/TagContext";
+import {TagResponse} from "../../api/tag/TagTypes";
+import {useEventContext} from "../../context/data/EventContext";
 import {EventDeleteWarningModal} from "./EventDeleteWarningModal";
 
 export const EventModal: React.FC = () => {

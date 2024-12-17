@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useEventContext } from "../context/data/EventContext";
-import { useTaskContext } from "../context/data/TaskContext";
-import {request_deleteEvent } from "../api/event/EventApi";
-import {request_getTasksByEvent } from "../api/task/TaskApi";
-import { EventSummary } from "../api/event/EventsTypes";
-import { TaskSummary } from "../api/task/TaskTypes";
-import { EventOption } from "../component/EventOption";
-import { TaskOption } from "../component/TaskOption";
-import {useEventModal} from "./context/EventModalContext";
+import { useEventContext } from "../../context/data/EventContext";
+import { useTaskContext } from "../../context/data/TaskContext";
+import {request_deleteEvent } from "../../api/event/EventApi";
+import {request_getTasksByEvent } from "../../api/task/TaskApi";
+import { EventSummary } from "../../api/event/EventsTypes";
+import { TaskSummary } from "../../api/task/TaskTypes";
+import { EventOption } from "../../component/EventOption";
+import { TaskOption } from "../../component/TaskOption";
+import {useEventModal} from "../context/EventModalContext";
 
 interface EventDeleteWarningModalProps {
     event: EventSummary;

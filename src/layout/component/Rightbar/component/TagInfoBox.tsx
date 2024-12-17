@@ -5,7 +5,7 @@ import {request_createTag, request_updateTag} from "../../../../api/tag/TagApi";
 import { ColorSelectBox } from "../../../../component/ColorSelectBox";
 import {useEventContext} from "../../../../context/data/EventContext";
 import {useTaskContext} from "../../../../context/data/TaskContext";
-import {TagDeleteWarningModal} from "../../../../modal/TagDeleteWarningModal";
+import {TagDeleteWarningModal} from "../../../../modal/tag/TagDeleteWarningModal";
 
 type TagInfoDropboxProps = {
     tag?: TagResponse;

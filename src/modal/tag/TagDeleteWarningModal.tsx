@@ -1,16 +1,16 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { request_deleteTag } from "../api/tag/TagApi";
-import { useEventContext } from "../context/data/EventContext";
-import { useTaskContext } from "../context/data/TaskContext";
-import { useTagContext } from "../context/data/TagContext";
-import { TagResponse } from "../api/tag/TagTypes";
-import { request_getEventsByTags } from "../api/event/EventApi";
-import { request_getTasksByTags } from "../api/task/TaskApi";
-import { EventSummary } from "../api/event/EventsTypes";
-import { TaskSummary } from "../api/task/TaskTypes";
-import { EventOption } from "../component/EventOption";
-import { TaskOption } from "../component/TaskOption";
-import { TagBadge } from "../component/TagBadge";
+import { request_deleteTag } from "../../api/tag/TagApi";
+import { useEventContext } from "../../context/data/EventContext";
+import { useTaskContext } from "../../context/data/TaskContext";
+import { useTagContext } from "../../context/data/TagContext";
+import { TagResponse } from "../../api/tag/TagTypes";
+import { request_getEventsByTags } from "../../api/event/EventApi";
+import { request_getTasksByTags } from "../../api/task/TaskApi";
+import { EventSummary } from "../../api/event/EventsTypes";
+import { TaskSummary } from "../../api/task/TaskTypes";
+import { EventOption } from "../../component/EventOption";
+import { TaskOption } from "../../component/TaskOption";
+import { TagBadge } from "../../component/TagBadge";
 
 interface TagDeleteWarningModalProps {
     tag: TagResponse;

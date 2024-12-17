@@ -1,7 +1,7 @@
-import {TaskItemCard} from "./TaskItemCard";
+import {TaskItemCard} from "../../page/task/component/TaskItemCard";
 import React, {SetStateAction, useCallback, useMemo, useState} from "react";
-import {TaskItemDto} from "../../../api/task/TaskTypes";
-import {useTaskModal} from "../../../modal/context/TaskModalContext";
+import {TaskItemDto} from "../../api/task/TaskTypes";
+import {useTaskModal} from "../context/TaskModalContext";
 
 interface TaskItemListProps {
     items: TaskItemDto[],

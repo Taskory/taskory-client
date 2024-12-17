@@ -1,17 +1,17 @@
 // TaskModal.tsx
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {useTaskModal} from "./context/TaskModalContext";
-import {request_createTask, request_deleteTask, request_getTaskById, request_updateTask} from "../api/task/TaskApi";
-import {SaveTaskRequest, TaskItemDto, TaskResponse, TaskStatus} from "../api/task/TaskTypes";
-import {TagSelectBox} from '../component/TagSelectBox';
-import {useTagContext} from "../context/data/TagContext";
-import {EventSummary} from "../api/event/EventsTypes";
-import {TagResponse} from "../api/tag/TagTypes";
-import {HashtagResponse} from "../api/hashtag/HashtagTypes";
-import {TaskItemSection} from "../page/task/component/TaskItemSection";
-import {request_getUpcomingEvents} from "../api/event/EventApi";
-import {TimeUtil} from "../util/TimeUtil";
-import {EventSelectBox} from '../component/EventSelectBox';
+import {useTaskModal} from "../context/TaskModalContext";
+import {request_createTask, request_deleteTask, request_getTaskById, request_updateTask} from "../../api/task/TaskApi";
+import {SaveTaskRequest, TaskItemDto, TaskResponse, TaskStatus} from "../../api/task/TaskTypes";
+import {TagSelectBox} from '../../component/TagSelectBox';
+import {useTagContext} from "../../context/data/TagContext";
+import {EventSummary} from "../../api/event/EventsTypes";
+import {TagResponse} from "../../api/tag/TagTypes";
+import {HashtagResponse} from "../../api/hashtag/HashtagTypes";
+import {TaskItemSection} from "./TaskItemSection";
+import {request_getUpcomingEvents} from "../../api/event/EventApi";
+import {TimeUtil} from "../../util/TimeUtil";
+import {EventSelectBox} from '../../component/EventSelectBox';
 
 interface TaskModalProps {
     selectedStatus: TaskStatus; // Preselected status for the modal

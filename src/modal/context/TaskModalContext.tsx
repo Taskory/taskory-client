@@ -1,5 +1,5 @@
 import React, {createContext, ReactNode, useCallback, useContext, useMemo, useState} from 'react';
-import {TaskModal} from '../TaskModal';
+import {TaskModal} from '../task/TaskModal';
 import {useTaskContext} from "../../context/data/TaskContext";
 import {TaskStatus} from "../../api/task/TaskTypes";
 
