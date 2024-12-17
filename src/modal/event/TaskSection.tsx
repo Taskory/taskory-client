@@ -1,28 +1,34 @@
-import React, {SetStateAction, useCallback, useMemo, useState} from "react";
-import {useTaskModal} from "../context/TaskModalContext";
-import {TaskSummary} from "../../api/task/TaskTypes";
+import React, {SetStateAction, useCallback, useState} from "react";
+import {TaskStatus, TaskSummary} from "../../api/task/TaskTypes";
+import {EventSummary} from "../../api/event/EventsTypes";
+import {TaskSummaryCard} from "./TaskSummaryCard";
 
 interface TaskListProps {
     items: TaskSummary[],
     setItems: React.Dispatch<SetStateAction<TaskSummary[]>>;
+    event: EventSummary;
 }
 
-export const TaskSection: React.FC<TaskListProps> = ({items, setItems}) => {
-    const { selectedTaskId } = useTaskModal();
-    const [newTaskItemTitle, setNewTaskItemTitle] = useState<string>('');
+export const TaskSection: React.FC<TaskListProps> = ({items, setItems, event}) => {
+    const [newTaskTitle, setNewTaskTitle] = useState<string>('');
 
     const handleAddTaskItem = useCallback(() => {
-        // if (newTaskItemTitle.trim() !== '') {
-        //     const newTaskItem: TaskSummary = {
-        //         id: Date.now() * (-1),  // Temporary ID
-        //         taskId: selectedTaskId ?? null,
-        //         title: newTaskItemTitle,
-        //         completed: false,
-        //     };
-        //     setItems([...items, newTaskItem]);
-        //     setNewTaskItemTitle('');
-        // }
-    }, []);
+        if (newTaskTitle.trim() !== '') {
+            const newTaskItem: TaskSummary = {
+                id: Date.now() * (-1),  // Temporary ID
+                title: newTaskTitle,
+                event: event,
+                tagTitle: event.tag.title,
+                tagColor: event.tag.color,
+                hashtags: [],
+                status: TaskStatus.BACKLOG,
+                itemsCount: 0,
+                completedItemsCount: 0,
+            };
+            setItems([...items, newTaskItem]);
+            setNewTaskTitle('');
+        }
+    }, [event, items, newTaskTitle, setItems]);
 
     const handleKeyPress = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
@@ -30,14 +36,6 @@ export const TaskSection: React.FC<TaskListProps> = ({items, setItems}) => {
             handleAddTaskItem();
         }
     }, [handleAddTaskItem]);
-
-    /* Progress Calculation */
-    const calculateProgress = useMemo((): number => {
-        // if (items.length === 0) return 0;
-        // const completedItems = items.filter(item => item.completed).length;
-        // return Math.round((completedItems / items.length) * 100);
-        return 0;
-    }, []);
 
     return (
         <>
@@ -47,8 +45,8 @@ export const TaskSection: React.FC<TaskListProps> = ({items, setItems}) => {
                     type="text"
                     className="input input-bordered input-sm flex-1 focus:outline-none focus:border-blue-500"
                     placeholder="New checklist item"
-                    value={newTaskItemTitle}
-                    onChange={(e) => setNewTaskItemTitle(e.target.value)}
+                    value={newTaskTitle}
+                    onChange={(e) => setNewTaskTitle(e.target.value)}
                     onKeyDown={handleKeyPress}
                 />
                 <button type="button" className="btn btn-primary btn-sm"
@@ -56,25 +54,11 @@ export const TaskSection: React.FC<TaskListProps> = ({items, setItems}) => {
                     Add
                 </button>
             </div>
-            <div className="col-span-4 mt-4">
-                <div className="w-full bg-gray-200 rounded-full h-4">
-                    <div
-                        className="bg-blue-600 h-4 rounded-full text-xs font-medium text-center text-white"
-                        style={{width: `${calculateProgress}%`}}
-                    >
-                        {calculateProgress}%
-                    </div>
-                </div>
-            </div>
-            {/*<ul className="col-span-4 space-y-2 h-52 overflow-y-auto mt-2">*/}
-            {/*    {items.map((item, index) => (*/}
-            {/*        <TaskItemCard*/}
-            {/*            key={index}*/}
-            {/*            item={item}*/}
-            {/*            setItems={setItems}*/}
-            {/*        />*/}
-            {/*    ))}*/}
-            {/*</ul>*/}
+            <ul className="col-span-4 space-y-2 h-52 overflow-y-auto mt-2">
+                {items.map((item, index) => (
+                    <TaskSummaryCard key={index} item={item} setItems={setItems}/>
+                ))}
+            </ul>
         </>
     );
 };

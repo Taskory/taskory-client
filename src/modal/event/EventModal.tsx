@@ -11,6 +11,8 @@ import {useTagContext} from "../../context/data/TagContext";
 import {TagResponse} from "../../api/tag/TagTypes";
 import {useEventContext} from "../../context/data/EventContext";
 import {EventDeleteWarningModal} from "./EventDeleteWarningModal";
+import {TaskSection} from "./TaskSection";
+import {TaskSummary} from "../../api/task/TaskTypes";
 
 export const EventModal: React.FC = () => {
     /* Context */
@@ -30,7 +32,8 @@ export const EventModal: React.FC = () => {
     const [location, setLocation] = useState('');
     const [loading, setLoading] = useState(false);
     const [dateError, setDateError] = useState('');
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [savedTask, setSavedTask] = useState<TaskSummary[]>([]);
 
     /* useCallback */
     const handleSave = useCallback(async (): Promise<void> => {
@@ -295,12 +298,28 @@ export const EventModal: React.FC = () => {
                                 />
                                 </div>
                             </div>
+                            {selectedEventId &&
+                                <TaskSection items={savedTask} setItems={setSavedTask}
+                                             event={{
+                                                 id: selectedEventId,
+                                                 title,
+                                                 tag: {
+                                                     id: tag.id,
+                                                     title: tag.title,
+                                                     color: tag.color
+                                                 },
+                                                 startDateTime,
+                                                 dueDateTime,
+                                             }}/>
+                            }
+
                             <div className="flex gap-2 justify-end">
                                 <button className="btn btn-primary btn-sm" onClick={handleSave}>
                                     {selectedEventId ? 'Update' : 'Save'}
                                 </button>
                                 {selectedEventId && (
-                                    <button className="btn btn-error btn-sm" onClick={() => setIsDeleteModalOpen(true)}>Delete</button>
+                                    <button className="btn btn-error btn-sm"
+                                            onClick={() => setIsDeleteModalOpen(true)}>Delete</button>
                                 )}
                                 <button className="btn btn-outline btn-sm" onClick={handleClose}>Cancel</button>
                             </div>
