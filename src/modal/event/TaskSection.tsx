@@ -1,34 +1,33 @@
 import React, {SetStateAction, useCallback, useState} from "react";
-import {TaskStatus, TaskSummary} from "../../api/task/TaskTypes";
-import {EventSummary} from "../../api/event/EventsTypes";
-import {TaskSummaryCard} from "./TaskSummaryCard";
+import {SaveTaskRequest, TaskStatus } from "../../api/task/TaskTypes";
+import {SavedTaskCard} from "./SavedTaskCard";
 
 interface TaskListProps {
-    items: TaskSummary[],
-    setItems: React.Dispatch<SetStateAction<TaskSummary[]>>;
-    event: EventSummary;
+    items: SaveTaskRequest[],
+    setItems: React.Dispatch<SetStateAction<SaveTaskRequest[]>>;
+    eventId: number | null;
+    tagId: number;
 }
 
-export const TaskSection: React.FC<TaskListProps> = ({items, setItems, event}) => {
+export const TaskSection: React.FC<TaskListProps> = ({items, setItems, eventId, tagId }) => {
     const [newTaskTitle, setNewTaskTitle] = useState<string>('');
 
     const handleAddTaskItem = useCallback(() => {
         if (newTaskTitle.trim() !== '') {
-            const newTaskItem: TaskSummary = {
-                id: Date.now() * (-1),  // Temporary ID
+            const newTaskItem: SaveTaskRequest = {
+                // id: Date.now() * (-1),  // Temporary ID
                 title: newTaskTitle,
-                event: event,
-                tagTitle: event.tag.title,
-                tagColor: event.tag.color,
-                hashtags: [],
+                eventId: eventId,
+                tagId: tagId,
+                hashtagIds: [],
+                description: "",
                 status: TaskStatus.BACKLOG,
-                itemsCount: 0,
-                completedItemsCount: 0,
+                items: [],
             };
             setItems([...items, newTaskItem]);
             setNewTaskTitle('');
         }
-    }, [event, items, newTaskTitle, setItems]);
+    }, [eventId, items, newTaskTitle, setItems, tagId]);
 
     const handleKeyPress = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
@@ -56,7 +55,7 @@ export const TaskSection: React.FC<TaskListProps> = ({items, setItems, event}) =
             </div>
             <ul className="col-span-4 space-y-2 h-52 overflow-y-auto mt-2">
                 {items.map((item, index) => (
-                    <TaskSummaryCard key={index} item={item} setItems={setItems}/>
+                    <SavedTaskCard key={index} item={item} setItems={setItems}/>
                 ))}
             </ul>
         </>
