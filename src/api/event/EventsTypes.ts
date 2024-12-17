@@ -5,6 +5,7 @@ export interface EventResponse {
     id: number;
     title: string;
     tag: TagResponse;
+    tasks: TaskInEventDto[];
     hashtags: HashtagResponse[];
     description: string;
     startDateTime: string;
@@ -28,6 +29,12 @@ export interface SaveEventRequest {
     startDateTime?: string;
     dueDateTime?: string;
     location?: string;
+}
+
+export interface TaskInEventDto {
+    id: number;
+    title: string;
+    status: string;
 }
 
 export type DateEventInfo = {
