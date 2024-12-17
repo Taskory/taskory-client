@@ -1,38 +1,34 @@
 import React, {SetStateAction, useCallback, useState} from "react";
-import {SaveTaskRequest, TaskStatus } from "../../api/task/TaskTypes";
+import {TaskStatus} from "../../api/task/TaskTypes";
 import {SavedTaskCard} from "./SavedTaskCard";
+import {TaskInEventDto} from "../../api/event/EventsTypes";
 
 interface TaskListProps {
-    items: SaveTaskRequest[],
-    setItems: React.Dispatch<SetStateAction<SaveTaskRequest[]>>;
-    eventId: number | null;
-    tagId: number;
+    items: TaskInEventDto[],
+    setItems: React.Dispatch<SetStateAction<TaskInEventDto[]>>;
 }
 
-export const TaskSection: React.FC<TaskListProps> = ({items, setItems, eventId, tagId }) => {
+export const TaskSection: React.FC<TaskListProps> = ({items, setItems}) => {
     const [newTaskTitle, setNewTaskTitle] = useState<string>('');
 
     const handleAddTaskItem = useCallback(() => {
         if (newTaskTitle.trim() !== '') {
-            const newTaskItem: SaveTaskRequest = {
-                // id: Date.now() * (-1),  // Temporary ID
+            const newTaskItem: TaskInEventDto = {
+                id: Date.now() * (-1),  // Temporary ID
                 title: newTaskTitle,
-                eventId: eventId,
-                tagId: tagId,
-                hashtagIds: [],
-                description: "",
-                status: TaskStatus.BACKLOG,
-                items: [],
+                status: TaskStatus.BACKLOG
             };
             setItems([...items, newTaskItem]);
             setNewTaskTitle('');
         }
-    }, [eventId, items, newTaskTitle, setItems, tagId]);
+    }, [items, newTaskTitle, setItems]);
 
     const handleKeyPress = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             e.preventDefault();
             handleAddTaskItem();
+        } else if (e.key === 'Escape') {
+            e.currentTarget.blur(); // Removes focus from the input
         }
     }, [handleAddTaskItem]);
 

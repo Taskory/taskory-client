@@ -1,10 +1,10 @@
 // TaskItem.tsx
 import React, {useState, useCallback, SetStateAction} from 'react';
-import {SaveTaskRequest} from "../../api/task/TaskTypes";
+import {TaskInEventDto} from "../../api/event/EventsTypes";
 
 interface SavedTaskCardProps {
-    item: SaveTaskRequest,
-    setItems: React.Dispatch<SetStateAction<SaveTaskRequest[]>>;
+    item: TaskInEventDto,
+    setItems: React.Dispatch<SetStateAction<TaskInEventDto[]>>;
 }
 
 export const SavedTaskCard: React.FC<SavedTaskCardProps> = React.memo(({ item, setItems }) => {
@@ -20,28 +20,28 @@ export const SavedTaskCard: React.FC<SavedTaskCardProps> = React.memo(({ item, s
         setEditedTitle(e.target.value);
     }, []);
 
-    // const handleInputBlur = useCallback(() => {
-    //     setIsEditing(false);
-    //     if (editedTitle !== item.title) {
-    //         setItems((prevItems) =>
-    //             prevItems.map((prevItem) =>
-    //                 prevItem.id === item.id ? { ...prevItem, title: editedTitle } : prevItem
-    //             )
-    //         );
-    //     }
-    // }, [editedTitle, item.id, item.title, setItems]);
+    const handleInputBlur = useCallback(() => {
+        setIsEditing(false);
+        if (editedTitle !== item.title) {
+            setItems((prevItems) =>
+                prevItems.map((prevItem) =>
+                    prevItem.id === item.id ? { ...prevItem, title: editedTitle } : prevItem
+                )
+            );
+        }
+    }, [editedTitle, item.id, item.title, setItems]);
 
-    // const handleInputKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-    //     if (e.key === 'Enter') {
-    //         e.preventDefault();
-    //         handleInputBlur();
-    //     }
-    // }, [handleInputBlur]);
+    const handleInputKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            handleInputBlur();
+        }
+    }, [handleInputBlur]);
 
-    // const handleDeleteClick = useCallback((e: React.MouseEvent) => {
-    //     e.stopPropagation();
-    //     setItems((prevItems) => prevItems.filter((prevItem) => prevItem.id !== item.id));
-    // }, [item.id, setItems]);
+    const handleDeleteClick = useCallback((e: React.MouseEvent) => {
+        e.stopPropagation();
+        setItems((prevItems) => prevItems.filter((prevItem) => prevItem.id !== item.id));
+    }, [item.id, setItems]);
 
     return (
         <div
@@ -52,8 +52,8 @@ export const SavedTaskCard: React.FC<SavedTaskCardProps> = React.memo(({ item, s
                     type="text"
                     value={editedTitle}
                     onChange={handleInputChange}
-                    // onBlur={handleInputBlur}
-                    // onKeyDown={handleInputKeyDown}
+                    onBlur={handleInputBlur}
+                    onKeyDown={handleInputKeyDown}
                     autoFocus
                     className="flex-1 p-1 border-b border-gray-300 focus:outline-none"
                 />
@@ -70,7 +70,7 @@ export const SavedTaskCard: React.FC<SavedTaskCardProps> = React.memo(({ item, s
             <button
                 type="button"
                 className="btn btn-xs btn-error ml-2"
-                // onClick={handleDeleteClick}
+                onClick={handleDeleteClick}
             >
                 Delete
             </button>

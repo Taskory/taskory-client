@@ -1,5 +1,6 @@
 import {HashtagResponse} from "../hashtag/HashtagTypes";
 import {TagResponse} from "../tag/TagTypes";
+import {TaskStatus} from "../task/TaskTypes";
 
 export interface EventResponse {
     id: number;
@@ -24,6 +25,7 @@ export interface EventSummary {
 export interface SaveEventRequest {
     title: string;
     tagId?: number;
+    tasks: TaskInEventDto[];
     hashtagIds?: number[];
     description?: string;
     startDateTime?: string;
@@ -32,9 +34,9 @@ export interface SaveEventRequest {
 }
 
 export interface TaskInEventDto {
-    id: number;
+    id: number | null;
     title: string;
-    status: string;
+    status: TaskStatus;
 }
 
 export type DateEventInfo = {

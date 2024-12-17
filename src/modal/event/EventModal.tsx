@@ -2,7 +2,7 @@ import React, {useState, useEffect, KeyboardEvent, useCallback} from 'react';
 import { API_URL } from "../../constants";
 import { format, addHours, isBefore } from 'date-fns';
 import { request_createEvent, request_getEventById, request_updateEvent } from "../../api/event/EventApi";
-import { SaveEventRequest, EventResponse } from "../../api/event/EventsTypes";
+import {SaveEventRequest, EventResponse, TaskInEventDto} from "../../api/event/EventsTypes";
 import { TimeUtil } from "../../util/TimeUtil";
 import { HashtagResponse } from "../../api/hashtag/HashtagTypes";
 import {useEventModal} from "../context/EventModalContext";
@@ -12,13 +12,14 @@ import {TagResponse} from "../../api/tag/TagTypes";
 import {useEventContext} from "../../context/data/EventContext";
 import {EventDeleteWarningModal} from "./EventDeleteWarningModal";
 import {TaskSection} from "./TaskSection";
-import {SaveTaskRequest } from "../../api/task/TaskTypes";
+import {useTaskContext} from "../../context/data/TaskContext";
 
 export const EventModal: React.FC = () => {
     /* Context */
     const {fetchOriginEvents} = useEventContext();
     const {userTags} = useTagContext();
     const {isModalOpen, closeEventModal, selectedEventId} = useEventModal();
+    const {fetchOriginTasks} = useTaskContext();
 
     /* useState */
     const [title, setTitle] = useState('');
@@ -33,7 +34,7 @@ export const EventModal: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [dateError, setDateError] = useState('');
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [savedTask, setSavedTask] = useState<SaveTaskRequest[]>([]);
+    const [savedTasks, setSavedTasks] = useState<TaskInEventDto[]>([]);
 
     /* useCallback */
     const handleSave = useCallback(async (): Promise<void> => {
@@ -43,6 +44,8 @@ export const EventModal: React.FC = () => {
             const eventPayload: SaveEventRequest = {
                 title,
                 tagId: tag?.id,
+                tasks: savedTasks.map((task) =>
+                    task.id && task.id < 0 ? {...task, id: null} : task),
                 hashtagIds,
                 description,
                 startDateTime: formattedStartDateTime,
@@ -69,6 +72,7 @@ export const EventModal: React.FC = () => {
                         console.error('Failed to create event');
                     }
                 }
+                fetchOriginTasks();
             } catch (error) {
                 console.error('Error saving event:', error);
             }
@@ -76,7 +80,7 @@ export const EventModal: React.FC = () => {
         } else {
             console.error('Missing required fields or invalid dates');
         }
-    }, [closeEventModal, dateError, description, dueDateTime, fetchOriginEvents, hashtagIds, location, selectedEventId, startDateTime, tag?.id, title]);
+    }, [closeEventModal, dateError, description, dueDateTime, fetchOriginEvents, fetchOriginTasks, hashtagIds, location, savedTasks, selectedEventId, startDateTime, tag?.id, title]);
 
     const handleClose = useCallback(async (): Promise<void> => {
         await fetchOriginEvents();
@@ -104,6 +108,14 @@ export const EventModal: React.FC = () => {
 
     useEffect(() => {
         const handleKeyDown = (event: globalThis.KeyboardEvent): void => {
+            if (
+                ['INPUT', 'TEXTAREA'].includes((event.target as HTMLElement).tagName) ||
+                event.target instanceof HTMLInputElement
+            ) {
+                // Prevent Enter key from interfering in input fields
+                return;
+            }
+
             if (event.key === 'Enter') {
                 handleSave();
             } else if (event.key === 'Escape') {
@@ -115,7 +127,8 @@ export const EventModal: React.FC = () => {
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [title, startDateTime, dueDateTime, dateError, handleSave, handleClose]);
+    }, [handleSave, handleClose]);
+
 
     /* functions */
     const fetchEvent = async (eventId: number): Promise<void> => {
@@ -126,6 +139,7 @@ export const EventModal: React.FC = () => {
                 const data: EventResponse = response.data;
                 setTitle(data.title ?? "");
                 setTag(data.tag)
+                setSavedTasks(data.tasks);
                 setHashtags(data.hashtags ?? []);
                 setHashtagIds(data.hashtags ? data.hashtags.map((hashtag) => hashtag.id) : []);
                 setDescription(data.description ?? "");
@@ -298,7 +312,7 @@ export const EventModal: React.FC = () => {
                                 />
                                 </div>
                             </div>
-                            <TaskSection items={savedTask} setItems={setSavedTask} eventId={selectedEventId} tagId={tag.id} />
+                            <TaskSection items={savedTasks} setItems={setSavedTasks} />
                             <div className="flex gap-2 justify-end">
                                 <button className="btn btn-primary btn-sm" onClick={handleSave}>
                                     {selectedEventId ? 'Update' : 'Save'}
