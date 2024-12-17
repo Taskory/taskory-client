@@ -1,6 +1,6 @@
 import React, {useState} from "react";
-import {EventSummary} from "../api/event/EventsTypes";
-import {EventOption} from "./EventOption";
+import {EventSummary} from "../../api/event/EventsTypes";
+import {EventOption} from "../../component/EventOption";
 
 interface EventSelectBoxProps {
     eventList: EventSummary[],

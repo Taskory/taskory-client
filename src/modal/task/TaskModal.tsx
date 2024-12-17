@@ -11,7 +11,7 @@ import {HashtagResponse} from "../../api/hashtag/HashtagTypes";
 import {TaskItemSection} from "./TaskItemSection";
 import {request_getUpcomingEvents} from "../../api/event/EventApi";
 import {TimeUtil} from "../../util/TimeUtil";
-import {EventSelectBox} from '../../component/EventSelectBox';
+import {EventSelectBox} from './EventSelectBox';
 
 interface TaskModalProps {
     selectedStatus: TaskStatus; // Preselected status for the modal
