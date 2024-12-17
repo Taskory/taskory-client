@@ -1,47 +1,59 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
-import {TagResponse} from '../api/tag/TagTypes';
-import {ColorBadge} from "./ColorBadge";
+import React, { Dispatch, SetStateAction, useState } from "react";
+import { TagResponse } from "../api/tag/TagTypes";
+import { ColorBadge } from "./ColorBadge";
 
 interface TagSelectBoxProps {
-    list: TagResponse[];
-    tagState: TagResponse;
-    setTagState: Dispatch<SetStateAction<TagResponse>>;
+  list: TagResponse[];
+  tagState: TagResponse;
+  setTagState: Dispatch<SetStateAction<TagResponse>>;
 }
 
-export const TagSelectBox: React.FC<TagSelectBoxProps> = ({list, tagState, setTagState}) => {
+export const TagSelectBox: React.FC<TagSelectBoxProps> = ({
+                                                            list,
+                                                            tagState,
+                                                            setTagState,
+                                                          }) => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const handleSelect = (tag: TagResponse) => {
+    setTagState(tag);
+    setIsDropdownOpen(false);
+  };
 
-    const handleSelect = (tag: TagResponse) => {
-        setTagState(tag);
-        setIsDropdownOpen(false);
-    };
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
 
-    const toggleDropdown = () => {
-        setIsDropdownOpen(!isDropdownOpen);
-    };
+  return (
+    <div className="relative w-full">
+      {/* Dropdown Trigger */}
+      <div
+        tabIndex={0}
+        role="button"
+        onClick={toggleDropdown}
+        className="flex items-center gap-1 rounded px-2 py-1 cursor-pointer hover:bg-gray-200 transition duration-200"
+      >
+        <ColorBadge color={tagState?.color ?? ""} />
+        <div className="truncate text-sm">{tagState?.title ?? "none"}</div>
+      </div>
 
-    return (
-        <div className={`dropdown w-full`}>
-            <div tabIndex={0} role="button"
-                 onClick={toggleDropdown}
-                 className="flex items-center cursor-pointer">
-                <ColorBadge color={tagState?.color ?? ''}/>
-                <div className="px-1 truncate w-full">{tagState?.title ?? "none"}</div>
-            </div>
-            <ul tabIndex={0}
-                className={`dropdown-content mb-1 bg-white rounded-b flex flex-col z-[1] ${isDropdownOpen ? '' : 'hidden'} w-full`}>
-                {list.map((option, index) => (
-                    (
-                        <li key={option ? `TagColor-${option.toString()}-${index.toString()}` : `TagColor-${index.toString()}`}
-                            className={`flex items-center gap-y-2 cursor-pointer text-center`}
-                            onClick={() => handleSelect(option)}>
-                            <ColorBadge color={option?.color}/>
-                            <div className="px-1 truncate">{option.title}</div>
-                        </li>
-                    ))
-                )}
-            </ul>
-        </div>
-    );
+      {/* Dropdown List */}
+      <ul
+        className={`absolute z-10 bg-white shadow-md rounded transition-all duration-300 overflow-hidden ${
+          isDropdownOpen ? "max-h-60" : "max-h-0"
+        } w-full`}
+      >
+        {list.map((option, index) => (
+          <li
+            key={`TagColor-${index}`}
+            className="flex items-center px-2 py-1 gap-1 text-sm cursor-pointer hover:bg-gray-100 active:bg-gray-200 transition duration-200"
+            onClick={() => handleSelect(option)}
+          >
+            <ColorBadge color={option?.color} />
+            <div className="truncate">{option.title}</div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 };

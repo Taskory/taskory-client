@@ -41,7 +41,7 @@ export const EventSelectBox: React.FC<EventSelectBoxProps> = ({eventList, event,
 
             {/* Dropdown menu */}
             {isDropdownOpen && (
-                <ul className="absolute left-0 w-full mt-2 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto z-10">
+                <ul className="absolute left-0 w-full  bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto z-10">
                     <li
                         className="p-1 hover:bg-gray-100 cursor-pointer bg-gray-50"
                         onClick={() => handleSelect(null)}> Select an event(No event)

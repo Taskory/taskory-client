@@ -1,79 +1,111 @@
-// TaskItem.tsx
-import React, {useState, useCallback, SetStateAction} from 'react';
-import {TaskInEventDto} from "../../api/event/EventsTypes";
+import React, {useState, useCallback, SetStateAction, useEffect} from "react";
+import { TaskInEventDto } from "../../api/event/EventsTypes";
+import {TaskStatus} from "../../api/task/TaskTypes";
+import {StatusSelectBox} from "./StatusSelectBox";
 
 interface SavedTaskCardProps {
-    item: TaskInEventDto,
+    item: TaskInEventDto;
     setItems: React.Dispatch<SetStateAction<TaskInEventDto[]>>;
 }
 
-export const SavedTaskCard: React.FC<SavedTaskCardProps> = React.memo(({ item, setItems }) => {
-    const [isEditing, setIsEditing] = useState(false);
-    const [editedTitle, setEditedTitle] = useState(item.title);
+export const SavedTaskCard: React.FC<SavedTaskCardProps> = React.memo(
+  ({ item, setItems }) => {
+      const [isEditing, setIsEditing] = useState(false);
+      const [editedTitle, setEditedTitle] = useState(item.title);
+      const [selectedStatus, setSelectedStatus] = useState<TaskStatus>(
+        item.status as TaskStatus
+      );
 
-    const handleEditClick = useCallback((e: React.MouseEvent) => {
-        e.stopPropagation();
-        setIsEditing(true);
-    }, []);
+      const handleEditClick = useCallback((e: React.MouseEvent) => {
+          e.stopPropagation();
+          setIsEditing(true);
+      }, []);
 
-    const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-        setEditedTitle(e.target.value);
-    }, []);
+      const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+          setEditedTitle(e.target.value);
+      }, []);
 
-    const handleInputBlur = useCallback(() => {
-        setIsEditing(false);
-        if (editedTitle !== item.title) {
-            setItems((prevItems) =>
+      const handleInputBlur = useCallback(() => {
+          setIsEditing(false);
+          if (editedTitle !== item.title) {
+              setItems((prevItems) =>
                 prevItems.map((prevItem) =>
-                    prevItem.id === item.id ? { ...prevItem, title: editedTitle } : prevItem
+                  prevItem.id === item.id ? { ...prevItem, title: editedTitle } : prevItem
                 )
-            );
-        }
-    }, [editedTitle, item.id, item.title, setItems]);
+              );
+          }
+      }, [editedTitle, item.id, item.title, setItems]);
 
-    const handleInputKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            handleInputBlur();
-        }
-    }, [handleInputBlur]);
+      const handleInputKeyDown = useCallback(
+        (e: React.KeyboardEvent<HTMLInputElement>) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                handleInputBlur();
+            }
+        },
+        [handleInputBlur]
+      );
 
-    const handleDeleteClick = useCallback((e: React.MouseEvent) => {
-        e.stopPropagation();
-        setItems((prevItems) => prevItems.filter((prevItem) => prevItem.id !== item.id));
-    }, [item.id, setItems]);
+      const handleDeleteClick = useCallback(
+        (e: React.MouseEvent) => {
+            e.stopPropagation();
+            setItems((prevItems) => prevItems.filter((prevItem) => prevItem.id !== item.id));
+        },
+        [item.id, setItems]
+      );
 
-    return (
-        <div
-            className={`flex items-center p-3 border rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer text-gray-800`}
-        >
+      useEffect(() => {
+          setItems((prevItems) =>
+            prevItems.map((prevItem) =>
+              prevItem.id === item.id ? { ...prevItem, status: selectedStatus } : prevItem
+            )
+          );
+      }, [item.id, selectedStatus, setItems]);
+
+      return (
+        <div className="flex items-center gap-2 p-2 border rounded bg-white shadow-sm text-sm hover:shadow transition-all">
             {isEditing ? (
-                <input
-                    type="text"
-                    value={editedTitle}
-                    onChange={handleInputChange}
-                    onBlur={handleInputBlur}
-                    onKeyDown={handleInputKeyDown}
-                    autoFocus
-                    className="flex-1 p-1 border-b border-gray-300 focus:outline-none"
-                />
+              <input
+                type="text"
+                value={editedTitle}
+                onChange={handleInputChange}
+                onBlur={handleInputBlur}
+                onKeyDown={handleInputKeyDown}
+                autoFocus
+                className="flex-1 input input-sm input-bordered"
+              />
             ) : (
-                <p className="flex-1">{item.title}</p>
+              <span className="flex-1 truncate">{item.title}</span>
             )}
+
+            <StatusSelectBox status={selectedStatus} setStatus={setSelectedStatus} />
+            {/*<select*/}
+            {/*  value={selectedStatus}*/}
+            {/*  onChange={handleStatusChange}*/}
+            {/*  className="select select-sm select-bordered text-xs"*/}
+            {/*>*/}
+            {/*    {Object.values(TaskStatus).map((status) => (*/}
+            {/*      <option key={status} value={status}>*/}
+            {/*          {status}*/}
+            {/*      </option>*/}
+            {/*    ))}*/}
+            {/*</select>*/}
+
             <button
-                type="button"
-                className="btn btn-xs btn-primary ml-2"
-                onClick={handleEditClick}
+              type="button"
+              className="btn btn-sm btn-outline btn-primary px-2"
+              onClick={handleEditClick}
             >
-                Edit
+                edit
             </button>
             <button
-                type="button"
-                className="btn btn-xs btn-error ml-2"
-                onClick={handleDeleteClick}
+              type="button"
+              className="btn btn-sm btn-outline btn-error px-2"
+              onClick={handleDeleteClick}
             >
-                Delete
+                delete
             </button>
         </div>
-    );
-});
+      );
+  }
+);

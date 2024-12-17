@@ -1,11 +1,11 @@
 import React from "react";
 import { useTaskModal } from "../../../../../modal/context/TaskModalContext";
-import { getStatusStyle } from "../../../../../util/StatusUtil";
 import { CardType } from "../../../../../api/task/TaskTypes";
 import { useTaskDragDrop } from "../../../context/TaskDragDropContext";
 import { calculateProgressRate } from "../../../../../util/TaskUtil";
 import {TagBadge} from "../../../../../component/TagBadge";
 import {TagColor} from "../../../../../api/tag/TagTypes";
+import {StatusBadge} from "../../../../../component/StatusBadge";
 
 
 export const OneLineTaskCard: React.FC<CardType> = ({ task }) => {
@@ -58,14 +58,7 @@ export const OneLineTaskCard: React.FC<CardType> = ({ task }) => {
                 <TagBadge tagColor={task.tagColor as TagColor} tagTitle={task.tagTitle}/>
 
                 {/* Status */}
-                <div
-                    className={`px-2 py-0.5 text-xs font-semibold rounded-full ${getStatusStyle(
-                        task.status
-                    )} flex-none`}
-                    aria-label={`Status: ${task.status}`}
-                >
-                    {task.status}
-                </div>
+                <StatusBadge status={task.status} />
 
                 {/* Progress */}
                 <div className="flex items-center gap-2 flex-none">
