@@ -57,7 +57,6 @@ export const EventModal: React.FC = () => {
 				if (selectedEventId) {
 					const response = await request_updateEvent(selectedEventId, eventPayload);
 					if (response.status === 200) {
-						console.log('Event successfully updated');
 						await fetchOriginEvents();
 						closeEventModal();
 					} else {
