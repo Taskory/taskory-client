@@ -12,6 +12,7 @@ import {TaskItemSection} from "./TaskItemSection";
 import {request_getUpcomingEvents} from "../../api/event/EventApi";
 import {TimeUtil} from "../../util/TimeUtil";
 import {EventSelectBox} from './EventSelectBox';
+import {getSelectedStatusStyle, getUnselectedStatusStyle} from "../../component/StatusBadge";
 
 interface TaskModalProps {
 	selectedStatus: TaskStatus; // Preselected status for the modal
@@ -137,22 +138,8 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
 							onChange={() => setStatus(item)}
 						/>
 						<div
-							className={`w-full text-center py-2 border-2 rounded-lg text-xs transition-colors font-medium items-center 
-            ${
-								status === item
-									? {
-										[TaskStatus.BACKLOG]: 'bg-gray-500 text-white',
-										[TaskStatus.TODO]: 'bg-blue-500 text-white',
-										[TaskStatus.PROGRESS]: 'bg-yellow-500 text-white',
-										[TaskStatus.DONE]: 'bg-green-500 text-white',
-									}[item]
-									: {
-										[TaskStatus.BACKLOG]: 'bg-gray-50 text-gray-700 hover:bg-gray-200',
-										[TaskStatus.TODO]: 'bg-blue-50 text-blue-700 hover:bg-blue-200',
-										[TaskStatus.PROGRESS]: 'bg-yellow-50 text-yellow-700 hover:bg-yellow-200',
-										[TaskStatus.DONE]: 'bg-green-50 text-green-700 hover:bg-green-200',
-									}[item]
-							}`}
+							className={`w-full text-center py-2 border-2 rounded-lg text-xs font-bold transition-colors items-center
+													${status === item ? getSelectedStatusStyle(item) : getUnselectedStatusStyle(item)}`}
 						>
 							{item}
 						</div>
@@ -160,7 +147,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
 				))}
 			</>
 		);
-		}, [status]);
+	}, [status]);
 
 	/* On Modal Open - Fetch task details if editing */
 	useEffect(() => {
