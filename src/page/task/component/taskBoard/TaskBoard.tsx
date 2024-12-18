@@ -7,9 +7,9 @@ import { VerticalBoard } from "./board/VerticalBoard";
 export const TaskBoard: React.FC = () => {
     return (
         <TaskDragDropProvider>
-            <div className="h-full overflow-y-auto">
+            <div className="h-full overflow-y-auto p-4">
                 {/* Top container: Vertical Boards */}
-                <div className="flex gap-2 p-2 min-h-[50%]">
+                <div className="flex gap-4 p-4 min-h-[50%]">
                     <div className="flex-1 flex items-stretch">
                         <VerticalBoard boardStatus={TaskStatus.TODO}/>
                     </div>
@@ -19,7 +19,7 @@ export const TaskBoard: React.FC = () => {
                 </div>
 
                 {/* Bottom container: Horizon Boards */}
-                <div className="grid gap-2 p-2">
+                <div className="grid gap-4 p-4">
                     <HorizonBoard boardStatus={TaskStatus.BACKLOG}/>
                     <HorizonBoard boardStatus={TaskStatus.DONE}/>
                 </div>
