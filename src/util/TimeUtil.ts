@@ -36,6 +36,38 @@ export class TimeUtil {
         return new Date(dateString);
     }
 
+    /**
+     * Converts a Date object into a formatted date string.
+     * The output format will be "yyyy-MM-dd".
+     *
+     * @param date the Date object to be converted
+     * @return the corresponding date string
+     */
+    public static dateToString(date: Date): string {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    /**
+     * Converts a date string into a Date object.
+     * The string must follow the format "yyyy-MM-dd".
+     *
+     * @param dateString the date string to be converted
+     * @return the corresponding Date object
+     * @throws Error if the string is not in the correct format
+     */
+    public static stringToDate(dateString: string): Date {
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!dateRegex.test(dateString)) {
+            throw new Error("Invalid date format: " + dateString);
+        }
+
+        const [year, month, day] = dateString.split('-').map(Number);
+        return new Date(year, month - 1, day); // Months are 0-based in Date
+    }
+
 
     /**
      * Get the first Sunday and last Saturday of the current month
