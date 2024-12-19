@@ -39,8 +39,8 @@ export const EventModal: React.FC = () => {
 	/* useCallback */
 	const handleSave = useCallback(async (): Promise<void> => {
 		if (title && startDateTime && dueDateTime && !dateError) {
-			const formattedStartDateTime = TimeUtil.dateToString(new Date(startDateTime));
-			const formattedDueDateTime = TimeUtil.dateToString(new Date(dueDateTime));
+			const formattedStartDateTime = TimeUtil.dateTimeToString(new Date(startDateTime));
+			const formattedDueDateTime = TimeUtil.dateTimeToString(new Date(dueDateTime));
 			const eventPayload: SaveEventRequest = {
 				title,
 				tagId: tag?.id,
