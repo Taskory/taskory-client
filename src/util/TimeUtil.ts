@@ -1,8 +1,6 @@
 // TimeUtil.ts
 
 export class TimeUtil {
-    // Define the common date-time pattern
-    private static readonly PATTERN = "yyyy-MM-dd'T'HH:mm";
 
     /**
      * Converts a Date object into a formatted date-time string.
@@ -11,7 +9,7 @@ export class TimeUtil {
      * @param date the Date object to be converted
      * @return the corresponding date-time string
      */
-    public static dateToString(date: Date): string {
+    public static dateTimeToString(date: Date): string {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
         const day = String(date.getDate()).padStart(2, '0');
@@ -29,7 +27,7 @@ export class TimeUtil {
      * @return the corresponding Date object
      * @throws Error if the string is not in the correct format
      */
-    public static stringToDate(dateString: string): Date {
+    public static stringToDateTime(dateString: string): Date {
         const dateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/;
         if (!dateRegex.test(dateString)) {
             throw new Error("Invalid dateTime format: " + dateString);
@@ -48,7 +46,7 @@ export class TimeUtil {
      */
     public static getFirstSundayAndLastSaturday(currentDateString: string): { start: string, end: string } {
         // Convert input string to Date
-        const currentDate = this.stringToDate(currentDateString);
+        const currentDate = this.stringToDateTime(currentDateString);
 
         // Move to the first day of the month
         const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
@@ -72,8 +70,8 @@ export class TimeUtil {
             lastSaturday.setDate(lastDayOfMonth.getDate() - (lastDayOfWeek + 1) + 7);
         }
 
-        const start: string = this.dateToString(firstSunday);
-        const end: string = this.dateToString(lastSaturday);
+        const start: string = this.dateTimeToString(firstSunday);
+        const end: string = this.dateTimeToString(lastSaturday);
 
         return { start, end};
     }
