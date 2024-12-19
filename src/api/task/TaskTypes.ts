@@ -12,6 +12,7 @@ export interface TaskResponse {
     description: string;
     status: string;
     items: TaskItemDto[];
+    deadline: string;
 }
 
 // Interface for SaveTaskRequest
@@ -23,6 +24,7 @@ export interface SaveTaskRequest {
     description: string;
     status: string;
     items: TaskItemDto[]
+    deadline: string | null;
 }
 
 export interface TaskItemDto {
@@ -43,6 +45,7 @@ export interface TaskSummary {
     status: TaskStatus;
     itemsCount: number;
     completedItemsCount: number;
+    deadline: string;
 }
 
 export enum TaskStatus {

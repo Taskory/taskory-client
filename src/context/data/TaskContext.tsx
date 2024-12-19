@@ -78,7 +78,7 @@ export const TaskContextProvider: React.FC<TaskContextProviderProps> = ({ childr
                         setBACKLOG(prevBACKLOG => [...prevBACKLOG, updatedTask]);
                         break;
                     case TaskStatus.TODO:
-                        setTODO(prevTODO => [...prevTODO, updatedTask]);
+                        setTODO(prevPROGRESS => [...prevPROGRESS, updatedTask]);
                         break;
                     case TaskStatus.PROGRESS:
                         setPROGRESS(prevPROGRESS => [...prevPROGRESS, updatedTask]);
