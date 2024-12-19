@@ -12,7 +12,7 @@ import {TaskItemSection} from "./TaskItemSection";
 import {request_getUpcomingEvents} from "../../api/event/EventApi";
 import {TimeUtil} from "../../util/TimeUtil";
 import {EventSelectBox} from './EventSelectBox';
-import {getSelectedStatusStyle, getUnselectedStatusStyle} from "../../component/StatusBadge";
+import {StatusSelector} from "./StatusSelector";
 
 interface TaskModalProps {
 	selectedStatus: TaskStatus; // Preselected status for the modal
@@ -199,35 +199,6 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
 		setDeadline(value); // Always update the deadline state
 	};
 
-
-	 // Render Status Options            TODO: if status is TODO, update deadline
-	const renderStatusOptions = useCallback(() => {
-	    const statusList = Object.values(TaskStatus);
-	    return (
-	        <>
-	            {statusList.map((item) => (
-	                < label key={item} className="cursor-pointer flex-1">
-	                    <input
-	                        type="radio"
-	                        name="status"
-	                        className="hidden"
-	                        value={item}
-	                        checked={status === item}
-	                        onChange={() => setStatus(item)}
-	                    />
-	                    <div
-	                        className={`w-full text-center py-2 border-2 rounded-lg text-xs font-bold transition-colors items-center
-	                                                ${status === item ? getSelectedStatusStyle(item) : getUnselectedStatusStyle(item)}`}
-	                    >
-	                        {item}
-	                    </div>
-	                </label>
-	            ))}
-	        </>
-	    );
-	}, [status]);
-
-
 	/* Modal Render */
 	return (
 		<div
@@ -272,7 +243,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
 								{/* Status Selector */}
 								<label className="col-span-1 text-sm text-right mt-2">Status</label>
 								<div className="col-span-3 flex space-x-2">
-									{renderStatusOptions()}
+									<StatusSelector status={status} setStatus={setStatus} />
 								</div>
 								{/* ===== */}
 
@@ -306,11 +277,9 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
 									<>
 										<div className="col-span-1"/>
 										<div className="col-span-3 flex items-center space-x-4">
-
 											<div className="col-span-3 text-red-500 text-xs">
 												{dateError}
 											</div>
-
 										</div>
 									</>
 								)}
