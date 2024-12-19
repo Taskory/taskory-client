@@ -51,8 +51,8 @@ export const MonthlyCalendarCell: React.FC<MonthCalendarCellProps> = ({day, even
                 {visibleEvents.map((event, idx) => {
                     const textColor = `text-${event.tag.color.toLowerCase() as string}-500`;
                     const time = TimeUtil.calculateTimeDisplay(
-                        TimeUtil.stringToDate(event.startDateTime),
-                        TimeUtil.stringToDate(event.dueDateTime),
+                        TimeUtil.stringToDateTime(event.startDateTime),
+                        TimeUtil.stringToDateTime(event.dueDateTime),
                         new Date(date.year, date.month - 1, date.day)
                     )
                     return (

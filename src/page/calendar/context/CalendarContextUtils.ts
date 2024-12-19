@@ -9,8 +9,8 @@ export function getProcessedEvents(events: EventSummary[], firstDate: Date): Spl
     const oneDayMilliSeconds = (24 * 60 * 60 * 1000);
 
     events.forEach((event: EventSummary) => {
-        const eventStart: Date = TimeUtil.stringToDate(event.startDateTime);
-        const eventEnd: Date = TimeUtil.stringToDate(event.dueDateTime);
+        const eventStart: Date = TimeUtil.stringToDateTime(event.startDateTime);
+        const eventEnd: Date = TimeUtil.stringToDateTime(event.dueDateTime);
 
         // events over 24 hours
         if (eventEnd.getTime() - eventStart.getTime() >=  oneDayMilliSeconds) {
@@ -25,8 +25,8 @@ export function getProcessedEvents(events: EventSummary[], firstDate: Date): Spl
         }
         // events under 24hours
         else {
-            const dueDate: Date = TimeUtil.stringToDate(event.dueDateTime);
-            const startDate: Date = TimeUtil.stringToDate(event.startDateTime);
+            const dueDate: Date = TimeUtil.stringToDateTime(event.dueDateTime);
+            const startDate: Date = TimeUtil.stringToDateTime(event.startDateTime);
 
             // under 24 hours and cross 2 days
             if (new Date(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate()).getTime() - new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate()).getTime() >= oneDayMilliSeconds) {

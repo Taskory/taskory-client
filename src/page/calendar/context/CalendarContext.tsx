@@ -59,7 +59,7 @@ export const CalendarProvider: React.FC<{ children: ReactNode }> = ({ children }
     const [processedEvents, setProcessedEvents] = useState<SplitEventsInterface>({ eventsUnder24: [], eventsOver24: [] });
 
     const filterEventsByMonth = useCallback(() => {
-        const utcString: string = TimeUtil.dateToString(state.currentDate);
+        const utcString: string = TimeUtil.dateTimeToString(state.currentDate);
         const referenceDate = new Date(utcString);
         const referenceYear = referenceDate.getFullYear();
         const referenceMonth = referenceDate.getMonth();

@@ -13,8 +13,8 @@ export const MiniEventCard: React.FC<MiniEventCardProps> = ({
                                                                 date,
                                                                 onClick,
                                                             }) => {
-    const startDateTime: Date = TimeUtil.stringToDate(event.startDateTime);
-    const dueDateTime: Date = TimeUtil.stringToDate(event.dueDateTime);
+    const startDateTime: Date = TimeUtil.stringToDateTime(event.startDateTime);
+    const dueDateTime: Date = TimeUtil.stringToDateTime(event.dueDateTime);
     const selectedDate: Date | null = date
         ? new Date(date.year, date.month - 1, date.day)
         : null;
