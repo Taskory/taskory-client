@@ -7,7 +7,7 @@ interface StatusSelectorProps {
 	setStatus: React.Dispatch<React.SetStateAction<TaskStatus>>;
 }
 
-export const StatusSelector: React.FC<StatusSelectorProps> = ({status, setStatus}) => {
+export const StatusRadioButtons: React.FC<StatusSelectorProps> = ({status, setStatus}) => {
 	const statusList = Object.values(TaskStatus);
 	return (
 		<>

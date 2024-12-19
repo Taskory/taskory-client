@@ -12,7 +12,7 @@ import {TaskItemSection} from "./TaskItemSection";
 import {request_getUpcomingEvents} from "../../api/event/EventApi";
 import {TimeUtil} from "../../util/TimeUtil";
 import {EventSelectBox} from './EventSelectBox';
-import {StatusSelector} from "./StatusSelector";
+import {StatusRadioButtons} from "./StatusRadioButtons";
 
 interface TaskModalProps {
 	selectedStatus: TaskStatus; // Preselected status for the modal
@@ -243,7 +243,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
 								{/* Status Selector */}
 								<label className="col-span-1 text-sm text-right mt-2">Status</label>
 								<div className="col-span-3 flex space-x-2">
-									<StatusSelector status={status} setStatus={setStatus} />
+									<StatusRadioButtons status={status} setStatus={setStatus} />
 								</div>
 								{/* ===== */}
 
