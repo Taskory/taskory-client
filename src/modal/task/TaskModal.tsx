@@ -13,11 +13,11 @@ import {request_getUpcomingEvents} from "../../api/event/EventApi";
 import {TimeUtil} from "../../util/TimeUtil";
 import {EventSelectBox} from './EventSelectBox';
 import {StatusRadioButtons} from "./StatusRadioButtons";
+import {StatusMsgBadge} from "../../component/StatusMsgBadge";
 
 interface TaskModalProps {
 	selectedStatus: TaskStatus; // Preselected status for the modal
 }
-
 
 export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
 	/* Contexts to manage modal state and user tags */
@@ -41,7 +41,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
 	// =======================
 	const [isLoading, setIsLoading] = useState(false); // Tracks loading state
 	const [upcomingEvents, setUpcomingEvents] = useState<EventSummary[]>([]);
-	const [daysLeftDeadline, setDaysLeftDeadline] = useState<number>(0);
+
 	const [dateError, setDateError] = useState<string>("");
 
 	/* UseCallback */
@@ -58,14 +58,14 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
 			setDescription(response.description);
 			setStatus(response.status as TaskStatus);
 			setTaskItems(response.items);
-			// if (response.deadline) {           TODO: uncomment, remove underline
-			// 	setDeadline(response.deadline);
-			// } else {
-			// 	setDeadline("");
-			// }
-			const tempDate = new Date();
-			const tempDeadlineDate = new Date(tempDate.getFullYear(), tempDate.getMonth(), tempDate.getDate() + 5);
-			setDeadline(TimeUtil.dateToString(tempDeadlineDate));
+			if (response.deadline) {           
+				setDeadline(response.deadline);
+			} else {
+				setDeadline("");
+			}
+			// const tempDate = new Date();
+			// const tempDeadlineDate = new Date(tempDate.getFullYear(), tempDate.getMonth(), tempDate.getDate() + 5);
+			// setDeadline(TimeUtil.dateToString(tempDeadlineDate));
 		} catch (e) {
 			console.error('Failed to fetch task:', e); // Error handling for failed fetch
 		} finally {
@@ -131,29 +131,6 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
 	}, []);
 
 	useEffect(() => {
-		const calculateDaysLeft = () => {
-			if (deadline.length > 0) {
-				try {
-					const deadlineDate = TimeUtil.stringToDate(deadline);
-					const now = new Date();
-
-					// Calculate the difference in milliseconds
-					const diffInMilliseconds = deadlineDate.getTime() - now.getTime();
-
-					// Convert to days and round up
-					const diffInDays = Math.ceil(diffInMilliseconds / (1000 * 60 * 60 * 24));
-
-					setDaysLeftDeadline(diffInDays);
-				} catch (error) {
-					console.error('Invalid deadline date format:', error);
-					setDaysLeftDeadline(0); // Reset the state on error
-				}
-			}
-		};
-		calculateDaysLeft();
-	}, [deadline]);
-
-	useEffect(() => {
 		if (event) {
 			try {
 				const deadlineDateTime: Date = TimeUtil.stringToDate(deadline);
@@ -163,7 +140,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
 				eventDueDate.setHours(23, 59, 0, 0);
 
 				if (deadlineDateTime > eventDueDate) {
-					setDateError("Deadline must be before event due date");
+					setDateError("Recommend deadline is before event due date");
 				} else {
 					setDateError(""); // Clear error if condition is satisfied
 				}
@@ -243,42 +220,34 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
 								{/* Status Selector */}
 								<label className="col-span-1 text-sm text-right mt-2">Status</label>
 								<div className="col-span-3 flex space-x-2">
-									<StatusRadioButtons status={status} setStatus={setStatus} />
+									<StatusRadioButtons status={status} setStatus={setStatus}/>
 								</div>
 								{/* ===== */}
 
 								{/* ===== */}
 								{/* Deadline */}
-								<label className="col-span-1 text-sm text-right mt-2">Deadline</label>
-								<div className="col-span-3 flex items-center space-x-4">
-									<div className="relative">
-										<input
-											type="date"
-											className="input input-bordered input-sm w-36"
-											value={deadline}
-											onChange={(e) => handleDeadline(e.target.value)}
-										/>
-									</div>
-									<div
-										className={`text-sm font-semibold ${
-											daysLeftDeadline && daysLeftDeadline < 0
-												? 'text-red-500'
-												: 'text-gray-700'
-										}`}
-									>
-										{deadline
-											? daysLeftDeadline < 0
-												? `Overdue by ${Math.abs(daysLeftDeadline)} days`
-												: `${daysLeftDeadline} days remaining`
-											: 'No deadline set'}
-									</div>
-								</div>
-								{dateError && (
+								{(status !== TaskStatus.BACKLOG) && (
 									<>
-										<div className="col-span-1"/>
-										<div className="col-span-3 flex items-center space-x-4">
-											<div className="col-span-3 text-red-500 text-xs">
-												{dateError}
+										<label className="col-span-1 text-sm text-right mt-2">Deadline</label>
+										<div className="col-span-3 grid items-center gap-2">
+											<div className="flex items-center gap-4">
+												<div className="relative">
+													<input
+														type="date"
+														className="input input-bordered input-sm w-36"
+														value={deadline}
+														onChange={(e) => handleDeadline(e.target.value)}
+													/>
+												</div>
+												<StatusMsgBadge deadline={deadline} status={status}/>
+											</div>
+											<div className="grid items-center space-x-4">
+												{dateError && (
+													<div className="bg-warning text-xs flex py-1 px-2 rounded font-semibold w-fit gap-2">
+														<span className="text-red-600">!</span>
+														<p>{dateError}</p>
+													</div>
+												)}
 											</div>
 										</div>
 									</>
