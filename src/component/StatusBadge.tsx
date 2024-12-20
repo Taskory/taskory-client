@@ -4,7 +4,7 @@ import { TaskStatus } from "../api/task/TaskTypes";
 export const StatusBadge: React.FC<{ status: TaskStatus }> = ({ status }) => {
 	return (
 		<div
-			className={`inline-flex items-center px-1.5 py-0.5 text-[10px] font-semibold rounded transition-colors duration-200 ${getStatusStyle(
+			className={`inline-flex items-center px-1.5 py-0.5 text-xs font-semibold rounded transition-colors duration-200 ${getStatusStyle(
 				status
 			)}`}
 			aria-label={`Status: ${status}`}

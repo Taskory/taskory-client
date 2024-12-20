@@ -35,7 +35,7 @@ export const StatusMsgBadge: React.FC<StatusMsgBadgeProps> = ({ deadline, status
 			return;
 		}
 
-		if (deadline.length > 0) {
+		if (deadline && deadline.length > 0) {
 			// Deadline is not empty
 			const deadlineDate = TimeUtil.stringToDate(deadline);
 			const now = new Date();
@@ -74,16 +74,17 @@ export const StatusMsgBadge: React.FC<StatusMsgBadgeProps> = ({ deadline, status
 			// Deadline is empty value
 			setBadgeConfig({
 				msg: "No deadline set",
-				style: "text-gray-500",
-				bgColor: "",
+				style: "text-white",
+				bgColor: "bg-gray-500",
 			});
 		}
 	}, [deadline, status]);
 
 	/* Rendering */
 	return (
-		<div className={`flex items-center ${badgeConfig.bgColor} rounded-full px-2 py-1`}>
-			<p className={`text-sm font-semibold ${badgeConfig.style}`}>{badgeConfig.msg}</p>
+		<div className={`flex items-center ${badgeConfig.bgColor} 
+		inline-flex items-center px-1.5 py-0.5 rounded-full`}>
+			<p className={`text-xs font-medium ${badgeConfig.style}`}>{badgeConfig.msg}</p>
 		</div>
 	);
 };

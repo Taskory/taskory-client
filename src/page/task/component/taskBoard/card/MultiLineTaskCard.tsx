@@ -6,6 +6,7 @@ import { calculateProgressRate } from "../../../../../util/TaskUtil";
 import {TagBadge} from "../../../../../component/TagBadge";
 import {TagColor} from "../../../../../api/tag/TagTypes";
 import {StatusBadge} from "../../../../../component/StatusBadge";
+import {StatusMsgBadge} from "../../../../../component/StatusMsgBadge";
 
 export const MultiLineTaskCard: React.FC<CardType> = ({task}) => {
     const {openTaskModal} = useTaskModal();
@@ -34,6 +35,7 @@ export const MultiLineTaskCard: React.FC<CardType> = ({task}) => {
                         {task.title}
                     </h3>
                     <div className="flex items-center gap-1">
+                        <StatusMsgBadge deadline={task.deadline} status={task.status} />
                         <TagBadge tagColor={task.tagColor as TagColor} tagTitle={task.tagTitle}/>
                         <StatusBadge status={task.status} />
                     </div>

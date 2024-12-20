@@ -6,6 +6,7 @@ import { calculateProgressRate } from "../../../../../util/TaskUtil";
 import {TagBadge} from "../../../../../component/TagBadge";
 import {TagColor} from "../../../../../api/tag/TagTypes";
 import {StatusBadge} from "../../../../../component/StatusBadge";
+import {StatusMsgBadge} from "../../../../../component/StatusMsgBadge";
 
 
 export const OneLineTaskCard: React.FC<CardType> = ({ task }) => {
@@ -54,6 +55,10 @@ export const OneLineTaskCard: React.FC<CardType> = ({ task }) => {
                     </span>
                     )}
                 </div>
+
+                {/* Status Message */}
+                <StatusMsgBadge deadline={task.deadline} status={task.status} />
+
                 {/* Tag */}
                 <TagBadge tagColor={task.tagColor as TagColor} tagTitle={task.tagTitle}/>
 

@@ -10,7 +10,7 @@ export const TagBadge: React.FC<{ tagColor: TagColor; tagTitle: string }> = ({
     <div
       className={`inline-flex items-center px-1.5 py-0.5 ${getTagColorStyle(
         tagColor
-      )} rounded-full text-[10px] font-medium`}
+      )} rounded-full text-xs font-medium`}
       title={tagTitle ?? ""}
     >
       <span className="truncate">{tagTitle ?? ""}</span>
