@@ -63,9 +63,6 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
 			} else {
 				setDeadline("");
 			}
-			// const tempDate = new Date();
-			// const tempDeadlineDate = new Date(tempDate.getFullYear(), tempDate.getMonth(), tempDate.getDate() + 5);
-			// setDeadline(TimeUtil.dateToString(tempDeadlineDate));
 		} catch (e) {
 			console.error('Failed to fetch task:', e); // Error handling for failed fetch
 		} finally {
@@ -131,10 +128,10 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
 	}, []);
 
 	useEffect(() => {
-		if (event) {
+		if (event && deadline.length > 0) {
 			try {
+				console.log(deadline);
 				const deadlineDateTime: Date = TimeUtil.stringToDate(deadline);
-				deadlineDateTime.setHours(23, 59, 0, 0); // Set to end of day
 
 				const eventDueDate: Date = TimeUtil.stringToDateTime(event.dueDateTime);
 				eventDueDate.setHours(23, 59, 0, 0);
@@ -153,6 +150,33 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
 		}
 	}, [deadline, event]);
 
+	useEffect(() => {
+		if (deadline.length === 0) {
+			// Deadline value is empty
+			switch (status) {
+				case TaskStatus.BACKLOG:
+					setDeadline("");
+					break;
+				case TaskStatus.TODO:
+				case TaskStatus.PROGRESS:
+					const currentDateTime = new Date();
+					const defaultDateTime = new Date(currentDateTime.getFullYear(), currentDateTime.getMonth(), currentDateTime.getDate() + 7);
+					if (event) {
+						const eventDueDateTime = TimeUtil.dateTimeToDate(TimeUtil.stringToDateTime(event.dueDateTime));
+
+						if (eventDueDateTime.getTime() < defaultDateTime.getTime()) {
+							setDeadline(TimeUtil.dateToString(eventDueDateTime));
+						} else {
+							setDeadline(TimeUtil.dateToString(defaultDateTime));
+						}
+					} else {
+						setDeadline(TimeUtil.dateToString(defaultDateTime));
+					}
+					break;
+			}
+		}
+	}, [deadline.length, event, status]);
+
 	/* Fetch for get upcoming events */
 	const fetchUpcomingEvents =  async () => {
 		const res = await request_getUpcomingEvents(TimeUtil.dateTimeToString(new Date()));
@@ -170,6 +194,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
 	const handleSelectEvent = (event: EventSummary | null) => {
 		setEvent(event);
 		if (event) setTag(event.tag);
+		else setDeadline("");
 	}
 
 	const handleDeadline = (value: string): void => {

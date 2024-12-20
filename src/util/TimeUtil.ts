@@ -68,6 +68,10 @@ export class TimeUtil {
         return new Date(year, month - 1, day); // Months are 0-based in Date
     }
 
+    public static dateTimeToDate(dateTime: Date): Date {
+        return new Date(dateTime.getFullYear(), dateTime.getMonth(), dateTime.getDate());
+    }
+
 
     /**
      * Get the first Sunday and last Saturday of the current month
