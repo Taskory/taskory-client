@@ -32,8 +32,8 @@ export const EventSelectBox: React.FC<EventSelectBoxProps> = ({eventList, event,
                     )
                     :
                     (
-                        <p className="h-7 p-1 hover:bg-gray-100 cursor-pointer bg-gray-50">
-                            Select an event
+                        <p className="h-7 p-1 hover:bg-gray-100 cursor-pointer bg-gray-50 text-xs text-center">
+                            (No event)Select an event of upcoming events
                         </p>
                     )}
                 <span className="ml-2">{isDropdownOpen ? "▲" : "▼"}</span>
@@ -43,8 +43,8 @@ export const EventSelectBox: React.FC<EventSelectBoxProps> = ({eventList, event,
             {isDropdownOpen && (
                 <ul className="absolute left-0 w-full  bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto z-10">
                     <li
-                        className="p-1 hover:bg-gray-100 cursor-pointer bg-gray-50"
-                        onClick={() => handleSelect(null)}> Select an event(No event)
+                        className="p-1 hover:bg-gray-100 cursor-pointer bg-gray-50 text-xs"
+                        onClick={() => handleSelect(null)}> (No event)Select an event of upcoming events
                     </li>
                     {eventList.map((event) => (
                         <li
