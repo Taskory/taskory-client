@@ -14,6 +14,7 @@ import {TimeUtil} from "../../util/TimeUtil";
 import {EventSelectBox} from './EventSelectBox';
 import {StatusRadioButtons} from "./StatusRadioButtons";
 import {StatusMsgBadge} from "../../component/StatusMsgBadge";
+import {getDeadline} from "../../util/TaskUtil";
 
 interface TaskModalProps {
 	selectedStatus: TaskStatus; // Preselected status for the modal
@@ -150,31 +151,8 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
 	}, [deadline, event]);
 
 	useEffect(() => {
-		if (deadline.length === 0) {
-			// Deadline value is empty
-			switch (status) {
-				case TaskStatus.BACKLOG:
-					setDeadline("");
-					break;
-				case TaskStatus.TODO:
-				case TaskStatus.PROGRESS:
-					const currentDateTime = new Date();
-					const defaultDateTime = new Date(currentDateTime.getFullYear(), currentDateTime.getMonth(), currentDateTime.getDate() + 7);
-					if (event) {
-						const eventDueDateTime = TimeUtil.dateTimeToDate(TimeUtil.stringToDateTime(event.dueDateTime));
-
-						if (eventDueDateTime.getTime() < defaultDateTime.getTime()) {
-							setDeadline(TimeUtil.dateToString(eventDueDateTime));
-						} else {
-							setDeadline(TimeUtil.dateToString(defaultDateTime));
-						}
-					} else {
-						setDeadline(TimeUtil.dateToString(defaultDateTime));
-					}
-					break;
-			}
-		}
-	}, [deadline.length, event, status]);
+		setDeadline(getDeadline(deadline, status, event?.dueDateTime ?? null));
+	}, [deadline, event?.dueDateTime, status]);
 
 	/* Fetch for get upcoming events */
 	const fetchUpcomingEvents =  async () => {

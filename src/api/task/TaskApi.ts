@@ -83,7 +83,7 @@ export const request_deleteTask = async (taskId: number): Promise<void> => {
     await axios.delete(`${API_URL}/task/${taskId}`, requestOptions);
 };
 
-export const request_updateTaskStatus = async (taskId: number, taskStatus: TaskStatus): Promise<TaskSummary> => {
+export const request_updateTaskStatus = async (taskId: number, taskStatus: TaskStatus, deadline: string): Promise<TaskSummary> => {
     const requestUrl = `${API_URL}/task/status/${taskId}`
 
     const authToken = getAuthCookie();  // Fetch the latest cookie value here
@@ -94,11 +94,11 @@ export const request_updateTaskStatus = async (taskId: number, taskStatus: TaskS
         },
     };
 
-
     const response = await axios.patch<TaskSummary>(requestUrl, null, {
         ...requestOptions,
         params: {
             status: taskStatus.toString(),
+            deadline: deadline,
         },
     });
     return response.data;

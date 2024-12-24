@@ -2,6 +2,7 @@ import React, {createContext, ReactNode, useCallback, useContext, useEffect, use
 import {TaskStatus, TaskSummary} from "../../api/task/TaskTypes";
 import {request_getTasksByTags, request_updateTaskStatus} from "../../api/task/TaskApi";
 import {useTagContext} from "./TagContext";
+import {getDeadline} from "../../util/TaskUtil";
 
 interface TaskContextProps {
     BACKLOG: TaskSummary[],
@@ -52,9 +53,11 @@ export const TaskContextProvider: React.FC<TaskContextProviderProps> = ({ childr
 
     const moveTaskItem = async (taskItem: TaskSummary, toStatus: TaskStatus) => {
         if (taskItem.status === toStatus) return; // 기존 상태와 동일하면 요청하지 않음
+        
+        const toDeadline = getDeadline(taskItem.deadline, toStatus, taskItem.event?.dueDateTime ?? null);
 
         try {
-            const updatedTask = await request_updateTaskStatus(taskItem.id, toStatus); // 업데이트된 TaskSummary 반환
+            const updatedTask = await request_updateTaskStatus(taskItem.id, toStatus, toDeadline);
             if (updatedTask) {
                 // 기존 상태에서 task 제거
                 switch (taskItem.status) {
