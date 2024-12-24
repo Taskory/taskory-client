@@ -19,8 +19,6 @@ export const TaskCard: React.FC<CardType> = ({task}) => {
 		openTaskModal(task.id);
 	};
 
-	
-
 	return (
 		<>
 			<div className="card w-full bg-white shadow-md border border-gray-200 rounded-md p-2 gap-1">
