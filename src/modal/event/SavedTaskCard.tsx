@@ -79,17 +79,6 @@ export const SavedTaskCard: React.FC<SavedTaskCardProps> = React.memo(
             )}
 
             <StatusSelectBox status={selectedStatus} setStatus={setSelectedStatus} />
-            {/*<select*/}
-            {/*  value={selectedStatus}*/}
-            {/*  onChange={handleStatusChange}*/}
-            {/*  className="select select-sm select-bordered text-xs"*/}
-            {/*>*/}
-            {/*    {Object.values(TaskStatus).map((status) => (*/}
-            {/*      <option key={status} value={status}>*/}
-            {/*          {status}*/}
-            {/*      </option>*/}
-            {/*    ))}*/}
-            {/*</select>*/}
 
             <button
               type="button"

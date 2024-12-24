@@ -47,28 +47,28 @@ export const StatusSelectBox: React.FC<StatusSelectBoxProps> = ({ status, setSta
 	}, [isDropdownOpen]);
 
 	return (
-		<div className="relative w-20" ref={dropdownRef}>
+		<div className="relative w-28 border rounded" ref={dropdownRef}>
 			{/* Dropdown Trigger */}
 			<div
-				role="button"
 				onClick={toggleDropdown}
-				className="flex justify-end items-center gap-1 rounded px-1 py-0.5 cursor-pointer transition duration-200 hover:bg-gray-100"
+				className="flex w-full justify-between items-center gap-1 rounded px-1 py-0.5 cursor-pointer transition duration-200 hover:bg-gray-100 "
 			>
-				<StatusBadge status={status} />
+				<StatusBadge status={status}/>
+				<p className="">{isDropdownOpen ? "▲" : "▼"}</p>
 			</div>
-
+			
 			{/* Dropdown List - rendered via Portal to prevent overflow issues */}
 			{isDropdownOpen &&
 				ReactDOM.createPortal(
 					<ul
-						className="absolute bg-white border rounded-lg shadow-lg z-[9999] w-20 overflow-y-auto"
+						className="absolute bg-white border rounded-lg shadow-lg z-[9999] w-28 overflow-y-auto"
 						style={{ position: "absolute", top: dropdownPosition.top, left: dropdownPosition.left }}
 					>
 						{/* Render all possible status options */}
 						{Object.values(TaskStatus).map((option) => (
 							<li
 								key={option}
-								className="p-0.5 hover:bg-gray-100 cursor-pointer flex justify-end"
+								className="p-0.5 hover:bg-gray-100 cursor-pointer flex justify-start"
 								onClick={() => handleSelect(option)}
 							>
 								<StatusBadge status={option} />
