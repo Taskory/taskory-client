@@ -11,7 +11,7 @@ export const Leftbar: React.FC = () => {
             } flex flex-col`}
         >
             {/* 상단 아이템들 */}
-            <div className="mt-4 flex-1">
+            <div className="flex-1">
                 <SelectItem
                     src={"/asset/img/leftbar/dashboard.svg"}
                     label="Dashboard"
@@ -45,7 +45,7 @@ export const Leftbar: React.FC = () => {
             </div>
 
             {/* 하단 아이템 */}
-            <div className="mb-4">
+            <div className="">
                 <SelectItem
                     src={"/asset/img/leftbar/setting.svg"}
                     label="Setting"
