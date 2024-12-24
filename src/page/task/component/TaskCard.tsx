@@ -8,6 +8,7 @@ import {TagBadge} from "../../../component/TagBadge";
 import {StatusBadge} from "../../../component/StatusBadge";
 import {TaskProgressRate} from "./TaskProgressRate";
 import {TaskHashtagList} from "./TaskHashtagList";
+import {getTagStringColor} from "../../../util/TagUtil";
 
 export const TaskCard: React.FC<CardType> = ({task}) => {
 	const {openTaskModal} = useTaskModal();
@@ -32,16 +33,23 @@ export const TaskCard: React.FC<CardType> = ({task}) => {
 				</div>
 				
 				{/* 2nd line: Status message badge, Event Title */}
-				<div className="flex items-center justify-between text-xs text-gray-600">
+				<div className="flex items-center justify-between">
 					<StatusMsgBadge deadline={task.deadline} status={task.status}/>
-					<p className="text-gray-600 text-xs truncate" title={task.event?.title ?? "No Event"}>
-						{task.event ? task.event.title : "No Event"}
-					</p>
+					{task.event ?
+						<p
+							className={`${getTagStringColor(task.event.tag.color)} truncate font-medium text-sm`}
+							title={task.event.title}>
+							{task.event ? task.event.title : ""}
+						</p>
+						:
+						null
+					}
+				
 				</div>
 				
 				{/* 3rd line: Task Hashtags + Progress */}
 				<div className="flex items-center justify-between text-xs">
-					<TaskHashtagList hashtags={task.hashtags} />
+					<TaskHashtagList hashtags={task.hashtags}/>
 					<TaskProgressRate status={task.status} itemsCount={task.itemsCount} completedCount={task.completedItemsCount} />
 				</div>
 				<button ref={drag} className={`absolute top-0 left-0 w-full h-full opacity-0`}
