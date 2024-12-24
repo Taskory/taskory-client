@@ -1,11 +1,11 @@
-import {TaskStatus, TaskSummary} from "../api/task/TaskTypes";
+import {TaskStatus } from "../api/task/TaskTypes";
 import {CollectedPropsType} from "../page/task/context/TaskDragDropContext";
 
-export function calculateProgressRate(task: TaskSummary): number {
-    if (task.itemsCount > 0) {
-        return Math.round((task.completedItemsCount / task.itemsCount) * 100);
+export function calculateProgressRate(status: TaskStatus, itemsCount: number, completedCount: number): number {
+    if (itemsCount > 0) {
+        return Math.round((completedCount / itemsCount) * 100);
     } else {
-        if (task.status === TaskStatus.DONE) {
+        if (status === TaskStatus.DONE) {
             return 100;
         } else {
             return 0;

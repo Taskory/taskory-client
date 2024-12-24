@@ -130,7 +130,6 @@ export const TaskModal: React.FC<TaskModalProps> = ({ selectedStatus }) => {
 	useEffect(() => {
 		if (event && deadline.length > 0) {
 			try {
-				console.log(deadline);
 				const deadlineDateTime: Date = TimeUtil.stringToDate(deadline);
 
 				const eventDueDate: Date = TimeUtil.stringToDateTime(event.dueDateTime);

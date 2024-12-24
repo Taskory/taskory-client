@@ -1,14 +1,14 @@
-import {TaskStatus, TaskSummary} from "../../../../../api/task/TaskTypes";
+import {TaskStatus, TaskSummary} from "../../../api/task/TaskTypes";
 import React, {useEffect, useState} from "react";
-import {useTaskContext} from "../../../../../context/data/TaskContext";
-import {useTaskDragDrop} from "../../../context/TaskDragDropContext";
-import {useTaskModal} from "../../../../../modal/context/TaskModalContext";
-import {MultiLineTaskCard} from "../card/MultiLineTaskCard";
-import {getDropStyle} from "../../../../../util/TaskUtil";
+import {useTaskContext} from "../../../context/data/TaskContext";
+import {useTaskDragDrop} from "../context/TaskDragDropContext";
+import {useTaskModal} from "../../../modal/context/TaskModalContext";
+import {getDropStyle} from "../../../util/TaskUtil";
+import {TaskCard} from "./TaskCard";
 
 
 
-export const VerticalBoard: React.FC<{boardStatus: TaskStatus}> = ({boardStatus}) => {
+export const StaticTaskBoard: React.FC<{boardStatus: TaskStatus}> = ({boardStatus}) => {
     const { TODO, PROGRESS } = useTaskContext();
     const {openTaskModal} = useTaskModal();
     const {useTaskDrop, renderDropDisplay} = useTaskDragDrop();
@@ -46,7 +46,7 @@ export const VerticalBoard: React.FC<{boardStatus: TaskStatus}> = ({boardStatus}
             <div className="grid gap-2">
                 {/* Render the Task component for each task in the tasks array */}
                 {tasks.length > 0 ? (
-                    tasks.map((task) => <MultiLineTaskCard key={`${task.status}-${task.id}`} task={task}/>)
+                    tasks.map((task) => <TaskCard key={`${task.status}-${task.id}`} task={task}/>)
                 ) : (
                     <p className="text-xs text-gray-500 text-center">No tasks</p> // Handle case where no tasks are available
                 )}

@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { TaskStatus, TaskSummary } from "../../../../../api/task/TaskTypes";
-import { useTaskContext } from "../../../../../context/data/TaskContext";
-import { useTaskDragDrop } from "../../../context/TaskDragDropContext";
-import { OneLineTaskCard } from "../card/OneLineTaskCard";
-import { useTaskModal } from "../../../../../modal/context/TaskModalContext";
-import {getDropStyle} from "../../../../../util/TaskUtil";
+import {TaskStatus, TaskSummary} from "../../../api/task/TaskTypes";
+import {useTaskDragDrop} from "../context/TaskDragDropContext";
+import {useTaskModal} from "../../../modal/context/TaskModalContext";
+import {useTaskContext} from "../../../context/data/TaskContext";
+import {getDropStyle} from "../../../util/TaskUtil";
+import {TaskCard} from "./TaskCard";
 
-export const HorizonBoard: React.FC<{ boardStatus: TaskStatus }> = ({ boardStatus }) => {
+export const DropdownTaskBoard: React.FC<{ boardStatus: TaskStatus }> = ({ boardStatus }) => {
     const { useTaskDrop, renderDropDisplay } = useTaskDragDrop();
     const { openTaskModal } = useTaskModal();
     const { BACKLOG, DONE } = useTaskContext();
@@ -63,7 +63,7 @@ export const HorizonBoard: React.FC<{ boardStatus: TaskStatus }> = ({ boardStatu
                 <div className="mt-2 flex flex-col gap-1">
                     {tasks.length > 0 ? (
                         tasks.map((task) => (
-                            <OneLineTaskCard key={`${task.status}-${task.id}`} task={task}/>
+                           <TaskCard task={task} key={`${task.status}-${task.id}`} />
                         ))
                     ) : (
                         <p className="text-xs text-gray-500 text-center">No tasks</p>

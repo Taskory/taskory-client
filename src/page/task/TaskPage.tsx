@@ -1,6 +1,6 @@
-import {TaskHeader} from "./component/TaskHeader";
+import {TaskHeader} from "./TaskHeader";
 import React from "react";
-import {TaskBoard} from "./component/taskBoard/TaskBoard";
+import {TaskContents} from "./TaskContents";
 
 export const TaskPage: React.FC = () => {
     return (
@@ -10,7 +10,7 @@ export const TaskPage: React.FC = () => {
                 <TaskHeader/>
 
                 {/* Boards Section */}
-                <TaskBoard />
+                <TaskContents />
             </div>
         </>
     );
