@@ -5,7 +5,7 @@ import {WeeklyPage} from "./week/WeeklyPage";
 import {DailyPage} from "./day/DailyPage";
 import React from "react";
 
-export const CalendarBody = () => {
+export const CalendarContents = () => {
     const {view} = useCalendarView();
 
     const renderCalendarView = () => {

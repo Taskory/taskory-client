@@ -1,17 +1,16 @@
 import React from "react";
 import { CalendarTopBar } from "./CalendarTopBar";
 import {CalendarWrapper} from "./CalendarWrapper";
-import { CalendarBody } from "./CalendarBody";
+import { CalendarContents } from "./CalendarContents";
 
 export const CalendarPage = () => {
-
-    return (
-        <CalendarWrapper>
-            <div className="flex flex-col h-full">
-                <CalendarTopBar/>
-                <CalendarBody />
-
-            </div>
-        </CalendarWrapper>
-    );
+	
+	return (
+		<CalendarWrapper>
+			<div className="flex flex-col h-full">
+				<CalendarTopBar/>
+				<CalendarContents />
+			</div>
+		</CalendarWrapper>
+	);
 };
