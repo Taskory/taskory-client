@@ -11,7 +11,7 @@ export const CommonHeader: React.FC = () => {
         <>
             <div className="flex justify-between items-center border-b h-12">
                 {/* 1st space*/}
-                <div className="flex w-20">
+                <div className="flex gap-4">
                     {/* Leftbar toggle button */}
                     <div
                         onClick={toggleLeftbar}
@@ -19,12 +19,11 @@ export const CommonHeader: React.FC = () => {
                     >
                         <img className="h-8 w-auto" src={"/asset/img/header/menu.svg"} alt={"Menu"} />
                     </div>
+                    
+                    <LogoBtn />
                 </div>
 
                 {/* 2nd space */}
-                <LogoBtn />
-
-                {/* 3rd space */}
                 <div className="flex items-center justify-start">
                     {/* Profile img */}
                     <ProfileBtn />
